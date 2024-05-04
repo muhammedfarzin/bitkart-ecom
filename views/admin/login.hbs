@@ -7,6 +7,9 @@
         </div>
 
         <div class="login-box col-md-6">
+            {{#if errMessage}}
+               <span class="text-danger fw-normal">*{{errMessage}}</span>
+            {{/if}}
             <form method="post">
                 <div class="login-frm col-12">
                     <div class="form-field">
@@ -18,7 +21,7 @@
                         <input type="password" name="password" id="password" required>
                     </div>
                 </div>
-                <button class="btn btn-light rounded-pill col-12" type="submit">LOGIN</button>
+                <button class="btn btn-light rounded-pill border col-12" type="submit">LOGIN</button>
             </form>
         </div>
     </div>
