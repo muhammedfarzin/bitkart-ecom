@@ -1,0 +1,69 @@
+@media (max-width: 768px) {
+    .form-title>h1 {
+        font-size: 2rem !important;
+    }
+}
+
+body {
+    margin: 0;
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1vw 5vw;
+    margin-bottom: 1rem;
+}
+
+.btn.btn-outline-primary {
+    border: 1px solid #6F43BF;
+    color: #6F43BF;
+}
+
+.btn.btn-outline-primary:hover {
+    border: 1px solid #6F43BF;
+    background: #6F43BF;
+}
+
+.login-box {
+    background: #D2BBFF;
+    font-family: 'Roboto';
+    font-weight: bold;
+    font-size: 1rem;
+    padding: 6vw 8vw;
+    border-radius: 4.5vw;
+}
+
+.login-box input {
+    width: 100%;
+    padding: 0.5rem 1rem; 
+    border-radius: 2rem;
+    border: none;
+}
+
+.login-box input:focus {
+    outline: none;
+    background: #ffffffb3;
+}
+
+.form-title {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.form-title>h1 {
+    color: #6F43BF;
+    font-family: 'Roboto Slab';
+    font-size: 3rem;
+    font-weight: bold;
+}
+
+.login-frm>.form-field {
+    margin-bottom: 1.5rem;
+}
+
+.login-frm {
+    margin-bottom: 2.5rem;
+}
