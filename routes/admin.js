@@ -18,7 +18,11 @@ const sideMenuPath = {
 
 function getSideMenus(pathName) {
     return Object.keys(sideMenuPath).map(title => {
-        return { title, path: sideMenuPath[title], active: title == pathName };
+        return {
+            title,
+            path: dashboardRoute + sideMenuPath[title],
+            active: sideMenuPath[title] == pathName
+        };
     })
 }
 
@@ -72,10 +76,15 @@ router.use((req, res, next) => {
 
 // Routes needs authorization
 
-router.get('/', (req, res) => {
-    const sideMenus = getSideMenus('dashboard');
+router.get(sideMenuPath.dashboard, (req, res) => {
+    const sideMenus = getSideMenus(sideMenuPath.dashboard);
     res.render('admin/index', { sideMenus });
 });
+
+router.get(sideMenuPath.users, (req, res) => {
+    const sideMenus = getSideMenus(sideMenuPath.users);
+    res.render('admin/users/users', { sideMenus });
+})
 
 router.get('/logout', (req, res) => {
     req.session.destroy();
