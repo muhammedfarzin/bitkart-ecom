@@ -6,11 +6,30 @@ const router = Router();
 const dashboardRoute = '/admin';
 const loginRoute = '/admin/login';
 
+const sideMenuPath = {
+    dashboard: '/',
+    users: '/users',
+    orders: '/orders',
+    products: '/products',
+    categories: '/categories',
+    coupons: '/coupons',
+    banner: '/banner'
+};
+
+function getSideMenus(pathName) {
+    return Object.keys(sideMenuPath).map(title => {
+        return { title, path: sideMenuPath[title], active: title == pathName };
+    })
+}
+
 router.use(session({
     secret: 'admin_user_secret',
     saveUninitialized: false,
-    resave: false
-}))
+    resave: false,
+    cookie: {
+        maxAge: 3600000  // 1 Hour
+    }
+}));
 
 function checkLogin(session, isLogin) {
     if (session.admin && session.admin == process.env.ADMIN_EMAIL) {
@@ -18,7 +37,7 @@ function checkLogin(session, isLogin) {
     } else {
         return false;
     }
-}
+};
 
 // Routes
 router.get('/login', (req, res) => {
@@ -26,7 +45,7 @@ router.get('/login', (req, res) => {
         res.redirect(dashboardRoute);
     }
     res.render('admin/login', { title: "Admin Login" });
-})
+});
 
 router.post('/login', (req, res) => {
     if (checkLogin(req.session)) {
@@ -39,8 +58,9 @@ router.post('/login', (req, res) => {
     } else {
         res.status(401).render('admin/login', { errMessage: 'Invalid username or password' });
     }
-})
+});
 
+// Check login
 router.use((req, res, next) => {
     if (checkLogin(req.session)) {
         next();
@@ -48,16 +68,19 @@ router.use((req, res, next) => {
         req.session.destroy();
         res.redirect(loginRoute);
     }
-})
+});
+
+// Routes needs authorization
 
 router.get('/', (req, res) => {
-    res.render('admin/index');
-})
+    const sideMenus = getSideMenus('dashboard');
+    res.render('admin/index', { sideMenus });
+});
 
 router.get('/logout', (req, res) => {
     req.session.destroy();
     res.redirect(loginRoute);
-})
+});
 
 
 export default router;

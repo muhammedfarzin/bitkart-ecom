@@ -1,0 +1,7 @@
+<div class="sidebar col-md-3">
+  {{#each sideMenus}}
+    <a href="{{this.path}}" class="btn text-start {{#if this.active}}btn-primary{{else}}btn-outline-primary{{/if}}">
+      {{this.title}}
+    </a>
+  {{/each}}
+</div>
