@@ -40,7 +40,7 @@ nav.navbar {
     align-items: center;
     height: 4.5rem;
     padding: 1vw 5vw;
-    background-color: #fff;
+    background-color: #fff !important;
 }
 
 .btn.btn-primary {
@@ -172,4 +172,20 @@ body .text-primary {
     padding-top: 2px;
     padding-bottom: 0.5rem;
     background-color: #fff;
+}
+
+.list>.list-item {
+    background-color: #6F43BF33;
+    padding: 0.5rem 1rem;
+    border: 1px solid #000;
+    border-radius: 1vw;
+    margin: 0.5rem 0;
+}
+
+.fs-7 {
+    font-size: 0.75rem;
+}
+
+.subtitle {
+    font-size: 1.25rem;
 }
