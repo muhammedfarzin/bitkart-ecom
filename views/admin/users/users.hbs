@@ -1,15 +1,15 @@
-{{> navbar}}
+{{> admin-navbar}}
 
 <div class="fluid-container d-flex">
     {{> sidebar}}
 
     <div class="container">
-        <div class="d-flex justify-content-between align-items-center top-bar">
+        <div class="top-bar d-flex justify-content-between align-items-center">
             <div class="title">
                 <h1 class="text-primary">Users</h1>
             </div>
-            <div class="actions">
-                {{> searchbox for='users'}}
+            <div class="actions col-12 col-md-9">
+                {{> searchbox for='users' class='col-12'}}
             </div>
         </div>
         <div class="list">

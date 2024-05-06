@@ -1,4 +1,4 @@
-{{> navbar}}
+{{> admin-navbar}}
 
 <div class="fluid-container d-flex">
     {{> sidebar}}
@@ -10,14 +10,16 @@
             </div>
             <div class="actions d-flex justify-content-end align-items-center col-12 col-md-9">
                 {{> searchbox for='orders' class='col-8 col-md-9'}}
-                
-                <select class="btn btn-outline-primary col-4 col-md-3" name="status" id="status">
-                    <option value="all">All</option>
-                    <option value="confirmed">Confirmed</option>
-                    <option value="shipped">Shipped</option>
-                    <option value="delivered">Delivered</option>
-                    <option value="cancelled">Cancelled</option>
-                </select>
+
+                <div class="col col-md-3">
+                    <select class="btn btn-outline-primary w-100" name="status" id="status">
+                        <option value="all">All</option>
+                        <option value="confirmed">Confirmed</option>
+                        <option value="shipped">Shipped</option>
+                        <option value="delivered">Delivered</option>
+                        <option value="cancelled">Cancelled</option>
+                    </select>
+                </div>
             </div>
         </div>
         <div class="list">
