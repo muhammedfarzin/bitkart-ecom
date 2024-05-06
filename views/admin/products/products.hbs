@@ -9,9 +9,9 @@
                 <h1 class="text-primary">Products</h1>
             </div>
             <div class="actions d-flex flex-wrap justify-content-end align-items-center col-12 col-md-9">
-                {{> searchbox for='products' class='col-8 col-md-6'}}
+                {{> searchbox for='products' class='col-12 col-md-6'}}
 
-                <div class="col col-md-3">
+                <div class=" sm-reset-pl sm-mt-1 col">
                     <select class="btn btn-outline-primary w-100" name="status" id="status">
                         <option value="all">All</option>
                         <option value="confirmed">Active</option>
@@ -20,7 +20,7 @@
                     </select>
                 </div>
 
-                <div class=" sm-reset-pl sm-mt-1 col-12 col-md-3">
+                <div class="sm-mt-1 col">
                     <a href="products/add" class="btn btn-primary w-100">New Product</a>
                 </div>
             </div>

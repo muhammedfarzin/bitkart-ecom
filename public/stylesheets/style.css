@@ -23,10 +23,6 @@
         padding: 0.5rem;
     }
 
-    .actions .searchbox {
-        max-width: 63%;
-    }
-
     .fluid-container>.container {
         margin-right: auto !important;
     }
@@ -155,6 +151,10 @@ nav.navbar {
     text-transform: capitalize;
 }
 
+.top-bar>.title {
+    width: 25%;
+}
+
 .title>h1 {
     font-size: 2rem;
     font-weight: 500;
@@ -165,7 +165,7 @@ body .text-primary {
     color: #6F43BF !important;
 }
 
-.actions .searchbox {
+.searchbox {
     display: flex;
     align-items: center;
     background-color: #6F43BF33;
@@ -175,11 +175,11 @@ body .text-primary {
     padding: 0.5rem;
 }
 
-.actions form {
+form {
     width: -webkit-fill-available;
 }
 
-.actions .searchbox #search {
+.searchbox #search {
     width: -webkit-fill-available;
     border: none;
     outline: none;
