@@ -30,6 +30,14 @@
     .fluid-container>.container {
         margin-right: auto !important;
     }
+
+    .sm-mt-1 {
+        margin-top: 0.25rem;
+    }
+
+    .sm-reset-pl {
+        padding-left: unset !important;
+    }
 }
 
 body {
@@ -186,6 +194,7 @@ body .text-primary {
     padding-top: 2px;
     padding-bottom: 0.5rem;
     background-color: #fff;
+    z-index: 5;
 }
 
 .list .list-item {
@@ -237,5 +246,10 @@ body .text-primary {
 }
 
 .top-bar>.actions>*:not(:first-child) {
-    margin-left: 1rem;
+    padding-left: 1rem;
+}
+
+.br-1 {
+    bottom: 0.5rem;
+    right: 0.5rem;
 }
