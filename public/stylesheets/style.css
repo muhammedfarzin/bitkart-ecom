@@ -22,6 +22,14 @@
         overflow-y: scroll;
         padding: 0.5rem;
     }
+
+    .actions .searchbox {
+        max-width: 63%;
+    }
+
+    .fluid-container>.container {
+        margin-right: 0 !important;
+    }
 }
 
 body {
@@ -149,16 +157,11 @@ body .text-primary {
     color: #6F43BF !important;
 }
 
-.title+.actions {
-    width: 55vw;
-}
-
 .actions .searchbox {
     display: flex;
     align-items: center;
     background-color: #6F43BF33;
     height: 2.75rem;
-    width: -webkit-fill-available;
     border: 1px solid #000;
     border-radius: 1vw;
     padding: 0.5rem;
@@ -233,6 +236,6 @@ body .text-primary {
     text-decoration: none !important;
 }
 
-.top-bar>.actions>* {
+.top-bar>.actions>*:not(:first-child) {
     margin-left: 1rem;
 }
