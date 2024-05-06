@@ -1,0 +1,18 @@
+<nav class="navbar bg-body-tertiary fixed-top">
+    <div class="logo">
+        {{#if hideLogout}}
+        {{else}}
+        <button class="btn btn-primary" type="button" id="menubtn" data-bs-toggle="offcanvas"
+            data-bs-target="#offcanvasScrolling" aria-controls="offcanvasScrolling">
+            <img src="/images/icons/menu.svg" alt="menu" width="24">
+        </button>
+        {{/if}}
+
+        <a href="/"> <img src="/images/bitkart.svg" alt="logo"></a>
+    </div>
+
+    {{#if hideLogout}}
+    {{else}}
+    <a href="/logout" class="btn btn-outline-primary"> Logout </a>
+    {{/if}}
+</nav>

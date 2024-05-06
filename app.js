@@ -1,5 +1,6 @@
 import express from "express";
 import adminRouter from "./routes/admin.js";
+import userRouter from "./routes/user.js";
 import dotenv from "dotenv";
 import hbs from 'express-handlebars'
 
@@ -12,7 +13,10 @@ app.engine('hbs', hbs.engine({
     extname: 'hbs',
     defaultLayout: 'layout',
     layoutsDir: 'views/layouts',
-    partialsDir: ['views/admin/partials']
+    partialsDir: [
+        'views/admin/partials',
+        'views/user/partials'
+    ]
 }))
 
 app.set('view engine', 'hbs');
@@ -22,6 +26,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use('/admin', adminRouter);
+app.use('/', userRouter);
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
