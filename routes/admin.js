@@ -91,6 +91,16 @@ router.get(sideMenuPath.orders, (req, res) => {
     res.render('admin/orders/orders', { sideMenus });
 })
 
+router.get(sideMenuPath.products, (req, res) => {
+    const sideMenus = getSideMenus(sideMenuPath.products);
+    res.render('admin/products/products', ({ sideMenus }));
+})
+
+router.get(sideMenuPath.categories, (req, res) => {
+    const sideMenus = getSideMenus(sideMenuPath.categories);
+    res.render('admin/categories/categories', ({ sideMenus }));
+})
+
 router.get('/logout', (req, res) => {
     req.session.destroy();
     res.redirect(loginRoute);
