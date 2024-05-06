@@ -86,6 +86,11 @@ router.get(sideMenuPath.users, (req, res) => {
     res.render('admin/users/users', { sideMenus });
 })
 
+router.get(sideMenuPath.orders, (req, res) => {
+    const sideMenus = getSideMenus(sideMenuPath.orders);
+    res.render('admin/orders/orders', { sideMenus });
+})
+
 router.get('/logout', (req, res) => {
     req.session.destroy();
     res.redirect(loginRoute);

@@ -58,6 +58,17 @@ nav.navbar {
     background: #6F43BF !important;
 }
 
+.btn:focus {
+    border: 1px solid #6F43BF !important;
+    background: #6F43BF !important;
+}
+
+.btn:focus-visible {
+    border: 1px solid #6F43BF !important;
+    background: #6F43BF !important;
+    box-shadow: none !important;
+}
+
 #menubtn {
     display: none;
 }
@@ -174,12 +185,30 @@ body .text-primary {
     background-color: #fff;
 }
 
-.list>.list-item {
+.list .list-item {
     background-color: #6F43BF33;
-    padding: 0.5rem 1rem;
+    padding: 1rem;
     border: 1px solid #000;
-    border-radius: 1vw;
+    border-radius: 2vw;
     margin: 0.5rem 0;
+}
+
+.list-item img {
+    width: 7.5rem;
+    height: 7.5rem;
+    border-radius: 1vw;
+    margin-right: 0.5rem;
+    object-fit: contain;
+    background: #fff;
+    padding: 0.5rem;
+}
+
+.max-line-1 {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
 }
 
 .fs-7 {
@@ -188,4 +217,22 @@ body .text-primary {
 
 .subtitle {
     font-size: 1.25rem;
+}
+
+.status-view-primary {
+    color: #6F43BF;
+    border: 1px solid #6F43BF;
+    border-radius: 0.75rem;
+    padding: 0.25rem;
+    width: 9rem;
+    text-align: center;
+}
+
+.text-reset {
+    color: inherit !important;
+    text-decoration: none !important;
+}
+
+.top-bar>.actions>* {
+    margin-left: 1rem;
 }

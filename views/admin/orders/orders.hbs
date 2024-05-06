@@ -1,0 +1,57 @@
+{{> navbar}}
+
+<div class="fluid-container d-flex">
+    {{> sidebar}}
+
+    <div class="container">
+        <div class="top-bar d-flex justify-content-between align-items-center">
+            <div class="title">
+                <h1 class="text-primary">Orders</h1>
+            </div>
+            <div class="actions d-flex align-items-center">
+                {{> searchbox for='orders'}}
+                
+                <select class="btn btn-outline-primary" name="status" id="status">
+                    <option value="all">All</option>
+                    <option value="confirmed">Confirmed</option>
+                    <option value="shipped">Shipped</option>
+                    <option value="delivered">Delivered</option>
+                    <option value="cancelled">Cancelled</option>
+                </select>
+            </div>
+        </div>
+        <div class="list">
+            <a class="text-reset" href="#">
+                <div class="list-item">
+                    <div class="content d-flex">
+                        <div class="leading">
+                            <img src="https://store.storeimages.cdn-apple.com/4668/as-images.apple.com/is/MTJV3?wid=1144&hei=1144&fmt=jpeg&qlt=90&.v=1694014871985"
+                                alt="img">
+                        </div>
+                        <div class="datas">
+                            <div class="text-primary fs-7">Product id: 98765431</div>
+                            <h4 class="title max-line-1 mb-3">Rubbermaid Commercial 1250 Lb Capacity Standard Duty Tilt
+                                Truck
+                                -
+                                1250 Lb
+                                Capacity - X 33.5in Width X 72.2in Depth X 43.8in Height - Black - 1 Each</h4>
+                            <div class="text-primary fs-7">User id: 6579895</div>
+                            <div class="subtitle">Henry Arthur, 2118 Thornridge Cir. Syracuse, Connecticut 35624,
+                                9876543210
+                            </div>
+                        </div>
+                    </div>
+
+                    {{!-- Bottom of the list --}}
+                    <div class="bottom d-flex justify-content-end">
+                        <div class="p-1 bg-light rounded-4">
+                            <div class="status-view-primary">
+                                Delivered
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
