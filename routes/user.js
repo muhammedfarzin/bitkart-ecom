@@ -14,5 +14,9 @@ router.get('/', (req, res) => {
     res.render('user/index');
 })
 
+router.get('/view/:id', (req, res) => {
+    res.render('user/products/products');
+})
+
 
 export default router;
