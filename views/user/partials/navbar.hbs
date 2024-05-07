@@ -1,18 +1,50 @@
-<nav class="navbar bg-body-tertiary fixed-top">
+<nav class="navbar bg-body-tertiary fixed-top py-1">
     <div class="logo">
-        {{#if hideLogout}}
-        {{else}}
-        <button class="btn btn-primary" type="button" id="menubtn" data-bs-toggle="offcanvas"
-            data-bs-target="#offcanvasScrolling" aria-controls="offcanvasScrolling">
-            <img src="/images/icons/menu.svg" alt="menu" width="24">
-        </button>
-        {{/if}}
-
         <a href="/"> <img src="/images/bitkart.svg" alt="logo"></a>
     </div>
 
     {{#if hideLogout}}
     {{else}}
-    <a href="/logout" class="btn btn-outline-primary"> Logout </a>
+    {{> searchbox for='for products' class='sm-d-none col-4 col-lg-6'}}
+
+    <div class="actions sm-d-none col-4 col-lg-3">
+        <a href="/cart" class="icon-btn"><img src="/images/icons/shopping-cart.svg" alt="cart"></a>
+        <a href="/account" class="icon-btn"><img src="/images/icons/user.svg" alt="account"></a>
+        <a href="/wishlist" class="icon-btn"><img src="/images/icons/heart.svg" alt="wishlist"></a>
+        <a href="/logout" class="btn btn-outline-primary"> Logout </a>
+    </div>
+
+    <div class="actions justify-content-end col-2 md-d-none sm-d-unset">
+        {{!-- Sidebar btn for sm devices --}}
+        <button class="navbar-toggler sm-d-unset d-hide" type="button" data-bs-toggle="offcanvas"
+            data-bs-target="#offcanvasScrolling" aria-controls="offcanvasScrolling" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="sm-sidebar">
+            <div class="offcanvas offcanvas-end" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1"
+                id="offcanvasScrolling" aria-labelledby="offcanvasScrollingLabel">
+                <div class="offcanvas-header">
+                    <a href="/"> <img src="/images/bitkart.svg" alt="logo"></a>
+                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                </div>
+                {{> searchbox for='for products' class='m-2'}}
+
+                <a href="/cart" class="btn btn-outline-primary">
+                    <div class="d-inline-flex align-items-center"><img class="mx-2"
+                            src="/images/icons/shopping-cart.svg" alt="cart"> <span
+                            class="w-30px text-start">Cart</span></div>
+                </a>
+                <a href="/account" class="btn btn-outline-primary">
+                    <div class="d-inline-flex align-items-center"><img class="mx-2" src="/images/icons/user.svg"
+                            alt="account"> <span class="w-30px text-start">Account</span></div>
+                </a>
+                <a href="/wishlist" class="btn btn-outline-primary">
+                    <div class="d-inline-flex align-items-center"><img class="mx-2" src="/images/icons/heart.svg"
+                            alt="wishlist"><span class="w-30px text-start">Wishlist</span></div>
+                </a>
+                <a href="/logout" class="btn btn-outline-primary"> Logout </a>
+            </div>
+        </div>
+    </div>
     {{/if}}
 </nav>

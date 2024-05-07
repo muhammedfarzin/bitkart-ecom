@@ -10,5 +10,9 @@ router.get('/signup', (req, res) => {
     res.render('user/signup');
 })
 
+router.get('/', (req, res) => {
+    res.render('user/index');
+})
+
 
 export default router;

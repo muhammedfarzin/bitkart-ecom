@@ -1,4 +1,4 @@
-@media (max-width: 768px) {
+@media (max-width: 767px) {
     .form-title>h1 {
         font-size: 2rem !important;
     }
@@ -27,12 +27,30 @@
         margin-right: auto !important;
     }
 
+    .banner>img {
+        aspect-ratio: 16 / 9 !important;
+    }
+
     .sm-mt-1 {
         margin-top: 0.25rem;
     }
 
     .sm-reset-pl {
         padding-left: unset !important;
+    }
+
+    .sm-d-none {
+        display: none !important;
+    }
+
+    .sm-d-unset {
+        display: unset !important;
+    }
+}
+
+@media (min-width: 768px) {
+    .md-d-none {
+        display: none !important;
     }
 }
 
@@ -55,6 +73,16 @@ nav.navbar {
     background-color: #fff !important;
 }
 
+.navbar .actions {
+    display: flex;
+    justify-content: end;
+    align-items: center;
+}
+
+.navbar .actions>* {
+    margin: 0 0.5rem;
+}
+
 .btn.btn-primary {
     background: #6F43BF;
     border: 1px solid #6F43BF;
@@ -70,15 +98,27 @@ nav.navbar {
     background: #6F43BF !important;
 }
 
+.btn:hover img {
+    filter: invert(100%) sepia(100%) saturate(0%) hue-rotate(34deg) brightness(108%) contrast(101%);
+}
+
 .btn:focus {
     border: 1px solid #6F43BF !important;
     background: #6F43BF !important;
+}
+
+.btn:focus img {
+    filter: invert(100%) sepia(100%) saturate(0%) hue-rotate(34deg) brightness(108%) contrast(101%);
 }
 
 .btn:focus-visible {
     border: 1px solid #6F43BF !important;
     background: #6F43BF !important;
     box-shadow: none !important;
+}
+
+.btn:focus-visible img {
+    filter: invert(100%) sepia(100%) saturate(0%) hue-rotate(34deg) brightness(108%) contrast(101%);
 }
 
 #menubtn {
@@ -151,6 +191,10 @@ nav.navbar {
     text-transform: capitalize;
 }
 
+.btn-outline-primary img {
+    filter: invert(29%) sepia(15%) saturate(6833%) hue-rotate(240deg) brightness(94%) contrast(90%);
+}
+
 .top-bar>.title {
     width: 25%;
 }
@@ -184,7 +228,7 @@ form {
     border: none;
     outline: none;
     background-color: transparent;
-    padding: 0 0.5rem;
+    padding-left: 0.5rem;
 }
 
 .top-bar {
@@ -252,4 +296,36 @@ form {
 .br-1 {
     bottom: 0.5rem;
     right: 0.5rem;
+}
+
+.icon-btn {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0.5rem;
+    border-radius: 25%;
+    width: 3rem;
+    height: 3rem;
+    transition: 0.2s;
+}
+
+.icon-btn:hover {
+    background-color: #6F43BF33;
+}
+
+.banner {
+    width: 100%;
+}
+
+.banner>img {
+    aspect-ratio: 125 / 35;
+    object-fit: cover;
+}
+
+.navbar-toggler:focus {
+    box-shadow: none !important;
+}
+
+.w-30px {
+    width: 3.5rem;
 }
