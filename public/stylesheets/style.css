@@ -63,7 +63,7 @@ body {
 }
 
 .mid-container {
-    width: 95%;
+    width: 90%;
     margin: 0 4.5vw;
 }
 
@@ -381,4 +381,8 @@ form {
 .product-card .title {
     font-weight: bold;
     font-size: 1.2rem;
+}
+
+.w-95 {
+    width: 95%;
 }
