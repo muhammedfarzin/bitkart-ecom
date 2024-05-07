@@ -62,6 +62,11 @@ body {
     margin-right: 4.5vw;
 }
 
+.mid-container {
+    width: 90%;
+    margin: 0 4.5vw;
+}
+
 nav.navbar {
     position: sticky;
     top: 0;
@@ -91,6 +96,11 @@ nav.navbar {
 .btn.btn-outline-primary {
     border: 1px solid #6F43BF;
     color: #6F43BF;
+}
+
+.btn.btn-outline-danger:hover{
+    border: 1px solid #dc3545 !important;
+    background: #dc3545 !important;
 }
 
 .btn:hover {
@@ -328,4 +338,47 @@ form {
 
 .w-30px {
     width: 3.5rem;
+}
+
+.list-h {
+    display: flex;
+    overflow-x: scroll;
+}
+
+.list-h::-webkit-scrollbar {
+    display: none;
+}
+
+.product-card {
+    background-color: #6e43bf33;
+    margin: 0 0.5rem;
+    padding: 0.5rem;
+    border: 1px solid #000000;
+    border-radius: 1.5rem;
+}
+
+.product-card img {
+    width: 11rem;
+    height: 11rem;
+    background-color: #fff;
+    border-radius: 1rem;
+    margin: auto;
+}
+
+.w-11rem {
+    width: 11rem;
+}
+
+.sec-ml-1>*:not(:first-child) {
+    margin-left: 0.5rem;
+}
+
+.product-card .strike-price {
+    text-decoration: line-through;
+    font-size: 0.9rem;
+}
+
+.product-card .title {
+    font-weight: bold;
+    font-size: 1.2rem;
 }
