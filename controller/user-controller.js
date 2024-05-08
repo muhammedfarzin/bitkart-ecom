@@ -1,6 +1,6 @@
 import UserModel from "../model/user-model.js";
 
-const userHelper = {
+const userController = {
     createUser: (datas) => {
         return new Promise((resolve, reject) => {
             const { name, email, password, mobile } = datas;
@@ -29,7 +29,14 @@ const userHelper = {
                 reject(err);
             }
         })
+    },
+    getUsersBasicData: () => {
+        return UserModel.find()
+            .select('name email mobile')
+            .limit(20)
+            .then(users => users)
+            .catch(err => err);
     }
 }
 
-export default userHelper;
+export default userController;

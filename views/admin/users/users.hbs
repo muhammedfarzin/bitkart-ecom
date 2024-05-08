@@ -13,12 +13,13 @@
             </div>
         </div>
         <div class="list">
+            {{#each users}}
             <div class="list-item d-flex justify-content-between">
                 <div class="content">
-                    <div class="text-primary fs-7">User id: 98765431</div>
-                    <h4 class="title">Henry Arthur</h4>
-                    <div class="subtitle">michelle.rivera@example.com</div>
-                    <div class="subtitle">9876543210</div>
+                    <div class="text-primary fs-7">User id: {{this._id}}</div>
+                    <h4 class="title">{{this.name}}</h4>
+                    <div class="subtitle">{{this.email}}</div>
+                    <div class="subtitle">{{this.mobile}}</div>
                 </div>
                 <div class="trailing">
                     <div class="actions">
@@ -26,123 +27,7 @@
                     </div>
                 </div>
             </div>
-            <div class="list-item d-flex justify-content-between">
-                <div class="content">
-                    <div class="text-primary fs-7">User id: 98765431</div>
-                    <h4 class="title">Henry Arthur</h4>
-                    <div class="subtitle">michelle.rivera@example.com</div>
-                    <div class="subtitle">9876543210</div>
-                </div>
-                <div class="trailing">
-                    <div class="actions">
-                        <button class="btn btn-danger">Block</button>
-                    </div>
-                </div>
-            </div>
-            <div class="list-item d-flex justify-content-between">
-                <div class="content">
-                    <div class="text-primary fs-7">User id: 98765431</div>
-                    <h4 class="title">Henry Arthur</h4>
-                    <div class="subtitle">michelle.rivera@example.com</div>
-                    <div class="subtitle">9876543210</div>
-                </div>
-                <div class="trailing">
-                    <div class="actions">
-                        <button class="btn btn-danger">Block</button>
-                    </div>
-                </div>
-            </div>
-            <div class="list-item d-flex justify-content-between">
-                <div class="content">
-                    <div class="text-primary fs-7">User id: 98765431</div>
-                    <h4 class="title">Henry Arthur</h4>
-                    <div class="subtitle">michelle.rivera@example.com</div>
-                    <div class="subtitle">9876543210</div>
-                </div>
-                <div class="trailing">
-                    <div class="actions">
-                        <button class="btn btn-danger">Block</button>
-                    </div>
-                </div>
-            </div>
-            <div class="list-item d-flex justify-content-between">
-                <div class="content">
-                    <div class="text-primary fs-7">User id: 98765431</div>
-                    <h4 class="title">Henry Arthur</h4>
-                    <div class="subtitle">michelle.rivera@example.com</div>
-                    <div class="subtitle">9876543210</div>
-                </div>
-                <div class="trailing">
-                    <div class="actions">
-                        <button class="btn btn-danger">Block</button>
-                    </div>
-                </div>
-            </div>
-            <div class="list-item d-flex justify-content-between">
-                <div class="content">
-                    <div class="text-primary fs-7">User id: 98765431</div>
-                    <h4 class="title">Henry Arthur</h4>
-                    <div class="subtitle">michelle.rivera@example.com</div>
-                    <div class="subtitle">9876543210</div>
-                </div>
-                <div class="trailing">
-                    <div class="actions">
-                        <button class="btn btn-danger">Block</button>
-                    </div>
-                </div>
-            </div>
-            <div class="list-item d-flex justify-content-between">
-                <div class="content">
-                    <div class="text-primary fs-7">User id: 98765431</div>
-                    <h4 class="title">Henry Arthur</h4>
-                    <div class="subtitle">michelle.rivera@example.com</div>
-                    <div class="subtitle">9876543210</div>
-                </div>
-                <div class="trailing">
-                    <div class="actions">
-                        <button class="btn btn-danger">Block</button>
-                    </div>
-                </div>
-            </div>
-            <div class="list-item d-flex justify-content-between">
-                <div class="content">
-                    <div class="text-primary fs-7">User id: 98765431</div>
-                    <h4 class="title">Henry Arthur</h4>
-                    <div class="subtitle">michelle.rivera@example.com</div>
-                    <div class="subtitle">9876543210</div>
-                </div>
-                <div class="trailing">
-                    <div class="actions">
-                        <button class="btn btn-danger">Block</button>
-                    </div>
-                </div>
-            </div>
-            <div class="list-item d-flex justify-content-between">
-                <div class="content">
-                    <div class="text-primary fs-7">User id: 98765431</div>
-                    <h4 class="title">Henry Arthur</h4>
-                    <div class="subtitle">michelle.rivera@example.com</div>
-                    <div class="subtitle">9876543210</div>
-                </div>
-                <div class="trailing">
-                    <div class="actions">
-                        <button class="btn btn-danger">Block</button>
-                    </div>
-                </div>
-            </div>
-            <div class="list-item d-flex justify-content-between">
-                <div class="content">
-                    <div class="text-primary fs-7">User id: 98765431</div>
-                    <h4 class="title">Henry Arthur</h4>
-                    <div class="subtitle">michelle.rivera@example.com</div>
-                    <div class="subtitle">9876543210</div>
-                </div>
-                <div class="trailing">
-                    <div class="actions">
-                        <button class="btn btn-danger">Block</button>
-                    </div>
-                </div>
-            </div>
+            {{/each}}
         </div>
     </div>
 </div>

@@ -2,6 +2,7 @@ import { Router } from "express";
 import session from "express-session";
 import MongoDBStore from "connect-mongodb-session";
 import { mongoUri } from "../config/db.js";
+import userController from "../controller/user-controller.js";
 
 const router = Router();
 const MongoStore = MongoDBStore(session);
@@ -95,9 +96,11 @@ router.get(sideMenuPath.dashboard, (req, res) => {
     res.render('admin/index', { sideMenus });
 });
 
-router.get(sideMenuPath.users, (req, res) => {
+router.get(sideMenuPath.users, async (req, res) => {
     const sideMenus = getSideMenus(sideMenuPath.users);
-    res.render('admin/users/users', { sideMenus });
+    const usersData = await userController.getUsersBasicData();
+    const users = usersData.map(user => user.toObject());
+    res.render('admin/users/users', { users: users, sideMenus });
 })
 
 router.get(sideMenuPath.orders, (req, res) => {
