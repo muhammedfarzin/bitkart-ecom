@@ -102,25 +102,21 @@ nav.navbar {
     color: #6F43BF;
 }
 
-.btn.btn-outline-danger:hover {
+.btn.btn-outline-danger:hover,
+.btn.btn-outline-danger:focus,
+.btn.btn-danger:hover,
+.btn.btn-danger:focus {
     border: 1px solid #dc3545 !important;
     background: #dc3545 !important;
 }
 
-.btn:hover {
-    border: 1px solid #6F43BF !important;
-    background: #6F43BF !important;
-}
-
-.btn:hover img {
-    filter: invert(100%) sepia(100%) saturate(0%) hue-rotate(34deg) brightness(108%) contrast(101%);
-}
-
+.btn:hover,
 .btn:focus {
     border: 1px solid #6F43BF !important;
     background: #6F43BF !important;
 }
 
+.btn:hover img,
 .btn:focus img {
     filter: invert(100%) sepia(100%) saturate(0%) hue-rotate(34deg) brightness(108%) contrast(101%);
 }
