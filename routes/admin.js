@@ -1,13 +1,26 @@
 import { Router } from "express";
 import session from "express-session";
+import MongoDBStore from "connect-mongodb-session";
+import { mongoUri } from "../config/db.js";
 
 const router = Router();
+const MongoStore = MongoDBStore(session);
+
+const sessionStore = new MongoStore({
+    uri: mongoUri,
+    collection: 'sessions',
+});
+
+sessionStore.on('error', (error) => {
+    console.error('Session store error:', error);
+});
 
 router.use(session({
     key: 'ADMIN_SESSION',
     secret: 'admin_user_secret',
     saveUninitialized: false,
     resave: false,
+    store: sessionStore,
     cookie: {
         maxAge: 3600000  // 1 Hour
     }

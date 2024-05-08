@@ -91,6 +91,6 @@ userSchema.methods.customError = function (err) {
     }
 }
 
-const userModel = model('user', userSchema, 'users')
+const UserModel = model('user', userSchema, 'users')
 
-export default userModel;
+export default UserModel;

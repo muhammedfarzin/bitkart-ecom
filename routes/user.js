@@ -1,14 +1,27 @@
 import { Router } from "express";
 import session from "express-session";
+import MongoDBStore from "connect-mongodb-session";
 import userController from "../controller/user-controller.js";
+import { mongoUri } from "../config/db.js";
 
 const router = Router();
+const MongoStore = MongoDBStore(session);
+
+const sessionStore = new MongoStore({
+    uri: mongoUri,
+    collection: 'sessions',
+});
+
+sessionStore.on('error', (error) => {
+    console.error('Session store error:', error);
+});
 
 router.use(session({
     key: 'USER_SESSION',
     secret: 'user_secret',
     saveUninitialized: false,
     resave: false,
+    store: sessionStore,
     cookie: {
         maxAge: 3600000 * 24 * 30  // 30 days
     }
@@ -19,8 +32,8 @@ router.use((req, res, next) => {
     res.header('Pragma', 'no-cache');
     res.header('Expires', '0');
     next();
-  });
-  
+});
+
 
 // Routes
 
