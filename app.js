@@ -1,10 +1,12 @@
 import express from "express";
-import adminRouter from "./routes/admin.js";
-import userRouter from "./routes/user.js";
 import dotenv from "dotenv";
 import hbs from 'express-handlebars'
+import adminRouter from "./routes/admin.js";
+import userRouter from "./routes/user.js";
+import dbConnect from "./config/db.js";
 
 dotenv.config();
+dbConnect();
 
 const PORT = process.env.PORT || 3000;
 const app = express();
