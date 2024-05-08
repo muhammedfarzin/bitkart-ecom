@@ -3,6 +3,16 @@ import session from "express-session";
 
 const router = Router();
 
+router.use(session({
+    key: 'ADMIN_SESSION',
+    secret: 'admin_user_secret',
+    saveUninitialized: false,
+    resave: false,
+    cookie: {
+        maxAge: 3600000  // 1 Hour
+    }
+}));
+
 const dashboardRoute = '/admin';
 const loginRoute = '/admin/login';
 
@@ -25,15 +35,6 @@ function getSideMenus(pathName) {
         };
     })
 }
-
-router.use(session({
-    secret: 'admin_user_secret',
-    saveUninitialized: false,
-    resave: false,
-    cookie: {
-        maxAge: 3600000  // 1 Hour
-    }
-}));
 
 function checkLogin(session, isLogin) {
     if (session.admin && session.admin == process.env.ADMIN_EMAIL) {
