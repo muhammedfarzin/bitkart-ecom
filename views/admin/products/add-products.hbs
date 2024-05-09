@@ -1,0 +1,73 @@
+{{> admin-navbar}}
+
+<div class="fluid-container d-flex">
+    {{> sidebar}}
+
+    <div class="container">
+        <div class="top-bar d-flex justify-content-between align-items-center flex-wrap">
+            <div class="title col">
+                <h1 class="text-primary">Add Products</h1>
+            </div>
+        </div>
+        <form method="post">
+            <div class="outlined-card m-2 border-black col-md-10">
+                {{!-- Images --}}
+                <div class="list-h">
+                    <div class="d-flex" id="image-gallery"></div>
+                    <div class="outlined-card m-2 center-box-v-17" id="image-picker">
+                        <img src="/images/icons/add-image.svg" alt="add">
+                        <div class="fs-6 fw-bold text-primary">Add Image</div>
+                    </div>
+                    <input type="file" name="images" id="image-input" accept="image/*" max="5" multiple hidden>
+                </div>
+                {{!-- Form --}}
+                <div class="px-3">
+                    <div>
+                        <div class="fs-6 fw-bold text-primary my-2">Title</div>
+                        <input type="text" name="title" id="title"
+                            class="outlined-card placeholder-primary outline-none w-100" placeholder="Enter title">
+                    </div>
+                    <div>
+                        <div class="fs-6 fw-bold text-primary my-2">Description</div>
+                        <textarea maxlength="300" rows="3" type="text" name="description" id="description"
+                            class="outlined-card placeholder-primary outline-none w-100"
+                            placeholder="Enter description"></textarea>
+                    </div>
+                    <div class="d-flex flex-wrap">
+                        <div class="me-3 col-12 col-md">
+                            <div class="fs-6 fw-bold text-primary my-2">Price</div>
+                            <input type="number" name="price" id="price"
+                                class="outlined-card placeholder-primary outline-none w-100" placeholder="Enter price">
+                        </div>
+                        <div class="col-12 col-md">
+                            <div class="fs-6 fw-bold text-primary my-2">Offer Price</div>
+                            <input type="number" name="offerPrice" id="offer-price"
+                                class="outlined-card placeholder-primary outline-none w-100"
+                                placeholder="Enter offer price">
+                        </div>
+                    </div>
+                    <div class="d-flex flex-wrap">
+                        <div class="me-3 col-12 col-md">
+                            <div class="fs-6 fw-bold text-primary my-2">Category</div>
+                            <select name="category" id="category" class="outlined-card outline-none w-100" aria-placeholder="Category" required>
+                                <option value="" selected disabled hidden>Category</option>
+                                <option value="headset">Headset</option>
+                            </select>
+                        </div>
+                        <div class="col-12 col-md">
+                            <div class="fs-6 fw-bold text-primary my-2">Quantity</div>
+                            <input type="number" name="quantity" id="quantity"
+                                class="outlined-card placeholder-primary outline-none w-100"
+                                placeholder="Enter offer price">
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-end my-3">
+                        <button class="btn btn-primary px-4 rounded-4" type="submit">Create</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="/javascript/form.js"></script>

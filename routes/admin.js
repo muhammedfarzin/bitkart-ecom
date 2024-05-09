@@ -98,8 +98,8 @@ router.get(sideMenuPath.dashboard, (req, res) => {
 
 router.get(sideMenuPath.users, async (req, res) => {
     const sideMenus = getSideMenus(sideMenuPath.users);
-    const usersData = await userController.getUsersBasicData();
-    const users = usersData.map(user => user.toObject());
+    let users = await userController.getUsersBasicData();
+    users = users.map(user => user.toObject());
     res.render('admin/users/users', { users: users, sideMenus });
 })
 
@@ -111,6 +111,11 @@ router.get(sideMenuPath.orders, (req, res) => {
 router.get(sideMenuPath.products, (req, res) => {
     const sideMenus = getSideMenus(sideMenuPath.products);
     res.render('admin/products/products', ({ sideMenus }));
+})
+
+router.get('/products/add', (req, res) => {
+    const sideMenus = getSideMenus();
+    res.render('admin/products/add-products', ({ sideMenus }));
 })
 
 router.get(sideMenuPath.categories, (req, res) => {
