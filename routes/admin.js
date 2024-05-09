@@ -1,11 +1,22 @@
 import { Router } from "express";
 import session from "express-session";
+import path from "path";
 import MongoDBStore from "connect-mongodb-session";
+import multer from "multer";
 import { mongoUri } from "../config/db.js";
 import userController from "../controller/user-controller.js";
+import categoryController from "../controller/category-controller.js";
 
 const router = Router();
 const MongoStore = MongoDBStore(session);
+
+const multerStorage = multer.diskStorage({
+    destination: './public/images/uploads/',
+    filename: (req, file, cb) => {
+        cb(null, file.fieldname + Date.now() + path.extname(file.originalname));
+    }
+});
+const upload = multer({ storage: multerStorage });
 
 const sessionStore = new MongoStore({
     uri: mongoUri,
@@ -108,19 +119,41 @@ router.get(sideMenuPath.orders, (req, res) => {
     res.render('admin/orders/orders', { sideMenus });
 })
 
+// Products routes
 router.get(sideMenuPath.products, (req, res) => {
     const sideMenus = getSideMenus(sideMenuPath.products);
     res.render('admin/products/products', ({ sideMenus }));
 })
 
-router.get('/products/add', (req, res) => {
+router.get(`${sideMenuPath.products}/add`, (req, res) => {
     const sideMenus = getSideMenus();
     res.render('admin/products/add-products', ({ sideMenus }));
 })
 
-router.get(sideMenuPath.categories, (req, res) => {
+// Category routes
+router.get(sideMenuPath.categories, async (req, res) => {
+    let categories = await categoryController.getCategories();
+    categories = categories.map(category => category.toObject());
     const sideMenus = getSideMenus(sideMenuPath.categories);
-    res.render('admin/categories/categories', ({ sideMenus }));
+    res.render('admin/categories/categories', ({ categories, sideMenus }));
+})
+
+router.get(`${sideMenuPath.categories}/create`, (req, res) => {
+    const sideMenus = getSideMenus();
+    res.render('admin/categories/create-category', ({ sideMenus }));
+})
+
+router.post(`${sideMenuPath.categories}/create`, upload.single('image'), async (req, res) => {
+    try {
+        if (!req.file) {
+            throw new Error('Please upload category image');
+        }
+        await categoryController.createCategory(req);
+        res.redirect(dashboardRoute + sideMenuPath.categories);
+    } catch (err) {
+        const sideMenus = getSideMenus();
+        return res.render('admin/categories/create-category', ({ sideMenus, errMessage: err.message }));
+    }
 })
 
 router.get('/logout', (req, res) => {
