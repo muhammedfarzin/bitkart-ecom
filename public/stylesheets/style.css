@@ -450,6 +450,14 @@ button.carousel-control {
     border-radius: 1rem;
 }
 
+.center-box {
+    display: flex;
+    aspect-ratio: 1;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
 .center-box-v-17 {
     height: 17rem;
     width: 17rem;
