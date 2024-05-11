@@ -6,6 +6,7 @@ import multer from "multer";
 import { mongoUri } from "../config/db.js";
 import userController from "../controller/user-controller.js";
 import categoryController from "../controller/category-controller.js";
+import productController from "../controller/product-controller.js";
 
 const router = Router();
 const MongoStore = MongoDBStore(session);
@@ -120,14 +121,27 @@ router.get(sideMenuPath.orders, (req, res) => {
 })
 
 // Products routes
-router.get(sideMenuPath.products, (req, res) => {
+router.get(sideMenuPath.products, async (req, res) => {
+    const products = await productController.getProducts();
     const sideMenus = getSideMenus(sideMenuPath.products);
-    res.render('admin/products/products', ({ sideMenus }));
+    res.render('admin/products/products', ({ products, sideMenus }));
 })
 
-router.get(`${sideMenuPath.products}/add`, (req, res) => {
+router.get(`${sideMenuPath.products}/add`, async (req, res) => {
+    const categories = await categoryController.getAllCategoryTitles();
     const sideMenus = getSideMenus();
-    res.render('admin/products/add-products', ({ sideMenus }));
+    res.render('admin/products/add-products', ({ categories, sideMenus }));
+})
+
+router.post(`${sideMenuPath.products}/add`, upload.array('images', 5), async (req, res) => {
+    try {
+        await productController.addProduct(req);
+        res.redirect(dashboardRoute + sideMenuPath.products);
+    } catch (err) {
+        const categories = await categoryController.getAllCategoryTitles();
+        const sideMenus = getSideMenus();
+        res.render('admin/products/add-products', ({ categories, sideMenus, errMessage: err.message }));
+    }
 })
 
 // Category routes

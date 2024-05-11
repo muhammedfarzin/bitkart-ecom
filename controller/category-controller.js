@@ -19,6 +19,11 @@ const categoryController = {
         return CategoryModel.find()
             .limit(20)
             .then(datas => datas);
+    },
+    getAllCategoryTitles: () => {
+        return CategoryModel.find()
+            .select('title')
+            .then(datas => datas.map(category => category.toObject()));
     }
 };
 
