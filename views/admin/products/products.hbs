@@ -27,30 +27,7 @@
         </div>
         <div class="list">
             {{#each products}}
-            <a class="text-reset" href="#">
-                <div class="list-item position-relative">
-                    <div class="content d-flex pb-1">
-                        <div class="leading">
-                            <img src="{{firstImagePath this.imagePaths}}" alt="img">
-                        </div>
-                        <div class="datas">
-                            <div class="text-primary fs-7">Product id: {{this._id}}</div>
-                            <h4 class="title max-line-1 mb-3">{{this.title}}</h4>
-                            <h4 class="title">
-                                {{#if this.offerPrice}}
-                                {{this.offerPrice}}
-                                {{else}}
-                                {{this.price}}
-                                {{/if}}
-                            </h4>
-                        </div>
-                    </div>
-
-                    <div class="p-1 bg-light rounded-4 position-absolute br-1">
-                        <div class="status-view-primary">{{this.status}}</div>
-                    </div>
-                </div>
-            </a>
+            {{> product-list-item product=this}}
             {{/each}}
         </div>
     </div>

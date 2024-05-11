@@ -14,9 +14,7 @@ const productController = {
                 .catch(err => {
                     imagePaths.forEach(imagePath => {
                         fs.unlink('public' + imagePath, (err) => {
-                            if (err) {
-                                console.log('Image is not deleted: ' + err.message);
-                            }
+                            if (err) console.log('Image is not deleted: ' + err.message);
                         });
                     });
                     if (err.errors) {
@@ -29,6 +27,10 @@ const productController = {
     },
     getProducts: async () => {
         const products = await ProductModel.find().limit(20);
+        return products.map(product => product.toObject());
+    },
+    getProductsByCategory: async (categoryId) => {
+        const products = await ProductModel.find({category: categoryId}).limit(20);
         return products.map(product => product.toObject());
     }
 }

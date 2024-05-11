@@ -1,0 +1,22 @@
+{{#with product}}
+<a class="text-reset" href="#">
+    <div class="list-item position-relative">
+        <div class="content d-flex pb-1">
+            <div class="leading">
+                <img src="{{firstImagePath imagePaths}}" alt="img">
+            </div>
+            <div class="datas">
+                <div class="text-primary fs-7">Product id: {{_id}}</div>
+                <h4 class="title max-line-1 mb-3">{{title}}</h4>
+                <h4 class="title">
+                    ₹{{#if offerPrice}}{{offerPrice}}{{else}}{{price}}{{/if}}
+                </h4>
+            </div>
+        </div>
+
+        <div class="p-1 bg-light rounded-4 position-absolute br-1">
+            <div class="status-view-primary">{{status}}</div>
+        </div>
+    </div>
+</a>
+{{/with}}

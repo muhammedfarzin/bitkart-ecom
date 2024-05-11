@@ -17,9 +17,9 @@
             </div>
         </div>
         <div class="list">
-            <a class="text-reset" href="#">
-                {{#each categories}}
-                <div class="list-item position-relative">
+            {{#each categories}}
+            <a class="text-reset" href="categories/{{this._id}}">
+                <div class="list-item d-flex justify-content-between align-items-start">
                     <div class="content d-flex pb-1">
                         <div class="leading">
                             <img src="{{this.imagePath}}" alt="img">
@@ -30,9 +30,10 @@
                             <div class="subtitle">{{this.description}}</div>
                         </div>
                     </div>
+                    <button class="btn btn-danger">Remove</button>
                 </div>
-                {{/each}}
             </a>
+            {{/each}}
         </div>
     </div>
 </div>

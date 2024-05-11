@@ -60,7 +60,7 @@ function getSideMenus(pathName) {
             active: sideMenuPath[title] == pathName
         };
     })
-}
+};
 
 function checkLogin(session, isLogin) {
     if (session.admin && session.admin == process.env.ADMIN_EMAIL) {
@@ -113,25 +113,25 @@ router.get(sideMenuPath.users, async (req, res) => {
     let users = await userController.getUsersBasicData();
     users = users.map(user => user.toObject());
     res.render('admin/users/users', { users: users, sideMenus });
-})
+});
 
 router.get(sideMenuPath.orders, (req, res) => {
     const sideMenus = getSideMenus(sideMenuPath.orders);
     res.render('admin/orders/orders', { sideMenus });
-})
+});
 
 // Products routes
 router.get(sideMenuPath.products, async (req, res) => {
     const products = await productController.getProducts();
     const sideMenus = getSideMenus(sideMenuPath.products);
     res.render('admin/products/products', ({ products, sideMenus }));
-})
+});
 
 router.get(`${sideMenuPath.products}/add`, async (req, res) => {
     const categories = await categoryController.getAllCategoryTitles();
     const sideMenus = getSideMenus();
     res.render('admin/products/add-products', ({ categories, sideMenus }));
-})
+});
 
 router.post(`${sideMenuPath.products}/add`, upload.array('images', 5), async (req, res) => {
     try {
@@ -142,7 +142,7 @@ router.post(`${sideMenuPath.products}/add`, upload.array('images', 5), async (re
         const sideMenus = getSideMenus();
         res.render('admin/products/add-products', ({ categories, sideMenus, errMessage: err.message }));
     }
-})
+});
 
 // Category routes
 router.get(sideMenuPath.categories, async (req, res) => {
@@ -150,12 +150,12 @@ router.get(sideMenuPath.categories, async (req, res) => {
     categories = categories.map(category => category.toObject());
     const sideMenus = getSideMenus(sideMenuPath.categories);
     res.render('admin/categories/categories', ({ categories, sideMenus }));
-})
+});
 
 router.get(`${sideMenuPath.categories}/create`, (req, res) => {
     const sideMenus = getSideMenus();
-    res.render('admin/categories/create-category', ({ sideMenus }));
-})
+    res.render('admin/categories/category-form', ({ sideMenus }));
+});
 
 router.post(`${sideMenuPath.categories}/create`, upload.single('image'), async (req, res) => {
     try {
@@ -166,10 +166,27 @@ router.post(`${sideMenuPath.categories}/create`, upload.single('image'), async (
         res.redirect(dashboardRoute + sideMenuPath.categories);
     } catch (err) {
         const sideMenus = getSideMenus();
-        return res.render('admin/categories/create-category', ({ sideMenus, errMessage: err.message }));
+        return res.render('admin/categories/category-form', ({ sideMenus, errMessage: err.message }));
     }
-})
+});
 
+router.get(`${sideMenuPath.categories}/:id`, async (req, res) => {
+    const category = await categoryController.getCategoryById(req.params.id);
+    const products = await productController.getProductsByCategory(req.params.id);
+    const sideMenus = getSideMenus();
+    res.render('admin/categories/category-form', ({ category, products, sideMenus, viewProducts: true, errMessage: req.query.errMessage }));
+});
+
+router.post(`${sideMenuPath.categories}/:id`, upload.single('image'), async (req, res) => {
+    try {
+        await categoryController.updateCategory(req.params.id, req);
+        res.redirect(dashboardRoute + sideMenuPath.categories);
+    } catch (err) {
+        res.redirect(`${dashboardRoute}${req.path}?errMessage=${err.message}`);
+    }
+});
+
+// Logout
 router.get('/logout', (req, res) => {
     req.session.destroy();
     res.redirect(loginRoute);

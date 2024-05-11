@@ -1,0 +1,71 @@
+{{> admin-navbar}}
+
+<div class="fluid-container d-flex">
+    {{> sidebar}}
+
+    <div class="container">
+        <div class="top-bar d-flex justify-content-between align-items-center flex-wrap">
+            <div class="title col">
+                <h1 class="text-primary">Create category</h1>
+            </div>
+        </div>
+        <form method="post" enctype="multipart/form-data">
+            <div class="outlined-card m-2 border-black col-md-11">
+                <div class="d-flex flex-wrap-reverse w-100">
+                    {{!-- Form --}}
+                    <div class="d-flex flex-column justify-content-between px-3 col-12 col-md-7">
+                        <div>
+                            <div class="text-danger" id="err-message">{{errMessage}}</div>
+                            <div>
+                                <div class="fs-6 fw-bold text-primary my-2">Title</div>
+                                <input type="text" name="title" id="title"
+                                    class="outlined-card placeholder-primary outline-none w-100"
+                                    value="{{category.title}}" placeholder="Enter title">
+                            </div>
+                            <div>
+                                <div class="fs-6 fw-bold text-primary my-2">Description</div>
+                                <textarea maxlength="300" rows="3" type="text" name="description" id="description"
+                                    class="outlined-card placeholder-primary outline-none w-100"
+                                    placeholder="Enter description">{{category.description}}</textarea>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-end my-3">
+                            <button class="btn btn-primary px-4 rounded-4" type="submit">
+                                {{#if category}} Update {{else}} Create {{/if}}
+                            </button>
+                        </div>
+                    </div>
+                    {{!-- Images --}}
+                    <div class="d-flex justify-content-end col-12 col-md-5">
+                        {{#if category.imagePath}}
+                        <div class="outlined-card m-2 center-box w-100 bg-light" id="image-picker-re">
+                            <img src="{{category.imagePath}}" alt="Selected Image"
+                                class="object-fit-contain bg-light w-100 h-100 rounded-4">
+                            {{else}}
+                            <div class="outlined-card m-2 center-box w-100" id="image-picker-re">
+                                <img src="/images/icons/add-image.svg" alt="add">
+                                <div class="fs-6 fw-bold text-primary">Add Image</div>
+                                {{/if}}
+                            </div>
+                            <input type="file" name="image" id="image-input-re" accept="image/*"
+                                onchange="imageChanged(this)" hidden>
+                        </div>
+                    </div>
+                    <input type="text" name="currentImage" id="currentImage" value="{{category.imagePath}}" hidden>
+                </div>
+        </form>
+
+        {{#if viewProducts}}
+        <div class="mt-4">
+            <h3 class="text-primary">Products</h3>
+            <div class="list">
+                {{#each products}}
+                {{> product-list-item product=this class="outlined-card"}}
+                {{/each}}
+            </div>
+        </div>
+        {{/if}}
+    </div>
+</div>
+
+<script src="/javascript/form.js"></script>
