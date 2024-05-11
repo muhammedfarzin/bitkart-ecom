@@ -27,8 +27,13 @@ const categoryController = {
         return datas;
     },
     getCategoryById: async (categoryId) => {
-        const category = await CategoryModel.findById(categoryId);
-        return category.toObject();
+        try {
+            const category = await CategoryModel.findById(categoryId);
+            if (!category) throw new Error('Invalid category');
+            return category.toObject();
+        } catch (err) {
+            throw new Error('Invalid category');
+        }
     },
     getAllCategoryTitles: async () => {
         const datas = await CategoryModel.find()

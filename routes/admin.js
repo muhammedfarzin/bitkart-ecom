@@ -170,14 +170,18 @@ router.post(`${sideMenuPath.categories}/create`, upload.single('image'), async (
     }
 });
 
-router.get(`${sideMenuPath.categories}/:id`, async (req, res) => {
-    const category = await categoryController.getCategoryById(req.params.id);
-    const products = await productController.getProductsByCategory(req.params.id);
-    const sideMenus = getSideMenus();
-    res.render('admin/categories/category-form', ({ category, products, sideMenus, viewProducts: true, errMessage: req.query.errMessage }));
+router.get(`${sideMenuPath.categories}/edit/:id`, async (req, res) => {
+    try {
+        const category = await categoryController.getCategoryById(req.params.id);
+        const products = await productController.getProductsByCategory(req.params.id);
+        const sideMenus = getSideMenus();
+        res.render('admin/categories/category-form', ({ category, products, sideMenus, viewProducts: true, errMessage: req.query.errMessage }));
+    } catch (err) {
+        res.render('admin/404', { errMessage: err.message });
+    }
 });
 
-router.post(`${sideMenuPath.categories}/:id`, upload.single('image'), async (req, res) => {
+router.post(`${sideMenuPath.categories}/edit/:id`, upload.single('image'), async (req, res) => {
     try {
         await categoryController.updateCategory(req.params.id, req);
         res.redirect(dashboardRoute + sideMenuPath.categories);
