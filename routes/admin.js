@@ -130,7 +130,7 @@ router.get(sideMenuPath.products, async (req, res) => {
 router.get(`${sideMenuPath.products}/add`, async (req, res) => {
     const categories = await categoryController.getAllCategoryTitles();
     const sideMenus = getSideMenus();
-    res.render('admin/products/add-products', ({ categories, sideMenus }));
+    res.render('admin/products/products-form', ({ categories, sideMenus, errMessage: req.query.errMessage }));
 });
 
 router.post(`${sideMenuPath.products}/add`, upload.array('images', 5), async (req, res) => {
@@ -138,9 +138,7 @@ router.post(`${sideMenuPath.products}/add`, upload.array('images', 5), async (re
         await productController.addProduct(req);
         res.redirect(dashboardRoute + sideMenuPath.products);
     } catch (err) {
-        const categories = await categoryController.getAllCategoryTitles();
-        const sideMenus = getSideMenus();
-        res.render('admin/products/add-products', ({ categories, sideMenus, errMessage: err.message }));
+        res.redirect(`${dashboardRoute}${req.path}?errMessage=${err.message}`);
     }
 });
 
@@ -175,9 +173,9 @@ router.get(`${sideMenuPath.categories}/edit/:id`, async (req, res) => {
         const category = await categoryController.getCategoryById(req.params.id);
         const products = await productController.getProductsByCategory(req.params.id);
         const sideMenus = getSideMenus();
-        res.render('admin/categories/category-form', ({ category, products, sideMenus, viewProducts: true, errMessage: req.query.errMessage }));
+        res.render('admin/categories/category-form', ({ category, products, sideMenus, errMessage: req.query.errMessage }));
     } catch (err) {
-        res.render('admin/404', { errMessage: err.message });
+        res.render('admin/error', { errMessage: err.message });
     }
 });
 
@@ -195,6 +193,10 @@ router.get('/logout', (req, res) => {
     req.session.destroy();
     res.redirect(loginRoute);
 });
+
+router.all('*', (req, res) => {
+    return res.render('admin/404');
+})
 
 
 export default router;
