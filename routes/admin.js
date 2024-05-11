@@ -142,6 +142,17 @@ router.post(`${sideMenuPath.products}/add`, upload.array('images', 5), async (re
     }
 });
 
+router.get(`${sideMenuPath.products}/edit/:id`, async (req, res) => {
+    try {
+        const product = await productController.getProductById(req.params.id);
+        const categories = await categoryController.getAllCategoryTitles();
+        const sideMenus = getSideMenus();
+        res.render('admin/products/products-form', { product, categories, sideMenus });
+    } catch (err) {
+        res.render('admin/error', { errMessage: err.message })
+    }
+})
+
 // Category routes
 router.get(sideMenuPath.categories, async (req, res) => {
     let categories = await categoryController.getCategories();

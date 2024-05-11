@@ -25,12 +25,21 @@ const productController = {
                 })
         })
     },
+    getProductById: async (id) => {
+        try {
+            const product = await ProductModel.findById(id)
+            if (!product) throw new Error('Invalid product');
+            return product.toObject();
+        } catch (err) {
+            throw new Error('Invalid product');
+        }
+    },
     getProducts: async () => {
         const products = await ProductModel.find().limit(20);
         return products.map(product => product.toObject());
     },
     getProductsByCategory: async (categoryId) => {
-        const products = await ProductModel.find({category: categoryId}).limit(20);
+        const products = await ProductModel.find({ category: categoryId }).limit(20);
         return products.map(product => product.toObject());
     }
 }

@@ -23,6 +23,9 @@ const hbs = exphbs.create({
     helpers: {
         firstImagePath: function (imagePaths) {
             return imagePaths[0];
+        },
+        isEqual: function (value1, value2, output) {
+            if (value1 == value2) return output
         }
     }
 });
