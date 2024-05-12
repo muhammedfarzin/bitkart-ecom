@@ -14,7 +14,8 @@ const MongoStore = MongoDBStore(session);
 const multerStorage = multer.diskStorage({
     destination: './public/images/uploads/',
     filename: (req, file, cb) => {
-        cb(null, file.fieldname + Date.now() + path.extname(file.originalname));
+        const randomNumber = Math.floor(Math.random() * 90000) + 10000;
+        cb(null, file.fieldname + Date.now() + randomNumber + path.extname(file.originalname));
     }
 });
 const upload = multer({ storage: multerStorage });
@@ -112,7 +113,7 @@ router.get(sideMenuPath.users, async (req, res) => {
     const sideMenus = getSideMenus(sideMenuPath.users);
     let users = await userController.getUsersBasicData();
     users = users.map(user => user.toObject());
-    res.render('admin/users/users', { users: users, sideMenus });
+    res.render('admin/users/users', { users, sideMenus });
 });
 
 router.get(sideMenuPath.orders, (req, res) => {

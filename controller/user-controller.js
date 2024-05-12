@@ -32,7 +32,7 @@ const userController = {
     },
     getUsersBasicData: () => {
         return UserModel.find()
-            .select('name email mobile')
+            .select('name email mobile status')
             .limit(20)
             .then(users => users)
             .catch(err => err);
