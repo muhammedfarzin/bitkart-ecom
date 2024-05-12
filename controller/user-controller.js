@@ -1,5 +1,7 @@
 import UserModel from "../model/user-model.js";
 
+const userStatusList = ['active', 'blocked'];
+
 const userController = {
     createUser: (datas) => {
         return new Promise((resolve, reject) => {
@@ -30,12 +32,31 @@ const userController = {
             }
         })
     },
-    getUsersBasicData: () => {
-        return UserModel.find()
-            .select('name email mobile status')
-            .limit(20)
-            .then(users => users)
-            .catch(err => err);
+    getUsersBasicData: async () => {
+        try {
+            const users = await UserModel.find()
+                .select('name email mobile status')
+                .limit(20);
+            return users;
+        } catch (err) {
+            return err;
+        }
+    },
+    blockUser: async (userId) => {
+        try {
+            const newData = await UserModel.findByIdAndUpdate(userId, { status: userStatusList[1] });
+            return { message: `User ${newData.name} is blocked` }
+        } catch (err) {
+            throw new Error('Invalid user');
+        }
+    },
+    unBlockUser: async (userId) => {
+        try {
+            const newData = await UserModel.findByIdAndUpdate(userId, { status: userStatusList[0] });
+            return { message: `User ${newData.name} is now active` }
+        } catch (err) {
+            throw new Error('Invalid user');
+        }
     }
 }
 

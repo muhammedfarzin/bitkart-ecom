@@ -116,6 +116,24 @@ router.get(sideMenuPath.users, async (req, res) => {
     res.render('admin/users/users', { users, sideMenus });
 });
 
+router.patch(`${sideMenuPath.users}/block`, async (req, res) => {
+    try {
+        const response = await userController.blockUser(req.body.userId);
+        res.json(response);
+    } catch (err) {
+        res.status(400).json({ errMessage: err.message });
+    }
+})
+
+router.patch(`${sideMenuPath.users}/unblock`, async (req, res) => {
+    try {
+        const response = await userController.unBlockUser(req.body.userId);
+        res.json(response);
+    } catch (err) {
+        res.status(400).json({ errMessage: err.message });
+    }
+})
+
 router.get(sideMenuPath.orders, (req, res) => {
     const sideMenus = getSideMenus(sideMenuPath.orders);
     res.render('admin/orders/orders', { sideMenus });

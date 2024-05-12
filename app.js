@@ -25,7 +25,11 @@ const hbs = exphbs.create({
             return imagePaths[0];
         },
         isEqual: function (value1, value2, output) {
-            if (value1 == value2) return output
+            if (value1 == value2) return output;
+        },
+        isEqualElse: function (value1, value2, output, elseOutput) {
+            if (value1 == value2) return output;
+            else return elseOutput;
         }
     }
 });
