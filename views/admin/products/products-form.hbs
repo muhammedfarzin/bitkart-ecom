@@ -3,14 +3,14 @@
 <div class="fluid-container d-flex">
     {{> sidebar}}
 
-    <div class="container">
+    <div class="container col-md-8">
         <div class="top-bar d-flex justify-content-between align-items-center flex-wrap">
             <div class="title col">
                 <h1 class="text-primary">{{#if product}} Edit {{else}} Add {{/if}} Products</h1>
             </div>
         </div>
         <form method="post" enctype="multipart/form-data">
-            <div class="outlined-card m-2 border-black col-md-10">
+            <div class="outlined-card m-2 border-black col">
                 {{#if errMessage}}<div class="text-danger">*{{errMessage}}</div> {{/if}}
                 {{!-- Images --}}
                 <div class="list-h">
@@ -74,7 +74,25 @@
                                 placeholder="Enter quantity">
                         </div>
                     </div>
-                    <div class="d-flex justify-content-end my-3">
+                    <div class="d-flex justify-content-between align-items-end mb-3">
+                        <div class="me-3 col-5 col-md-3 pe-2">
+                            {{#if product.status}}
+                            <div class="fs-6 fw-bold text-primary my-2">Status</div>
+                            <select name="status" id="status"
+                                class="outlined-card outline-none text-center text-primary w-100"
+                                aria-placeholder="status" required>
+                                <option value="active" {{isEqual product.status 'active' 'selected'}}>
+                                    Active
+                                </option>
+                                <option value="inactive" {{isEqual product.status 'inactive' 'selected'}}>
+                                    Inactive
+                                </option>
+                                <option value="sold out" {{isEqual product.status 'sold out' 'selected'}}>
+                                    Sold out
+                                </option>
+                            </select>
+                            {{/if}}
+                        </div>
                         <button class="btn btn-primary px-4 rounded-4" type="submit">
                             {{#if product}} Update {{else}} Create {{/if}}
                         </button>

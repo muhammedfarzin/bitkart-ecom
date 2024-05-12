@@ -15,7 +15,10 @@
         </div>
 
         <div class="p-1 bg-light rounded-4 position-absolute br-1">
-            <div class="status-view-primary">{{status}}</div>
+            <div
+                class="{{isEqual status 'active' 'status-view-success'}} {{isEqual status 'inactive' 'status-view-primary'}} {{isEqual status 'sold out' 'status-view-danger'}}">
+                {{status}}
+            </div>
         </div>
     </div>
 </a>

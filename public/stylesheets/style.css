@@ -294,6 +294,24 @@ form {
     text-align: center;
 }
 
+.status-view-success {
+    color: #198754;
+    border: 1px solid #198754;
+    border-radius: 0.75rem;
+    padding: 0.25rem;
+    width: 9rem;
+    text-align: center;
+}
+
+.status-view-danger {
+    color: #dc3545;
+    border: 1px solid #dc3545;
+    border-radius: 0.75rem;
+    padding: 0.25rem;
+    width: 9rem;
+    text-align: center;
+}
+
 .text-reset {
     color: inherit !important;
     text-decoration: none !important;

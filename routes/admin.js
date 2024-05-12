@@ -147,9 +147,18 @@ router.get(`${sideMenuPath.products}/edit/:id`, async (req, res) => {
         const product = await productController.getProductById(req.params.id);
         const categories = await categoryController.getAllCategoryTitles();
         const sideMenus = getSideMenus();
-        res.render('admin/products/products-form', { product, categories, sideMenus });
+        res.render('admin/products/products-form', { product, categories, sideMenus, errMessage: req.query.errMessage });
     } catch (err) {
         res.render('admin/error', { errMessage: err.message })
+    }
+})
+
+router.post(`${sideMenuPath.products}/edit/:id`, upload.array('images', 5), async (req, res) => {
+    try {
+        await productController.updateProduct(req.params.id, req);
+        res.redirect(dashboardRoute + sideMenuPath.products);
+    } catch (err) {
+        res.redirect(`${dashboardRoute + req.path}?errMessage=${err.message}`);
     }
 })
 
