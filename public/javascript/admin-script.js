@@ -5,7 +5,6 @@ function blockUser(userId) {
         data: { userId },
         dataType: 'json',
         success: function (data) {
-            alert('User blocked');
             document.getElementById('status' + userId).innerText = 'Blocked';
             const blockBtn = document.getElementById('block' + userId);
             blockBtn.innerText = 'Unblock';
@@ -27,7 +26,6 @@ function unblockUser(userId) {
         data: { userId },
         dataType: 'json',
         success: function (data) {
-            alert('User unblocked');
             document.getElementById('status' + userId).innerText = 'active';
             const blockBtn = document.getElementById('block' + userId);
             blockBtn.innerText = 'Block';

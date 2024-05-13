@@ -37,7 +37,7 @@ const userController = {
             const users = await UserModel.find()
                 .select('name email mobile status')
                 .limit(20);
-            return users;
+            return users.map(user => user.toObject());
         } catch (err) {
             return err;
         }
@@ -56,6 +56,21 @@ const userController = {
             return { message: `User ${newData.name} is now active` }
         } catch (err) {
             throw new Error('Invalid user');
+        }
+    },
+    findUsersByQuery: async (searchQuery) => {
+        try {
+            const users = await UserModel.find({
+                $or: [
+                    { _id: searchQuery },
+                    { name: { $regex: searchQuery, $options: 'i' } },
+                    { email: { $regex: searchQuery, $options: 'i' } },
+                    { mobile: { $regex: searchQuery, $options: 'i' } },
+                ]
+            });
+            return users.map(user => user.toObject());
+        } catch (err) {
+            return [];
         }
     }
 }

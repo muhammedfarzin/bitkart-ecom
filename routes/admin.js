@@ -110,10 +110,14 @@ router.get(sideMenuPath.dashboard, (req, res) => {
 });
 
 router.get(sideMenuPath.users, async (req, res) => {
+    let users, searchQuery = req.query.search;
+    if (searchQuery) {
+        users = await userController.findUsersByQuery(searchQuery);
+    } else {
+        users = await userController.getUsersBasicData();
+    }
     const sideMenus = getSideMenus(sideMenuPath.users);
-    let users = await userController.getUsersBasicData();
-    users = users.map(user => user.toObject());
-    res.render('admin/users/users', { users, sideMenus });
+    res.render('admin/users/users', { users, sideMenus, searchQuery });
 });
 
 router.patch(`${sideMenuPath.users}/block`, async (req, res) => {

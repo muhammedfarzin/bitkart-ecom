@@ -520,6 +520,10 @@ textarea#description::-webkit-scrollbar {
     padding: 1.75rem;
 }
 
-#star-rating > svg:not(:first-child) {
+#star-rating>svg:not(:first-child) {
     margin-left: 0.25rem;
+}
+
+.scrollbar-hidden::-webkit-scrollbar {
+    display: none;
 }
