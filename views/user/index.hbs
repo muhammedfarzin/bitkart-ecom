@@ -13,16 +13,9 @@
             Recommended Products
         </h3>
         <div class="list-h mt-3">
-            {{> basic-product-card}}
-            {{> basic-product-card}}
-            {{> basic-product-card}}
-            {{> basic-product-card}}
-            {{> basic-product-card}}
-            {{> basic-product-card}}
-            {{> basic-product-card}}
-            {{> basic-product-card}}
-            {{> basic-product-card}}
-            {{> basic-product-card}}
+            {{#each products}}
+            {{> basic-product-card product=this}}
+            {{/each}}
         </div>
     </div>
 
@@ -32,83 +25,14 @@
             Categories
         </h3>
         <div class="list-h mt-3">
+            {{#each categories}}
             <div class="product-card">
-                <img src="https://store.storeimages.cdn-apple.com/4668/as-images.apple.com/is/MTJV3?wid=1144&hei=1144&fmt=jpeg&qlt=90&.v=1694014871985"
-                    alt="img">
+                <img src="{{this.imagePath}}" alt="img" class="p-2">
                 <div class="w-11rem p-2">
-                    <div class="title">Headsets</div>
+                    <div class="title">{{this.title}}</div>
                 </div>
             </div>
-            <div class="product-card">
-                <img src="https://store.storeimages.cdn-apple.com/4668/as-images.apple.com/is/MTJV3?wid=1144&hei=1144&fmt=jpeg&qlt=90&.v=1694014871985"
-                    alt="img">
-                <div class="w-11rem p-2">
-                    <div class="title">Headsets</div>
-                </div>
-            </div>
-            <div class="product-card">
-                <img src="https://store.storeimages.cdn-apple.com/4668/as-images.apple.com/is/MTJV3?wid=1144&hei=1144&fmt=jpeg&qlt=90&.v=1694014871985"
-                    alt="img">
-                <div class="w-11rem p-2">
-                    <div class="title">Headsets</div>
-                </div>
-            </div>
-            <div class="product-card">
-                <img src="https://store.storeimages.cdn-apple.com/4668/as-images.apple.com/is/MTJV3?wid=1144&hei=1144&fmt=jpeg&qlt=90&.v=1694014871985"
-                    alt="img">
-                <div class="w-11rem p-2">
-                    <div class="title">Headsets</div>
-                </div>
-            </div>
-            <div class="product-card">
-                <img src="https://store.storeimages.cdn-apple.com/4668/as-images.apple.com/is/MTJV3?wid=1144&hei=1144&fmt=jpeg&qlt=90&.v=1694014871985"
-                    alt="img">
-                <div class="w-11rem p-2">
-                    <div class="title">Headsets</div>
-                </div>
-            </div>
-            <div class="product-card">
-                <img src="https://store.storeimages.cdn-apple.com/4668/as-images.apple.com/is/MTJV3?wid=1144&hei=1144&fmt=jpeg&qlt=90&.v=1694014871985"
-                    alt="img">
-                <div class="w-11rem p-2">
-                    <div class="title">Headsets</div>
-                </div>
-            </div>
-            <div class="product-card">
-                <img src="https://store.storeimages.cdn-apple.com/4668/as-images.apple.com/is/MTJV3?wid=1144&hei=1144&fmt=jpeg&qlt=90&.v=1694014871985"
-                    alt="img">
-                <div class="w-11rem p-2">
-                    <div class="title">Headsets</div>
-                </div>
-            </div>
-            <div class="product-card">
-                <img src="https://store.storeimages.cdn-apple.com/4668/as-images.apple.com/is/MTJV3?wid=1144&hei=1144&fmt=jpeg&qlt=90&.v=1694014871985"
-                    alt="img">
-                <div class="w-11rem p-2">
-                    <div class="title">Headsets</div>
-                </div>
-            </div>
-            <div class="product-card">
-                <img src="https://store.storeimages.cdn-apple.com/4668/as-images.apple.com/is/MTJV3?wid=1144&hei=1144&fmt=jpeg&qlt=90&.v=1694014871985"
-                    alt="img">
-                <div class="w-11rem p-2">
-                    <div class="title">Headsets</div>
-                </div>
-            </div>
-            <div class="product-card">
-                <img src="https://store.storeimages.cdn-apple.com/4668/as-images.apple.com/is/MTJV3?wid=1144&hei=1144&fmt=jpeg&qlt=90&.v=1694014871985"
-                    alt="img">
-                <div class="w-11rem p-2">
-                    <div class="title">Headsets</div>
-                </div>
-            </div>
-            <div class="product-card">
-                <img src="https://store.storeimages.cdn-apple.com/4668/as-images.apple.com/is/MTJV3?wid=1144&hei=1144&fmt=jpeg&qlt=90&.v=1694014871985"
-                    alt="img">
-                <div class="w-11rem p-2">
-                    <div class="title">Headsets</div>
-                </div>
-            </div>
+            {{/each}}
         </div>
     </div>
 </div>

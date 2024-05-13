@@ -6,9 +6,9 @@ const productStatuslist = ['active', 'inactive', 'sold out'];
 const productController = {
     addProduct: (datas) => {
         return new Promise((resolve, reject) => {
-            const { title, description, price, offerPrice, category, quantity } = datas.body;
+            const { title, description, price, offerPrice, category: categoryId, quantity } = datas.body;
             const imagePaths = datas.files.map(image => image.path.replace('public', ''));
-            const product = new ProductModel({ title, description, price, offerPrice, category, quantity, imagePaths });
+            const product = new ProductModel({ title, description, price, offerPrice, categoryId, quantity, imagePaths });
             product.save()
                 .then(data => {
                     resolve(data);
@@ -41,7 +41,7 @@ const productController = {
         return products.map(product => product.toObject());
     },
     getProductsByCategory: async (categoryId) => {
-        const products = await ProductModel.find({ category: categoryId }).limit(20);
+        const products = await ProductModel.find({ categoryId: categoryId }).limit(20);
         return products.map(product => product.toObject());
     },
     updateProduct: (productId, req) => {

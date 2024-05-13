@@ -22,9 +22,9 @@ const categoryController = {
         })
     },
     getCategories: async () => {
-        const datas = await CategoryModel.find()
+        const categories = await CategoryModel.find()
             .limit(20);
-        return datas;
+        return categories.map(category => category.toObject());
     },
     getCategoryById: async (categoryId) => {
         try {

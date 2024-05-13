@@ -18,13 +18,13 @@ const productSchema = new Schema({
         type: Number,
         min: [10, 'Offer price must be atlest 10 rupees']
     },
-    category: {
+    categoryId: {
         type: String,
         required: [true, 'Please select a category']
     },
     quantity: {
         type: Number,
-        requierd: [true, 'Please enter quantity'],
+        required: [true, 'Please enter quantity'],
         min: [0, 'Quantity cannot be less than zero'],
         max: [500, 'Maximum 500 quantity is allowed']
     },

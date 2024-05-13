@@ -25,10 +25,16 @@
                 </div>
             </div>
         </div>
+        {{#if products}}
         <div class="list">
             {{#each products}}
             {{> product-list-item product=this}}
             {{/each}}
         </div>
+        {{else}}
+        <div class="d-flex justify-content-center">
+            <img class="col-12 col-md-6" src="/images/nodata.svg" alt="No data">
+        </div>
+        {{/if}}
     </div>
 </div>

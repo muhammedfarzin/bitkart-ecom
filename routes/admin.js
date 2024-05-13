@@ -188,7 +188,6 @@ router.post(`${sideMenuPath.products}/edit/:id`, upload.array('images', 5), asyn
 // Category routes
 router.get(sideMenuPath.categories, async (req, res) => {
     let categories = await categoryController.getCategories();
-    categories = categories.map(category => category.toObject());
     const sideMenus = getSideMenus(sideMenuPath.categories);
     res.render('admin/categories/categories', ({ categories, sideMenus }));
 });
