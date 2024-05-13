@@ -3,6 +3,8 @@ import session from "express-session";
 import MongoDBStore from "connect-mongodb-session";
 import userController from "../controller/user-controller.js";
 import { mongoUri } from "../config/db.js";
+import productController from "../controller/product-controller.js";
+import categoryController from "../controller/category-controller.js";
 
 const router = Router();
 const MongoStore = MongoDBStore(session);
@@ -87,12 +89,19 @@ router.use((req, res, next) => {
 
 // Routes needs authorization
 
-router.get('/', (req, res) => {
-    res.render('user/index');
+router.get('/', async (req, res) => {
+    const products = await productController.getProducts();
+    const categories = await categoryController.getCategories();
+    res.render('user/index', { products, categories });
 })
 
-router.get('/view/:id', (req, res) => {
-    res.render('user/products/products');
+
+// Product overview
+router.get('/view/:id', async (req, res) => {
+    const product = await productController.getProductOverview(req.params.id);
+    console.log(product);
+    const relatedProducts = await productController.getProductsByCategory(product.categoryId);
+    res.render('user/products/products', { product, relatedProducts });
 })
 
 router.get('/logout', (req, res) => {

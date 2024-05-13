@@ -1,6 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
-import exphbs from 'express-handlebars'
+import hbsConfig from "./config/handlebars-config.js";
 import adminRouter from "./routes/admin.js";
 import userRouter from "./routes/user.js";
 import dbConnect from "./config/db.js";

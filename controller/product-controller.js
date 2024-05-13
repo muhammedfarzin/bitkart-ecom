@@ -1,5 +1,6 @@
 import fs from "fs"
 import ProductModel from "../model/product-model.js";
+import { Types } from "mongoose"
 
 const productStatuslist = ['active', 'inactive', 'sold out'];
 
@@ -62,6 +63,28 @@ const productController = {
                 reject(err);
             }
         });
+    },
+    getProductOverview: (productId) => {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const product = await ProductModel.aggregate([
+                    { $match: { _id: Types.ObjectId.createFromHexString(productId) } },
+                    { $addFields: { categoryId: { $toObjectId: '$categoryId' } } }, // Convert categoryId to ObjectId
+                    {
+                        $lookup: {
+                            from: 'categories',
+                            localField: 'categoryId',
+                            foreignField: '_id',
+                            as: 'category'
+                        }
+                    },
+                    { $addFields: { category: { $arrayElemAt: ['$category', 0] }, } } // Extract the first element from the 'category' array
+                ]);
+                resolve(product[0]);
+            } catch (err) {
+                reject(err);
+            }
+        })
     }
 };
 

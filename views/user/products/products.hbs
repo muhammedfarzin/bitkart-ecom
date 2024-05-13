@@ -1,30 +1,24 @@
 {{> navbar}}
 
 <div class="mid-container p-1">
+    {{#with product}}
     <div class="product-view">
+        {{!-- Product Images --}}
         <div class="product-image col-12 col-md-4">
             <div id="carouselExampleIndicators" class="carousel slide">
                 <div class="carousel-indicators">
-                    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0"
-                        class="active" aria-current="true" aria-label="Slide 1"></button>
-                    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1"
-                        aria-label="Slide 2"></button>
-                    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2"
-                        aria-label="Slide 3"></button>
+                    {{#each imagePaths}}
+                    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="{{@index}}"
+                        {{#unless @index}}class="active" aria-current="true" {{/unless}}
+                        aria-label="Slide {{@index}}"></button>
+                    {{/each}}
                 </div>
-                <div class="carousel-inner">
-                    <div class="carousel-item active">
-                        <img src="https://store.storeimages.cdn-apple.com/4668/as-images.apple.com/is/MTJV3?wid=1144&hei=1144&fmt=jpeg&qlt=90&.v=1694014871985"
-                            class="d-block w-100" alt="product image">
+                <div class="carousel-inner ratio ratio-1x1 rounded-4">
+                    {{#each imagePaths}}
+                    <div class="carousel-item {{#unless @index}}active{{/unless}} p-2">
+                        <img src="{{this}}" class="d-block w-100" alt="product image">
                     </div>
-                    <div class="carousel-item">
-                        <img src="https://store.storeimages.cdn-apple.com/4668/as-images.apple.com/is/MTJV3?wid=1144&hei=1144&fmt=jpeg&qlt=90&.v=1694014871985"
-                            class="d-block w-100" alt="product image">
-                    </div>
-                    <div class="carousel-item">
-                        <img src="https://store.storeimages.cdn-apple.com/4668/as-images.apple.com/is/MTJV3?wid=1144&hei=1144&fmt=jpeg&qlt=90&.v=1694014871985"
-                            class="d-block w-100" alt="product image">
-                    </div>
+                    {{/each}}
                 </div>
                 <button class="carousel-control carousel-control-prev filter-contrast" type="button"
                     data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
@@ -43,15 +37,11 @@
             <div class="text-primary fs-7">
                 <a class="text-primary fs-7" href="/">Home</a>
                 <span>›</span>
-                <a class="text-primary fs-7" href="/category/categoryid">Category</a>
+                <a class="text-primary fs-7" href="/category/{{categoryId}}">{{category.title}}</a>
                 <span>›</span>
                 <a class="text-primary fs-7" href="#">Product Overview</a>
             </div>
-            <h2 class="title">
-                Rubbermaid Commercial 1250 Lb Capacity Standard Duty Tilt Truck - 1250 Lb Capacity - X
-                33.5in Width X
-                72.2in Depth X 43.8in Height - Black - 1 Each
-            </h2>
+            <h2 class="title">{{title}}</h2>
 
             <div class="d-flex align-items-center">
                 {{> star-rating-box}}
@@ -59,9 +49,13 @@
             </div>
 
             <div class="price-details">
-                <div class="text-black-50 text-decoration-line-through fs-5">₹20,900</div>
-                <div class="fs-2 fw-bold mx-3">₹19,600</div>
-                <div class="outline-box-primary fw-bold"> 6% OFF </div>
+                {{#if offerPrice}}
+                <div class="text-black-50 text-decoration-line-through fs-5">₹{{price}}</div>
+                <div class="fs-2 fw-bold mx-3">₹{{offerPrice}}</div>
+                <div class="outline-box-primary fw-bold"> {{getOfferPecentage price offerPrice}}% OFF </div>
+                {{else}}
+                <div class="fs-2 fw-bold mx-3">₹{{price}}</div>
+                {{/if}}
             </div>
             <div class="action-btn d-flex flex-wrap">
                 <div class="btn btn-outline-primary fw-bold me-2 my-1 py-3 col-12 col-md">ADD TO CART</div>
@@ -69,7 +63,7 @@
             </div>
             <div class="my-4">
                 <h3>Description</h3>
-                <p class="fs-5">6.1" OLED, Dual Rear Camera, 6GB RAM, Apple A15 Bionic, 5G</p>
+                <p class="fs-5">{{description}}</p>
             </div>
             <div class="reviews">
                 <h3>Reviews</h3>
@@ -140,19 +134,13 @@
             </div>
         </div>
     </div>
+    {{/with}}
     <div class="section-list-h my-3">
         <h3 class="subtitle fs-3"> You might also like </h3>
         <div class="list-h mt-3">
-            {{> basic-product-card}}
-            {{> basic-product-card}}
-            {{> basic-product-card}}
-            {{> basic-product-card}}
-            {{> basic-product-card}}
-            {{> basic-product-card}}
-            {{> basic-product-card}}
-            {{> basic-product-card}}
-            {{> basic-product-card}}
-            {{> basic-product-card}}
+            {{#each relatedProducts}}
+            {{> basic-product-card product=this}}
+            {{/each}}
         </div>
     </div>
 </div>

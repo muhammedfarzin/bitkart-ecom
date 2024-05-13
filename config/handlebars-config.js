@@ -20,8 +20,8 @@ const hbsConfig = hbs.create({
             if (value1 == value2) return output;
             else return elseOutput;
         },
-        getPecentage: function (total, value) {
-            return Math.floor((value) * 100 / total);
+        getOfferPecentage: function (total, value) {
+            return Math.floor((total - value) * 100 / total);
         }
     }
 });
