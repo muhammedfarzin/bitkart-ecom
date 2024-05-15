@@ -1,0 +1,25 @@
+{{> navbar hideLogout=true}}
+
+<div class="container">
+    <div class="d-flex flex-wrap justify-content-center">
+        <div class="form-title col-md-6">
+            <h1>VERIFY EMAIL</h1>
+        </div>
+
+        <div class="login-box col-md-6">
+            {{#if errMessage}}
+            <span class="text-danger fw-normal">*{{errMessage}}</span>
+            {{/if}}
+            <form method="post">
+                <div class="login-frm col-12">
+                    <div class="form-field">
+                        <label for="otp">Enter the OTP</label>
+                        <input type="number" name="otp" id="otp" required>
+                        <a href="#" class="text-primary text-reset fw-regular fs-7" id="resendOtp">Resend OTP</a>
+                    </div>
+                </div>
+                <button class="btn btn-primary rounded-pill border col-12" type="submit">SUBMIT</button>
+            </form>
+        </div>
+    </div>
+</div>

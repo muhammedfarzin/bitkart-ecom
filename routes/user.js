@@ -5,6 +5,7 @@ import userController from "../controller/user-controller.js";
 import { mongoUri } from "../config/db.js";
 import productController from "../controller/product-controller.js";
 import categoryController from "../controller/category-controller.js";
+import otpController from "../controller/otp-controller.js";
 
 const router = Router();
 const MongoStore = MongoDBStore(session);
@@ -48,34 +49,71 @@ function checkForLogin(req, res, next) {
 }
 
 router.get('/login', checkForLogin, (req, res) => {
-    res.render('user/login');
+    res.render('user/login', { errMessage: req.query.errMessage });
 })
 
 router.post('/login', checkForLogin, (req, res) => {
     const { email, password } = req.body;
-    userController.getUser(email, password)
+    userController.verifyUser(email, password)
         .then(userData => {
             req.session.user = userData;
             res.redirect('/');
         })
         .catch(err => {
-            res.render('user/login', { errMessage: err.message });
+            res.redirect('/login?errMessage=' + err.message);
         })
 })
 
 router.get('/signup', checkForLogin, (req, res) => {
-    res.render('user/signup');
+    res.render('user/signup', { errMessage: req.query.errMessage });
 })
 
-router.post('/signup', checkForLogin, (req, res) => {
-    userController.createUser(req.body)
-        .then(data => {
-            req.session.user = data;
-            res.redirect('/');
-        })
-        .catch(err => {
-            res.render('user/signup', { errMessage: err.message });
-        })
+router.post('/signup', checkForLogin, async (req, res) => {
+    const { mobile, email, name, password } = req.body;
+    try {
+        if (!name || !mobile || !email || !password) throw new Error('All Fields are required');
+        const user = await userController.checkMobileAndEmail(mobile, email);
+        if (user) throw new Error(user.message);
+        await otpController.sendOTP(email);
+        req.session.tempUserData = { name, mobile, email, password };
+        req.session.cookie.maxAge = 5 * 60000;
+        req.session.save();
+        res.redirect('/verifyEmail');
+    } catch (err) {
+        res.redirect('/signup?errMessage=' + err.message);
+    }
+})
+
+// OTP Validation
+router.get('/verifyEmail', (req, res) => {
+    if (!req.session.tempUserData) res.redirect('/login?errMessage=Time is over, please try again');
+    res.render('user/verify-email', { errMessage: req.query.errMessage });
+})
+
+router.post('/verifyEmail', async (req, res) => {
+    try {
+        if (!req.session.tempUserData) throw new Error('OTP EXPIRED');
+        const userData = req.session.tempUserData;
+        if (await otpController.verifyOTP(userData.email, req.body.otp)) {
+            userController.createUser(userData)
+                .then(data => {
+                    req.session.user = data;
+                    delete req.session.tempUserData;
+                    res.redirect('/');
+                })
+                .catch(err => {
+                    res.render('user/signup', { errMessage: err.message });
+                })
+        } else {
+            throw new Error('Invalid OTP, please try again');
+        }
+    } catch (err) {
+        if (err.message == 'OTP EXPIRED') {
+            req.session.destroy();
+            res.redirect('/signup?errMessage=Your OTP has expired, Please try again');
+        }
+        else res.redirect('/verifyEmail?errMessage=' + err.message);
+    }
 })
 
 // Check Login
@@ -99,7 +137,6 @@ router.get('/', async (req, res) => {
 // Product overview
 router.get('/view/:id', async (req, res) => {
     const product = await productController.getProductOverview(req.params.id);
-    console.log(product);
     const relatedProducts = await productController.getProductsByCategory(product.categoryId);
     res.render('user/products/products', { product, relatedProducts });
 })

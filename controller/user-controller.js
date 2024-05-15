@@ -17,7 +17,12 @@ const userController = {
                 });
         })
     },
-    getUser: (enteredEmail, enteredPassword) => {
+    checkMobileAndEmail: async (mobile, email) => {
+        if (await UserModel.findOne({ mobile })) return { message: 'User with mobile number is already exist' };
+        if (await UserModel.findOne({ email })) return { message: 'User with email address is already exist' };
+        return false;
+    },
+    verifyUser: (enteredEmail, enteredPassword) => {
         return new Promise(async (resolve, reject) => {
             try {
                 const user = await UserModel.findOne({ email: enteredEmail });
@@ -60,14 +65,14 @@ const userController = {
     },
     findUsersByQuery: async (searchQuery) => {
         try {
-            const users = await UserModel.find({
+            let users = await UserModel.find({
                 $or: [
-                    { _id: searchQuery },
                     { name: { $regex: searchQuery, $options: 'i' } },
                     { email: { $regex: searchQuery, $options: 'i' } },
                     { mobile: { $regex: searchQuery, $options: 'i' } },
                 ]
             });
+            if (!users.length) users = [await UserModel.findById(searchQuery)];
             return users.map(user => user.toObject());
         } catch (err) {
             return [];
