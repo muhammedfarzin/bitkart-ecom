@@ -39,3 +39,19 @@ function unblockUser(userId) {
         }
     })
 }
+
+function deleteCategory(categoryId) {
+    $.ajax({
+        url: '/admin/categories/delete',
+        type: 'DELETE',
+        data: { categoryId },
+        dataType: 'json',
+        success: function (data) {
+            alert('Category deleted successfully');
+            location.reload();
+        },
+        error: function (err) {
+            alert(err.responseJSON?.errMessage ?? 'Something went wrong');
+        }
+    });
+}

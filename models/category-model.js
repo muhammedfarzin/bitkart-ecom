@@ -13,6 +13,14 @@ const categorySchema = new Schema({
     imagePath: {
         type: String,
         required: true
+    },
+    isDeleted: {
+        type: Boolean,
+        default: false
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now,
     }
 })
 

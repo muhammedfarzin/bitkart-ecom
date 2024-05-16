@@ -1,5 +1,5 @@
 import fs from "fs"
-import ProductModel from "../model/product-model.js";
+import ProductModel from "../models/product-model.js";
 import { Types } from "mongoose"
 
 const productStatuslist = ['active', 'inactive', 'sold out'];

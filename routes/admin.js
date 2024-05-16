@@ -230,6 +230,15 @@ router.post(`${sideMenuPath.categories}/edit/:id`, upload.single('image'), async
     }
 });
 
+router.delete(`${sideMenuPath.categories}/delete`, async (req, res) => {
+    try {
+        const response = await categoryController.deleteCategory(req.body.categoryId);
+        res.json(response);
+    } catch (err) {
+        res.status(400).json({ errMessage: 'Invalid category' });
+    }
+});
+
 // Logout
 router.get('/logout', (req, res) => {
     req.session.destroy();

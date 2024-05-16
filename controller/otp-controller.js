@@ -1,5 +1,5 @@
 import otpGenerator from "otp-generator";
-import OTPModel from "../model/otp-model.js";
+import OTPModel from "../models/otp-model.js";
 
 const otpController = {
     sendOTP: async (email) => {

@@ -1,5 +1,5 @@
 import fs from "fs";
-import CategoryModel from "../model/category-model.js";
+import CategoryModel from "../models/category-model.js";
 
 const categoryController = {
     createCategory: (datas) => {
@@ -22,7 +22,7 @@ const categoryController = {
         })
     },
     getCategories: async () => {
-        const categories = await CategoryModel.find()
+        const categories = await CategoryModel.find({ isDeleted: false })
             .limit(20);
         return categories.map(category => category.toObject());
     },
@@ -52,6 +52,15 @@ const categoryController = {
                 .then(data => resolve(data))
                 .catch(err => reject(err));
         })
+    },
+    deleteCategory: async (id) => {
+        try {
+            const category = await CategoryModel.findByIdAndUpdate(id, { isDeleted: true });
+            if(!category) throw new Error('Invalid category');
+            return { message: 'Category deleted successfully' }
+        } catch (err) {
+            throw err;
+        }
     }
 };
 
