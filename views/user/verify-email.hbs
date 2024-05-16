@@ -7,14 +7,12 @@
         </div>
 
         <div class="login-box col-md-6">
-            {{#if errMessage}}
-            <span class="text-danger fw-normal">*{{errMessage}}</span>
-            {{/if}}
-            <form method="post">
+            <span class="text-danger fw-normal" id="err-message">{{errMessage}}</span>
+            <form method="post" id="otp-frm">
                 <div class="login-frm col-12">
                     <div class="form-field">
                         <label for="otp">Enter the OTP</label>
-                        <input type="number" name="otp" id="otp" required>
+                        <input type="number" name="otp" id="otp">
                         <a href="#" class="text-primary text-reset fw-regular fs-7" id="resendOtp">Resend OTP</a>
                     </div>
                 </div>
@@ -23,3 +21,5 @@
         </div>
     </div>
 </div>
+
+<script src="/javascript/form.js"></script>

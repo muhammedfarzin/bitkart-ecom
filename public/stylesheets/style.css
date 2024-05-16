@@ -527,3 +527,8 @@ textarea#description::-webkit-scrollbar {
 .scrollbar-hidden::-webkit-scrollbar {
     display: none;
 }
+
+input.err {
+    border: 1px solid #dc3545;
+    background: #ffdddd;
+}

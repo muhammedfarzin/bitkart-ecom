@@ -1,3 +1,6 @@
+const mobilePattern = /^\d{10}$/
+const otpPattern = /^\d{6}$/
+
 document.addEventListener('DOMContentLoaded', function () {
     const imagesInput = document.getElementById('image-input');
     const imageGallery = document.getElementById('image-gallery');
@@ -26,11 +29,84 @@ document.addEventListener('DOMContentLoaded', function () {
 
     }
 
+    $('#login-frm').submit((e) => {
+        e.preventDefault();
+        let email = $('#email');
+        let password = $('#password');
+        let errMessage = $('#err-message');
+
+        email.removeClass('err');
+        password.removeClass('err');
+
+        if (!email.val()) {
+            errMessage.text('Please enter email');
+            email.addClass('err');
+        } else if (!password.val()) {
+            errMessage.text('Please enter password');
+            password.addClass('err');
+        } else {
+            $('#login-frm')[0].submit();
+        }
+    });
+
+    $('#signup-frm').submit((e) => {
+        e.preventDefault();
+        let email = $('#email');
+        let password = $('#password');
+        let name = $('#name');
+        let mobile = $('#mobile');
+        let errMessage = $('#err-message');
+
+        errMessage.text('');
+        email.removeClass('err');
+        password.removeClass('err');
+        name.removeClass('err');
+        mobile.removeClass('err');
+
+        if (!name.val()) {
+            errMessage.text('Please enter name');
+            name.addClass('err');
+        } else if (!email.val()) {
+            errMessage.text('Please enter email');
+            email.addClass('err');
+        } else if (!password.val()) {
+            errMessage.text('Please enter password');
+            password.addClass('err');
+        } else if (!mobile.val()) {
+            errMessage.text('Please enter mobile number');
+            mobile.addClass('err');
+        } else if (!mobilePattern.test(mobile.val())) {
+            errMessage.text('Please enter a valid 10-digit mobile number')
+            mobile.addClass('err');
+        } else if (password.val().length < 8) {
+            errMessage.text('Password must be atleast 8 characters');
+            password.addClass('err');
+        } else {
+            $('#signup-frm')[0].submit();
+        }
+    });
+
+    $('#otp-frm').submit((e) => {
+        e.preventDefault();
+        let otp = $('#otp');
+        let errMessage = $('#err-message');
+
+        otp.removeClass('err');
+
+        if (!otp.val()) {
+            errMessage.text('Please enter OTP');
+            otp.addClass('err');
+        } else if (!otpPattern.test(otp.val())) {
+            errMessage.text('Plesae enter a valid OTP');
+        } else {
+            $('#otp-frm')[0].submit();
+        }
+    });
 });
 
 const imageInput = document.getElementById('image-input-re');
 const imagePicker = document.getElementById('image-picker-re')
-imagePicker.addEventListener('click', () => imageInput.click());
+imagePicker?.addEventListener('click', () => imageInput.click());
 
 function imageChanged(element) {
     const image = element.files[0];
