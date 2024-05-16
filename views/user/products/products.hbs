@@ -45,7 +45,7 @@
 
             <div class="d-flex align-items-center">
                 {{> star-rating-box}}
-                <div class="ms-3 text-black-50 fw-bold">1,572 Reviews</div>
+                <div class="ms-3 text-black-50 fw-bold">{{totalReviews}} Reviews</div>
             </div>
 
             <div class="price-details">
@@ -57,10 +57,17 @@
                 <div class="fs-2 fw-bold mx-3">₹{{price}}</div>
                 {{/if}}
             </div>
+
+            {{#if (eq status 'active')}}
             <div class="action-btn d-flex flex-wrap">
                 <div class="btn btn-outline-primary fw-bold me-2 my-1 py-3 col-12 col-md">ADD TO CART</div>
                 <div class="btn btn-primary fw-bold me-2 my-1 py-3 col-12 col-md">BUY NOW</div>
             </div>
+            {{else if (eq status 'sold out')}}
+            <span class="fs-4 fw-bold text-danger">This product is currently sold out</span>
+            {{else}}
+            <span class="fs-4 fw-bold text-danger">This product is currently unvailable</span>
+            {{/if}}
             <div class="my-4">
                 <h3>Description</h3>
                 <p class="fs-5">{{description}}</p>
@@ -68,68 +75,25 @@
             <div class="reviews">
                 <h3>Reviews</h3>
                 <div class="list my-3">
+                    {{#each reviews}}
                     <div class="review-card">
                         <div class="d-flex" id="star-rating">
+                            {{#repeat this.starRating}}
                             <svg width="23" height="21" viewBox="0 0 23 21" fill="none"
                                 xmlns="http://www.w3.org/2000/svg">
                                 <path
                                     d="M11.2895 0.0307312L14.4879 6.91793L22.0264 7.83158L16.4647 13.0018L17.9253 20.4536L11.2895 16.7618L4.6537 20.4536L6.11428 13.0018L0.552547 7.83158L8.09104 6.91793L11.2895 0.0307312Z"
                                     fill="#6F43BF" />
                             </svg>
-                            <svg width="23" height="21" viewBox="0 0 23 21" fill="none"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <path
-                                    d="M11.2895 0.0307312L14.4879 6.91793L22.0264 7.83158L16.4647 13.0018L17.9253 20.4536L11.2895 16.7618L4.6537 20.4536L6.11428 13.0018L0.552547 7.83158L8.09104 6.91793L11.2895 0.0307312Z"
-                                    fill="#6F43BF" />
-                            </svg>
-                            <svg width="23" height="21" viewBox="0 0 23 21" fill="none"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <path
-                                    d="M11.2895 0.0307312L14.4879 6.91793L22.0264 7.83158L16.4647 13.0018L17.9253 20.4536L11.2895 16.7618L4.6537 20.4536L6.11428 13.0018L0.552547 7.83158L8.09104 6.91793L11.2895 0.0307312Z"
-                                    fill="#6F43BF" />
-                            </svg>
+                            {{/repeat}}
                         </div>
                         <div class="my-3">
-                            <div class="fs-5 fw-medium">Samantha D</div>
-                            <div class="mt-2">
-                                I absolutely love this t-shirt! The design is unique and the fabric feels so
-                                comfortable. As a fellow designer, I appreciate the attention to detail. It's become my
-                                favorite go-to shirt.
-                            </div>
+                            <div class="fs-5 fw-medium">{{this.user.name}}</div>
+                            <div class="mt-2"> {{this.review}} </div>
                         </div>
-                        <div class="fs-7 text-secondary">Posted on August 14, 2023</div>
+                        <div class="fs-7 text-secondary">Posted on {{formatDate this.createdAt 'MMMM D, YYYY'}}</div>
                     </div>
-                    <div class="review-card">
-                        <div class="d-flex" id="star-rating">
-                            <svg width="23" height="21" viewBox="0 0 23 21" fill="none"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <path
-                                    d="M11.2895 0.0307312L14.4879 6.91793L22.0264 7.83158L16.4647 13.0018L17.9253 20.4536L11.2895 16.7618L4.6537 20.4536L6.11428 13.0018L0.552547 7.83158L8.09104 6.91793L11.2895 0.0307312Z"
-                                    fill="#6F43BF" />
-                            </svg>
-                            <svg width="23" height="21" viewBox="0 0 23 21" fill="none"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <path
-                                    d="M11.2895 0.0307312L14.4879 6.91793L22.0264 7.83158L16.4647 13.0018L17.9253 20.4536L11.2895 16.7618L4.6537 20.4536L6.11428 13.0018L0.552547 7.83158L8.09104 6.91793L11.2895 0.0307312Z"
-                                    fill="#6F43BF" />
-                            </svg>
-                            <svg width="23" height="21" viewBox="0 0 23 21" fill="none"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <path
-                                    d="M11.2895 0.0307312L14.4879 6.91793L22.0264 7.83158L16.4647 13.0018L17.9253 20.4536L11.2895 16.7618L4.6537 20.4536L6.11428 13.0018L0.552547 7.83158L8.09104 6.91793L11.2895 0.0307312Z"
-                                    fill="#6F43BF" />
-                            </svg>
-                        </div>
-                        <div class="my-3">
-                            <div class="fs-5 fw-medium">Samantha D</div>
-                            <div class="mt-2">
-                                I absolutely love this t-shirt! The design is unique and the fabric feels so
-                                comfortable. As a fellow designer, I appreciate the attention to detail. It's become my
-                                favorite go-to shirt.
-                            </div>
-                        </div>
-                        <div class="fs-7 text-secondary">Posted on August 14, 2023</div>
-                    </div>
+                    {{/each}}
                 </div>
             </div>
         </div>

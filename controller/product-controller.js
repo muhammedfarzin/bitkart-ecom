@@ -92,8 +92,40 @@ const productController = {
                             as: 'category'
                         }
                     },
-                    { $addFields: { category: { $arrayElemAt: ['$category', 0] }, } } // Extract the first element from the 'category' array
+                    {
+                        $lookup: {
+                            from: 'productReviews',
+                            let: { productId: '$_id' },
+                            pipeline: [
+                                {
+                                    $match: {
+                                        $expr: { $eq: [{ $toString: '$productId' }, { $toString: '$$productId' }] }
+                                    },
+                                },
+                                { $addFields: { userId: { $toObjectId: '$userId' } } },
+                                {
+                                    $lookup: {
+                                        from: 'users',
+                                        localField: 'userId',
+                                        foreignField: '_id',
+                                        as: 'user'
+                                    }
+                                },
+                                { $addFields: { user: { $arrayElemAt: ['$user', 0] } } }
+                            ],
+                            as: 'reviews'
+                        }
+                    },
+                    {
+                        $addFields: {
+                            category: { $arrayElemAt: ['$category', 0] },  // Extract the first element from the 'category' array
+                            rating: { $avg: '$reviews.starRating' },
+                            totalReviews: { $size: '$reviews' }
+                        }
+                    }
                 ]);
+                console.log(product[0].reviews);
+                console.log('2', product[0]);
                 resolve(product[0]);
             } catch (err) {
                 reject(err);

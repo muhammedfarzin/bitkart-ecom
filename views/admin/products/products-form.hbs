@@ -60,7 +60,7 @@
                                 aria-placeholder="Category" required>
                                 <option value="" selected disabled hidden>Category</option>
                                 {{#each categories}}
-                                <option value="{{this._id}}" {{isEqual this._id @root.product.category 'selected' }}>
+                                <option value="{{this._id}}" {{#if (eq this._id @root.product.categoryId ) }} selected {{/if}}>
                                     {{this.title}}
                                 </option>
                                 {{/each}}
@@ -81,13 +81,13 @@
                             <select name="status" id="status"
                                 class="outlined-card outline-none text-center text-primary w-100"
                                 aria-placeholder="status" required>
-                                <option value="active" {{isEqual product.status 'active' 'selected'}}>
+                                <option value="active" {{#if (eq product.status 'active' ) }} selected {{/if}}>
                                     Active
                                 </option>
-                                <option value="inactive" {{isEqual product.status 'inactive' 'selected'}}>
+                                <option value="inactive" {{#if (eq product.status 'inactive' ) }} selected {{/if}}>
                                     Inactive
                                 </option>
-                                <option value="sold out" {{isEqual product.status 'sold out' 'selected'}}>
+                                <option value="sold out" {{#if (eq product.status 'sold out' ) }} selected {{/if}}>
                                     Sold out
                                 </option>
                             </select>
