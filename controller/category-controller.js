@@ -22,9 +22,22 @@ const categoryController = {
         })
     },
     getCategories: async () => {
-        const categories = await CategoryModel.find({ isDeleted: false })
-            .limit(20);
+        const categories = await CategoryModel.find({ isDeleted: false }).limit(20);
         return categories.map(category => category.toObject());
+    },
+    searchCategories: async (searchQuery) => {
+        try {
+            let categories = await CategoryModel.find({
+                $or: [
+                    { title: { $regex: searchQuery, $options: 'i' } },
+                    { description: { $regex: searchQuery, $options: 'i' } },
+                ]
+            });
+            if (!categories.length) categories = [await CategoryModel.findById(searchQuery)];
+            return categories.map(user => user.toObject());
+        } catch (err) {
+            return [];
+        }
     },
     getCategoryById: async (categoryId) => {
         try {
@@ -36,8 +49,7 @@ const categoryController = {
         }
     },
     getAllCategoryTitles: async () => {
-        const datas = await CategoryModel.find()
-            .select('title');
+        const datas = await CategoryModel.find({ isDeleted: false }).select('title');
         return datas.map(category => category.toObject());
     },
     updateCategory: (id, datas) => {
@@ -56,7 +68,7 @@ const categoryController = {
     deleteCategory: async (id) => {
         try {
             const category = await CategoryModel.findByIdAndUpdate(id, { isDeleted: true });
-            if(!category) throw new Error('Invalid category');
+            if (!category) throw new Error('Invalid category');
             return { message: 'Category deleted successfully' }
         } catch (err) {
             throw err;

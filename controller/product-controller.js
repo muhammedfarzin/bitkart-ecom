@@ -37,6 +37,20 @@ const productController = {
             throw new Error('Invalid product');
         }
     },
+    searchProducts: async (searchQuery) => {
+        try {
+            let products = await ProductModel.find({
+                $or: [
+                    { title: { $regex: searchQuery, $options: 'i' } },
+                    { description: { $regex: searchQuery, $options: 'i' } },
+                ]
+            });
+            if (!products.length) products = [await ProductModel.findById(searchQuery)];
+            return products.map(user => user.toObject());
+        } catch (err) {
+            return [];
+        }
+    },
     getProducts: async () => {
         const products = await ProductModel.find().limit(20);
         return products.map(product => product.toObject());

@@ -145,9 +145,14 @@ router.get(sideMenuPath.orders, (req, res) => {
 
 // Products routes
 router.get(sideMenuPath.products, async (req, res) => {
-    const products = await productController.getProducts();
+    let products;
+    if (req.query.search) {
+        products = await productController.searchProducts(req.query.search);
+    } else {
+        products = await productController.getProducts();
+    }
     const sideMenus = getSideMenus(sideMenuPath.products);
-    res.render('admin/products/products', ({ products, sideMenus }));
+    res.render('admin/products/products', ({ products, sideMenus, searchQuery: req.query.search }));
 });
 
 router.get(`${sideMenuPath.products}/add`, async (req, res) => {
@@ -187,9 +192,14 @@ router.post(`${sideMenuPath.products}/edit/:id`, upload.array('images', 5), asyn
 
 // Category routes
 router.get(sideMenuPath.categories, async (req, res) => {
-    let categories = await categoryController.getCategories();
+    let categories;
+    if (req.query.search) {
+        categories = await categoryController.searchCategories(req.query.search);
+    } else {
+        categories = await categoryController.getCategories();
+    }
     const sideMenus = getSideMenus(sideMenuPath.categories);
-    res.render('admin/categories/categories', ({ categories, sideMenus }));
+    res.render('admin/categories/categories', ({ categories, sideMenus, searchQuery: req.query.search }));
 });
 
 router.get(`${sideMenuPath.categories}/create`, (req, res) => {
