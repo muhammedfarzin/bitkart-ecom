@@ -53,6 +53,7 @@ document.addEventListener('DOMContentLoaded', function () {
         e.preventDefault();
         let email = $('#email');
         let password = $('#password');
+        let confPassword = $('#conf-password');
         let name = $('#name');
         let mobile = $('#mobile');
         let errMessage = $('#err-message');
@@ -60,6 +61,7 @@ document.addEventListener('DOMContentLoaded', function () {
         errMessage.text('');
         email.removeClass('err');
         password.removeClass('err');
+        confPassword.removeClass('err');
         name.removeClass('err');
         mobile.removeClass('err');
 
@@ -81,6 +83,9 @@ document.addEventListener('DOMContentLoaded', function () {
         } else if (password.val().length < 8) {
             errMessage.text('Password must be atleast 8 characters');
             password.addClass('err');
+        } else if (password.val() != confPassword.val()) {
+            errMessage.text('Your password and confirm password entries do not match');
+            confPassword.addClass('err');
         } else {
             $('#signup-frm')[0].submit();
         }
