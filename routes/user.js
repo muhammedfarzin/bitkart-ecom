@@ -117,10 +117,11 @@ router.post('/verifyEmail', async (req, res) => {
 })
 
 // Check Login
-router.use((req, res, next) => {
-    if (req.session.user) {
+router.use(async (req, res, next) => {
+    if (await userController.checkUserStatus(req.session.user)) {
         next();
     } else {
+        req.session.destroy();
         res.redirect('/login')
     }
 })

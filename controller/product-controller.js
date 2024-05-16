@@ -124,8 +124,6 @@ const productController = {
                         }
                     }
                 ]);
-                console.log(product[0].reviews);
-                console.log('2', product[0]);
                 resolve(product[0]);
             } catch (err) {
                 reject(err);

@@ -29,6 +29,8 @@ const userController = {
 
                 if (!user || !user.comparePassword(enteredPassword)) {
                     return reject(new Error("Invalid email or password"));
+                } else if (user.status == 'blocked') {
+                    reject(new Error('The user was blocked by admin'));
                 }
                 const { _id: userId, name, email, mobile, cart, status } = user;
                 resolve({ userId, name, email, mobile, cart, status })
@@ -77,6 +79,13 @@ const userController = {
         } catch (err) {
             return [];
         }
+    },
+    checkUserStatus: async (user) => {
+        if (!user) return false;
+        const userData = await UserModel.findById(user.userId);
+        if (!userData) return false;
+        if (userData.status != 'active') return false;
+        return true;
     }
 }
 
