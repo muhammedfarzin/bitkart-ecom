@@ -29,6 +29,20 @@ document.addEventListener('DOMContentLoaded', function () {
 
     }
 
+    $('#resendOtp').on('click', (e) => {
+        $.ajax({
+            url: '/resendOtp',
+            type: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                alert(data.responseJSON?.message ?? 'Resent OTP successfully');
+            },
+            error: function (err) {
+                alert(err.responseJSON?.errMessage ?? 'Something went wrong');
+            }
+        });
+    });
+
     $('#login-frm').submit((e) => {
         e.preventDefault();
         let email = $('#email');

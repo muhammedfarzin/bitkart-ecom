@@ -532,3 +532,7 @@ input.err {
     border: 1px solid #dc3545;
     background: #ffdddd;
 }
+
+.cursor-pointer {
+    cursor: pointer;
+}
