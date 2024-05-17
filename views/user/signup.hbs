@@ -11,28 +11,25 @@
             <form method="post" id="signup-frm">
                 <div class="login-frm col-12">
                     <div class="form-field">
-                        <label for="name">NAME</label>
-                        <input type="name" name="name" id="name">
+                        <input type="name" name="name" id="name" placeholder="Name">
                     </div>
                     <div class="form-field">
-                        <label for="email">E-MAIL</label>
-                        <input type="email" name="email" id="email">
+                        <input type="email" name="email" id="email" placeholder="Email">
+                    </div>
+                    <div class="d-flex mb-4">
+                        <div class="form-field me-2 col">
+                            <input type="password" name="password" id="password" placeholder="Password">
+                        </div>
+                        <div class="form-field ms-2 col">
+                            <input type="password" id="conf-password" placeholder="Confirm password">
+                        </div>
                     </div>
                     <div class="form-field">
-                        <label for="password">PASSWORD</label>
-                        <input type="password" name="password" id="password">
-                    </div>
-                    <div class="form-field">
-                        <label for="conf-password">CONFIRM PASSWORD</label>
-                        <input type="password" id="conf-password">
-                    </div>
-                    <div class="form-field">
-                        <label for="mobile">MOBILE NUMBER</label>
-                        <input type="tel" name="mobile" id="mobile">
+                        <input type="tel" name="mobile" id="mobile" placeholder="mobile">
                     </div>
                 </div>
-                <button class="btn btn-light rounded-pill border col-12" type="submit">SIGNUP</button>
-                <a href="/login" class="btn btn-primary rounded-pill border mt-3 col-12">I ALREADY HAVE AN ACCOUNT</a>
+                <button class="btn btn-primary rounded-pill fw-bold border col-12" type="submit">SIGNUP</button>
+                <a href="/login" class="btn btn-light rounded-pill border mt-5 col-12">I ALREADY HAVE AN ACCOUNT</a>
             </form>
         </div>
     </div>

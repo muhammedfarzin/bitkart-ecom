@@ -1,25 +1,23 @@
 {{> admin-navbar hideLogout=true}}
 
 <div class="container">
-    <div class="d-flex flex-wrap justify-content-center">
+    <div class="d-flex flex-wrap justify-content-center mt-5">
         <div class="form-title col-md-6">
             <h1>ADMIN LOGIN</h1>
         </div>
 
-        <div class="login-box col-md-6">
+        <div class="login-box col-12 col-md-6">
                <span class="text-danger fw-normal" id="err-message">{{errMessage}}</span>
             <form method="post" id="login-frm">
                 <div class="login-frm col-12">
                     <div class="form-field">
-                        <label for="email">E-MAIL</label>
-                        <input type="email" name="email" id="email">
+                        <input type="email" name="email" id="email" placeholder="Email">
                     </div>
                     <div class="form-field">
-                        <label for="password">PASSWORD</label>
-                        <input type="password" name="password" id="password">
+                        <input type="password" name="password" id="password" placeholder="Password">
                     </div>
                 </div>
-                <button class="btn btn-light rounded-pill border col-12" type="submit">LOGIN</button>
+                <button class="btn btn-primary rounded-pill fw-bold border col-12" type="submit">LOGIN</button>
             </form>
         </div>
     </div>
