@@ -1,5 +1,4 @@
-const mobilePattern = /^\d{10}$/
-const otpPattern = /^\d{6}$/
+const mobilePattern = /^\d{10}$/;
 
 document.addEventListener('DOMContentLoaded', function () {
     const imagesInput = document.getElementById('image-input');
@@ -28,20 +27,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
     }
-
-    $('#resendOtp').on('click', (e) => {
-        $.ajax({
-            url: '/resendOtp',
-            type: 'GET',
-            dataType: 'json',
-            success: function (data) {
-                alert(data.responseJSON?.message ?? 'Resent OTP successfully');
-            },
-            error: function (err) {
-                alert(err.responseJSON?.errMessage ?? 'Something went wrong');
-            }
-        });
-    });
 
     $('#login-frm').submit((e) => {
         e.preventDefault();
@@ -102,23 +87,6 @@ document.addEventListener('DOMContentLoaded', function () {
             confPassword.addClass('err');
         } else {
             $('#signup-frm')[0].submit();
-        }
-    });
-
-    $('#otp-frm').submit((e) => {
-        e.preventDefault();
-        let otp = $('#otp');
-        let errMessage = $('#err-message');
-
-        otp.removeClass('err');
-
-        if (!otp.val()) {
-            errMessage.text('Please enter OTP');
-            otp.addClass('err');
-        } else if (!otpPattern.test(otp.val())) {
-            errMessage.text('Plesae enter a valid OTP');
-        } else {
-            $('#otp-frm')[0].submit();
         }
     });
 });

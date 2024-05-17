@@ -101,27 +101,22 @@ router.get('/verifyEmail', (req, res) => {
 
 router.post('/verifyEmail', async (req, res) => {
     try {
-        if (!req.session.tempUserData) throw new Error('OTP EXPIRED');
         const userData = req.session.tempUserData;
+        if (!userData) throw new Error('OTP EXPIRED');
         if (await otpController.verifyOTP(userData.email, req.body.otp)) {
-            userController.createUser(userData)
-                .then(data => {
-                    req.session.user = data;
-                    delete req.session.tempUserData;
-                    res.redirect('/');
-                })
-                .catch(err => {
-                    res.render('user/signup', { errMessage: err.message });
-                })
+            const response = await userController.createUser(userData)
+            req.session.user = response;
+            delete req.session.tempUserData;
+            res.json({ path: '/', message: 'Signup successful' });
         } else {
             throw new Error('Invalid OTP, please try again');
         }
     } catch (err) {
         if (err.message == 'OTP EXPIRED') {
             req.session.destroy();
-            res.redirect('/signup?errMessage=Your OTP has expired, Please try again');
+            res.status(440).json({ errMessage: 'Your OTP has expired, Please try again' });
         }
-        else res.redirect('/verifyEmail?errMessage=' + err.message);
+        else res.status(400).json({ errMessage: err.message });
     }
 });
 
