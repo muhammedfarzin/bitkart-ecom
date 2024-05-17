@@ -37,6 +37,15 @@ router.use((req, res, next) => {
     next();
 });
 
+async function checkUserLoginStatus(req, res, next) {
+    if (await userController.checkUserStatus(req.session.user)) {
+        next();
+    } else {
+        req.session.destroy();
+        res.redirect('/login');
+    }
+}
+
 
 // Routes
 
@@ -116,11 +125,11 @@ router.post('/verifyEmail', async (req, res) => {
     }
 });
 
-router.get('/resendOtp', (req, res) => {
+router.get('/resendOtp', async (req, res) => {
     try {
         if (!req.session.tempUserData) return res.redirect('/login?errMessage=Time is over, please try again');
         req.session.cookie.maxAge = 5 * 60000;
-        otpController.sendOTP(req.session.tempUserData.email);
+        await otpController.sendOTP(req.session.tempUserData.email);
         res.json({ message: 'Resent OTP successfully. Kindly check your email' });
     } catch (err) {
         res.status(400).json({ errMessage: 'Something went wrong. Please try again later' });
@@ -140,7 +149,7 @@ router.use(async (req, res, next) => {
 
 // Routes needs authorization
 
-router.get('/', async (req, res) => {
+router.get('/', checkUserLoginStatus, async (req, res) => {
     const products = await productController.getProducts();
     const categories = await categoryController.getCategories();
     res.render('user/index', { products, categories });
@@ -148,7 +157,7 @@ router.get('/', async (req, res) => {
 
 
 // Product overview
-router.get('/view/:id', async (req, res) => {
+router.get('/view/:id', checkUserLoginStatus, async (req, res) => {
     const product = await productController.getProductOverview(req.params.id);
     const relatedProducts = await productController.getProductsByCategory(product.categoryId);
     res.render('user/products/products', { product, relatedProducts });
@@ -156,9 +165,6 @@ router.get('/view/:id', async (req, res) => {
 
 router.get('/logout', (req, res) => {
     req.session.destroy();
-    res.header('Cache-Control', 'no-cache, no-store, must-revalidate');
-    res.header('Pragma', 'no-cache');
-    res.header('Expires', '0');
     res.redirect('/login');
 });
 
