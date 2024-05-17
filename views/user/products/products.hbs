@@ -16,7 +16,7 @@
                 <div class="carousel-inner ratio ratio-1x1 rounded-4">
                     {{#each imagePaths}}
                     <div class="carousel-item {{#unless @index}}active{{/unless}} p-2">
-                        <img src="{{this}}" class="d-block w-100" alt="product image">
+                        <img src="{{this}}" class="d-block w-100 h-100 object-fit-contain" alt="product image">
                     </div>
                     {{/each}}
                 </div>
