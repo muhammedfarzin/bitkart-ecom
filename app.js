@@ -22,6 +22,11 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/admin', adminRouter);
 app.use('/', userRouter);
 
+// 404 page
+app.all('*', (req, res) => {
+    res.render('404');
+});
+
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 })

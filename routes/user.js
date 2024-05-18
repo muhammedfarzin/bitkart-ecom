@@ -131,19 +131,6 @@ router.get('/resendOtp', async (req, res) => {
     }
 })
 
-
-// Check Login
-router.use(async (req, res, next) => {
-    if (await userController.checkUserStatus(req.session.user)) {
-        next();
-    } else {
-        req.session.destroy();
-        res.redirect('/login');
-    }
-});
-
-// Routes needs authorization
-
 router.get('/', checkUserLoginStatus, async (req, res) => {
     const products = await productController.getProducts();
     const categories = await categoryController.getCategories();
