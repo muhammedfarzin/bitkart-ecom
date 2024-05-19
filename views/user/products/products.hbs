@@ -4,6 +4,42 @@
     {{#with product}}
     <div class="product-view">
         {{!-- Product Images --}}
+        <div id="popup-image">
+            <div id="closePopupBtn">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 72" width="30" height="30">
+                    <path
+                        d="M 19 15 C 17.977 15 16.951875 15.390875 16.171875 16.171875 C 14.609875 17.733875 14.609875 20.266125 16.171875 21.828125 L 30.34375 36 L 16.171875 50.171875 C 14.609875 51.733875 14.609875 54.266125 16.171875 55.828125 C 16.951875 56.608125 17.977 57 19 57 C 20.023 57 21.048125 56.609125 21.828125 55.828125 L 36 41.65625 L 50.171875 55.828125 C 51.731875 57.390125 54.267125 57.390125 55.828125 55.828125 C 57.391125 54.265125 57.391125 51.734875 55.828125 50.171875 L 41.65625 36 L 55.828125 21.828125 C 57.390125 20.266125 57.390125 17.733875 55.828125 16.171875 C 54.268125 14.610875 51.731875 14.609875 50.171875 16.171875 L 36 30.34375 L 21.828125 16.171875 C 21.048125 15.391875 20.023 15 19 15 z" />
+                </svg>
+            </div>
+            <div class="product-image col-12 col-md-4">
+                <div id="popupCarousel" class="carousel slide h-100">
+                    <div class="carousel-indicators">
+                        {{#each imagePaths}}
+                        <button type="button" data-bs-target="#popupCarousel" data-bs-slide-to="{{@index}}" {{#unless
+                            @index}}class="active" aria-current="true" {{/unless}}
+                            aria-label="Slide {{@index}}"></button>
+                        {{/each}}
+                    </div>
+                    <div class="carousel-inner ratio ratio-1x1 rounded-4 h-100" id="popup-image-view">
+                        {{#each imagePaths}}
+                        <div class="carousel-item {{#unless @index}}active{{/unless}} p-2">
+                            <img src="{{this}}" class="d-block w-100 h-100 object-fit-contain" alt="product image">
+                        </div>
+                        {{/each}}
+                    </div>
+                    <button class="carousel-control carousel-control-prev filter-contrast" type="button"
+                        data-bs-target="#popupCarousel" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon text-secondary" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control carousel-control-next filter-contrast" type="button"
+                        data-bs-target="#popupCarousel" data-bs-slide="next">
+                        <span class="carousel-control-next-icon text-secondary" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+            </div>
+        </div>
         <div class="product-image col-12 col-md-4">
             <div id="carouselExampleIndicators" class="carousel slide">
                 <div class="carousel-indicators">
@@ -13,7 +49,7 @@
                         aria-label="Slide {{@index}}"></button>
                     {{/each}}
                 </div>
-                <div class="carousel-inner ratio ratio-1x1 rounded-4">
+                <div class="carousel-inner ratio ratio-1x1 rounded-4" id="product-images">
                     {{#each imagePaths}}
                     <div class="carousel-item {{#unless @index}}active{{/unless}} p-2">
                         <img src="{{this}}" class="d-block w-100 h-100 object-fit-contain" alt="product image">
@@ -33,6 +69,7 @@
             </div>
         </div>
 
+        {{!-- Product Details --}}
         <div class="md-ps-3 col-12 col-md-8">
             <div class="text-primary fs-7">
                 <a class="text-primary fs-7" href="/">Home</a>
@@ -114,3 +151,5 @@
         </div>
     </div>
 </div>
+
+<script src="/javascript/product-zoom.js"></script>
