@@ -499,6 +499,16 @@ button.carousel-control {
     align-items: center;
 }
 
+.center-box-v-24 {
+    height: 24rem;
+    width: 24rem;
+    aspect-ratio: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
 .placeholder-primary::placeholder {
     color: #6e43bfb3;
 }
@@ -570,6 +580,10 @@ input.err {
     border: none;
 }
 
+#popup-image>* {
+    max-width: 100%;
+}
+
 #popupCarousel:hover .carousel-control-prev,
 #popupCarousel:hover .carousel-control-next,
 #popupCarousel:hover .carousel-indicators {
@@ -617,4 +631,12 @@ input.err {
 #closePopupBtn:hover {
     background: #fff;
     fill: #000;
+}
+
+#crop-image-gallery {
+    overflow-x: scroll;
+}
+
+#crop-image-gallery::-webkit-scrollbar {
+    display: none;
 }
