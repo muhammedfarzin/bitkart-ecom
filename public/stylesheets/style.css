@@ -103,6 +103,11 @@ nav.navbar {
     color: #6F43BF;
 }
 
+.btn.text-primary:hover {
+    color: #fff !important;
+    text-decoration: none !important;
+}
+
 .btn.btn-outline-danger:hover,
 .btn.btn-outline-danger:focus,
 .btn.btn-danger:hover,
@@ -288,6 +293,14 @@ form {
     -webkit-box-orient: vertical;
 }
 
+.max-line-2 {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
 .fs-7 {
     font-size: 0.75rem;
 }
@@ -338,6 +351,7 @@ form {
 }
 
 .icon-btn {
+    cursor: pointer;
     display: inline-flex;
     justify-content: center;
     align-items: center;
@@ -478,6 +492,12 @@ button.carousel-control {
     background-color: #6e43bf33;
     padding: .5rem;
     border: 1px solid #6F43BF;
+    border-radius: 1rem;
+}
+
+.card-primary-light {
+    background-color: #6e43bf33;
+    padding: .5rem;
     border-radius: 1rem;
 }
 
@@ -639,4 +659,16 @@ input.err {
 
 #crop-image-gallery::-webkit-scrollbar {
     display: none;
+}
+
+aside {
+    position: fixed;
+    max-width: 320px;
+    height: 100%;
+    border-right: 1px solid #6F43BF;
+    padding: 0 1rem;
+}
+
+.border-radius-1 {
+    border-radius: 1vw;
 }

@@ -150,5 +150,10 @@ router.get('/logout', (req, res) => {
     res.redirect('/login');
 });
 
+// Account
+router.get('/account', (req, res) => {
+    res.render('user/account/account');
+})
+
 
 export default router;
