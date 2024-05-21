@@ -159,5 +159,9 @@ router.get('/cart', checkUserLoginStatus, (req, res) => {
     res.render('user/purchase/cart');
 });
 
+router.get('/checkout', checkUserLoginStatus, (req, res) => {
+    res.render('user/purchase/checkout');
+});
+
 
 export default router;

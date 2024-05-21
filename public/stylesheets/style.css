@@ -103,6 +103,11 @@ nav.navbar {
     border: 1px solid #6F43BF;
 }
 
+.btn.btn-primary:disabled {
+    background: #916dd4;
+    border: 1px solid #916dd4;
+}
+
 .btn.btn-outline-primary {
     border: 1px solid #6F43BF;
     color: #6F43BF;
@@ -392,6 +397,19 @@ form {
     background-color: #6F43BF33;
 }
 
+.text-btn {
+    color: #6F43BF;
+    padding: 0.5rem 1rem;
+    text-decoration: none;
+    border-radius: 0.5rem;
+    transition: 0.25s;
+    background: transparent;
+}
+
+.text-btn:hover {
+    background: #6F43BF33;
+}
+
 .banner {
     width: 100%;
 }
@@ -559,6 +577,29 @@ button.carousel-control {
     color: #6e43bfb3;
 }
 
+input[type="radio"].radio-primary {
+    transition: 0.15s;
+    cursor: pointer;
+    flex-shrink: 0;
+    width: 1em;
+    height: 1em;
+    margin-top: .25em;
+    vertical-align: top;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    border: 1px solid #6F43BF;
+    border-radius: 50%;
+}
+
+input[type=radio].radio-primary:checked {
+    background-color: #6F43BF;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='2' fill='%23fff'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+}
+
 .outline-none,
 .outline-none:focus-visible {
     outline: none;
@@ -715,6 +756,14 @@ aside {
 
 .counter input::-webkit-outer-spin-button,
 .counter input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input#promocode.text-uppercase {
+    text-transform: uppercase;
+}
+
+input#promocode.text-uppercase::placeholder {
+    text-transform: none;
 }

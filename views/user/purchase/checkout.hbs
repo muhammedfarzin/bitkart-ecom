@@ -1,0 +1,85 @@
+{{> navbar}}
+
+
+<div class="container-fluid d-flex flex-wrap-reverse">
+    <div class="col-12 col-sm-7 col-md-9 p-2">
+        <div class="outlined-card p-0">
+            <div class="d-flex justify-content-between p-2">
+                <div class="text-primary fs-4 fw-medium p-2">Delivery Address</div>
+                <div class="actions">
+                    {{!-- Add button --}}
+                    <div class="icon-btn">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 5V19" stroke="#6F43BF" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                            <path d="M5 12H19" stroke="#6F43BF" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+            <div class="list mx-2">
+                <div class="d-flex justify-content-between mb-2">
+                    <div class="d-flex align-items-start">
+                        <input type="radio" class="radio-primary m-2" name="address" id="address1">
+                        <label for="address1">
+                            <div class="cursor-pointer ms-2">
+                                <div class="fs-6 fw-bold">Henry Arthur</div>
+                                <div class="fs-6">2118 Thornridge Cir. Syracuse, Connecticut 35624, 9876543210</div>
+                            </div>
+                        </label>
+                    </div>
+                    <div class="actions">
+                        <a href="/address/edit/id" class="text-btn">Edit</a>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-between mb-2">
+                    <div class="d-flex align-items-start">
+                        <input type="radio" class="radio-primary m-2" name="address" id="address2">
+                        <label for="address2">
+                            <div class="cursor-pointer ms-2">
+                                <div class="fs-6 fw-bold">Henry Arthur</div>
+                                <div class="fs-6">2118 Thornridge Cir. Syracuse, Connecticut 35624, 9876543210</div>
+                            </div>
+                        </label>
+                    </div>
+                    <div class="actions">
+                        <a href="/address/edit/id" class="text-btn">Edit</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="outlined-card p-0 my-3">
+            <div class="text-primary fs-4 fw-medium p-2 m-2">Payment Optins</div>
+            <div class="list mx-2">
+                <div class="d-flex align-items-start mb-3">
+                    <input type="radio" class="radio-primary my-1 mx-2" name="paymentMethod" id="paymentOnline">
+                    <label for="paymentOnline">
+                        <div class="cursor-pointer ms-2 fs-6 fw-bold">Online</div>
+                    </label>
+                </div>
+                <div class="d-flex align-items-start mb-3">
+                    <input type="radio" class="radio-primary my-1 mx-2" name="paymentMethod" id="paymentCOD">
+                    <label for="paymentCOD">
+                        <div class="cursor-pointer ms-2 fs-6 fw-bold">Cash on Delivery</div>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="price-data col-12 col-sm-5 col-md-3 my-2 px-2">
+        {{!-- Add Promode --}}
+        <div class="outlined-card p-0 mb-3">
+            <div class="text-primary fs-4 fw-medium border-bottom border-primary px-2 pt-2">Add Promocode</div>
+            <div class="p-2">
+                <input type="text" name="promocode" id="promocode" placeholder="Enter Promo Code"
+                    class="outlined-card placeholder-primary rounded-3 fs-6 text-uppercase py-1 my-1 outline-none w-100">
+                <button href="/checkout" class="btn btn-primary my-2 rounded-3 w-100" disabled>Apply</button>
+            </div>
+        </div>
+
+        {{> cart-price-details}}
+        <a href="/checkout" class="btn btn-primary my-2 rounded-3 w-100">CONTINUE</a>
+    </div>
+</div>
