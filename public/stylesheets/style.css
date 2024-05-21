@@ -46,6 +46,11 @@
     .sm-d-unset {
         display: unset !important;
     }
+
+    .list-item img {
+        width: 6rem !important;
+        height: 6rem !important;
+    }
 }
 
 @media (min-width: 768px) {
@@ -101,6 +106,27 @@ nav.navbar {
 .btn.btn-outline-primary {
     border: 1px solid #6F43BF;
     color: #6F43BF;
+}
+
+.btn.icon-btn-primary-light {
+    background: #D2BBFF;
+    padding: 0;
+}
+
+.btn.icon-btn-primary-light svg path {
+    transition: 0.15s;
+}
+
+.btn.icon-btn-primary-light:hover svg path {
+    stroke: #fff;
+}
+
+.btn.icon-btn-primary-light>svg {
+    margin: 0.5rem;
+}
+
+div.border-primary {
+    border-color: #6F43BF !important;
 }
 
 .btn.text-primary:hover {
@@ -271,14 +297,14 @@ form {
     background-color: #6F43BF33;
     padding: 1rem;
     border: 1px solid #000;
-    border-radius: 2vw;
+    border-radius: 1rem;
     margin: 0.5rem 0;
 }
 
 .list-item img {
     width: 7.5rem;
     height: 7.5rem;
-    border-radius: 1vw;
+    border-radius: 0.5rem;
     margin-right: 0.5rem;
     object-fit: contain;
     background: #fff;
@@ -671,4 +697,24 @@ aside {
 
 .border-radius-1 {
     border-radius: 1vw;
+}
+
+.counter {
+    display: flex;
+    align-items: center;
+}
+
+.counter>input {
+    cursor: pointer;
+    text-align: center;
+    max-width: 1.8rem;
+    background: #E2D9F2;
+    border: 1px solid #D2BBFF;
+    border-radius: 5px;
+}
+
+.counter input::-webkit-outer-spin-button,
+.counter input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }

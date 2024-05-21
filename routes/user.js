@@ -151,9 +151,13 @@ router.get('/logout', (req, res) => {
 });
 
 // Account
-router.get('/account', (req, res) => {
+router.get('/account', checkUserLoginStatus, (req, res) => {
     res.render('user/account/account');
-})
+});
+
+router.get('/cart', checkUserLoginStatus, (req, res) => {
+    res.render('user/purchase/cart');
+});
 
 
 export default router;
