@@ -32,6 +32,18 @@ const addressSchema = new Schema({
     }
 })
 
+const cartSchema = new Schema({
+    productId: {
+        type: String,
+        required: true
+    },
+    quantity: {
+        type: Number,
+        default: 1,
+        // min: 1,
+    }
+});
+
 const userSchema = new Schema({
     name: {
         type: String,
@@ -52,7 +64,7 @@ const userSchema = new Schema({
         required: true
     },
     cart: {
-        type: [String]
+        type: [cartSchema]
     },
     address: {
         type: [addressSchema]
@@ -71,7 +83,12 @@ const userSchema = new Schema({
         type: Date,
         default: Date.now(),
     }
-})
+});
+
+cartSchema.pre('save', function (next) {
+    if (this.quantity > 10) throw new Error('Sorry, you can only purchase up to 10 units of the same product at a time');
+    next();
+});
 
 userSchema.pre('save', async function (next) {
     if (this.isModified('password') || this.isNew) {

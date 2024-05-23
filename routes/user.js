@@ -155,9 +155,26 @@ router.get('/account', checkUserLoginStatus, (req, res) => {
     res.render('user/account/account');
 });
 
+// Cart
 router.get('/cart', checkUserLoginStatus, (req, res) => {
     res.render('user/purchase/cart');
 });
+
+router.post('/cart/addProduct', checkUserLoginStatus, async (req, res) => {
+    const { productId, quantity } = req.body;
+    try {
+        const datas = await userController.addToCart(req.session.user.userId, productId, quantity);
+        console.log(datas)
+        const cartCount = datas.cart.reduce((count, data) => {
+            return count + data.quantity;
+        }, 0);
+        console.log(cartCount);
+        res.json({ message: 'Added to cart', cartCount });
+    } catch (err) {
+        console.log(err)
+        res.status(400).json({ errMessage: err.message });
+    }
+})
 
 router.get('/checkout', checkUserLoginStatus, (req, res) => {
     res.render('user/purchase/checkout');

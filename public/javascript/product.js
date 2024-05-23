@@ -42,4 +42,23 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
+
+
 });
+
+function addToCart(productId) {
+    $.ajax({
+        url: '/cart/addProduct',
+        type: 'POST',
+        data: { productId },
+        dataType: 'json',
+        success: function (data) {
+            console.log(data);
+            alert('Product Added successfully');
+        },
+        error: function (err) {
+            console.log(err.responseJSON ?? 'err none printed');
+            alert(err.responseJSON?.errMessage ?? 'Something went wrong');
+        }
+    })
+}
