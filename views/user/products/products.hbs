@@ -99,7 +99,7 @@
 
             {{#if (eq status 'active')}}
             <div class="action-btn d-flex flex-wrap">
-                <div class="btn btn-outline-primary fw-bold me-2 my-1 py-3 col-12 col-md">ADD TO CART</div>
+                <div class="btn btn-outline-primary fw-bold me-2 my-1 py-3 col-12 col-md" onclick="addToCart('{{_id}}')">ADD TO CART</div>
                 <div class="btn btn-primary fw-bold me-2 my-1 py-3 col-12 col-md">BUY NOW</div>
             </div>
             {{else if (eq status 'sold out')}}
@@ -152,4 +152,4 @@
     </div>
 </div>
 
-<script src="/javascript/product-zoom.js"></script>
+<script src="/javascript/product.js"></script>

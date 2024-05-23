@@ -1,0 +1,48 @@
+{{> navbar}}
+
+<div class="container">
+    <div class="col-md-9 my-3">
+        <h3 class="text-primary">Enter your Address</h3>
+        <form method="post" class="my-3">
+            <div class="d-flex flex-wrap">
+                <div class="col-12 col-md my-2 px-2">
+                    <input type="text" name="name" id="name"
+                        class="outlined-card placeholder-primary rounded-3 outline-none w-100" placeholder="Name">
+                </div>
+                <div class="col-12 col-md my-2 px-2">
+                    <input type="tel" name="mobile" id="mobile"
+                        class="outlined-card placeholder-primary rounded-3 outline-none w-100"
+                        placeholder="Mobile number">
+                </div>
+            </div>
+            <div class="d-flex flex-wrap">
+                <div class="col-12 col-md my-2 px-2">
+                    <input type="text" name="pincode" id="pincode"
+                        class="outlined-card placeholder-primary rounded-3 outline-none w-100" placeholder="Pincode">
+                </div>
+                <div class="col-12 col-md my-2 px-2">
+                    <input type="text" name="locality" id="locality"
+                        class="outlined-card placeholder-primary rounded-3 outline-none w-100" placeholder="Locality">
+                </div>
+            </div>
+            <div class="d-flex">
+                <textarea name="address" id="address"
+                    class="outlined-card placeholder-primary rounded-3 outline-none w-100 col-12 col-md m-2"
+                    placeholder="Address (Area and Street)"></textarea>
+            </div>
+            <div class="d-flex flex-wrap">
+                <div class="col-12 col-md my-2 px-2">
+                    <input type="text" name="landmark" id="landmark"
+                        class="outlined-card placeholder-primary rounded-3 outline-none w-100" placeholder="Landmark">
+                </div>
+                <div class="col-12 col-md my-2 px-2">
+                    <input type="text" name="state" id="state"
+                        class="outlined-card placeholder-primary rounded-3 outline-none w-100" placeholder="State">
+                </div>
+            </div>
+            <div class="col-12 col-md my-2 px-2">
+                <button type="submit" class="btn btn-primary rounded-3 w-100">Save</button>
+            </div>
+        </form>
+    </div>
+</div>

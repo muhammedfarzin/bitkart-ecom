@@ -180,5 +180,13 @@ router.get('/checkout', checkUserLoginStatus, (req, res) => {
     res.render('user/purchase/checkout');
 });
 
+router.get('/orderSuccess', checkUserLoginStatus, (req, res) => {
+    res.render('user/purchase/order-success');
+});
+
+router.get('/account/address/add', checkUserLoginStatus, (req, res) => {
+    res.render('user/account/address-form');
+});
+
 
 export default router;
