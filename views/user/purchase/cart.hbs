@@ -1,38 +1,43 @@
 {{> navbar}}
 
 
-<div class="container-fluid p-0 d-flex flex-wrap-reverse">
-    <div class="list col-12 col-sm-7 col-md-9 px-2">
-        <a class="text-reset" href="#">
-            <div class="list-item border border-primary position-relative">
+<div class="container-lg">
+    <div id="cartView" class=" p-0 d-flex flex-wrap-reverse {{#unless cart.length}}d-none{{/unless}}">
+        <div class="list col-12 col-sm-7 col-md-8 px-2">
+            {{#each cart}}
+            <div class="list-item border border-primary position-relative" id="listItem{{productId}}">
                 <div class="content d-flex pb-1">
                     <div class="leading">
-                        <img src="/images/uploads/images171560052496577858.jpg" alt="img">
+                        <a href="/view/{{this.productId}}">
+                            <img src="{{first this.productDetails.imagePaths}}" alt="img">
+                        </a>
                     </div>
                     <div class="datas">
-                        <h4 class="title max-line-1">
-                            Rubbermaid Commercial 1250 Lb Capacity Standard Duty Tilt
-                            Truck - 1250 Lb Capacity - X 33.5in Width X 72.2in Depth X 43.8in Height - Black - 1
-                            Each
-                        </h4>
+                        {{#with this.productDetails}}
+                        <h4 class="title max-line-1">{{title}}</h4>
                         <div class="price-details pt-1 pb-2 flex-wrap">
-                            <div class="text-black-50 text-decoration-line-through fs-6">₹15,599</div>
+                            <div class="text-black-50 text-decoration-line-through fs-6">₹{{formatNumber price}}</div>
                             <div class="d-flex align-items-center">
-                                <div class="fs-4 fw-bold mx-3">₹19,999</div>
-                                <div class="text-primary fw-bold hide-col">24% OFF</div>
+                                <div class="fs-4 fw-bold mx-3">₹{{formatNumber offerPrice}}</div>
+                                <div class="text-primary fw-bold hide-col">
+                                    {{getOfferPecentage price offerPrice}}% OFF
+                                </div>
                             </div>
                         </div>
+                        {{/with}}
 
                         <div class="counter">
-                            <button class="btn icon-btn-primary-light mx-2">
+                            <button class="btn icon-btn-primary-light mx-2"
+                                onclick="removeFromCart('{{this.productId}}')">
                                 <svg width="14" height="14" viewBox="0 0 14 14" fill="none"
                                     xmlns="http://www.w3.org/2000/svg">
                                     <path d="M3 7H11.1667" stroke="#6F43BF" stroke-width="2" stroke-linecap="round"
                                         stroke-linejoin="round" />
                                 </svg>
                             </button>
-                            <input class="outlined-primary-box" type="number" value="1" disabled>
-                            <button class="btn icon-btn-primary-light mx-2">
+                            <input class="outlined-primary-box" type="number" id="quantity{{this.productId}}"
+                                value="{{this.quantity}}" disabled>
+                            <button class="btn icon-btn-primary-light mx-2" onclick="addToCart('{{this.productId}}')">
                                 <svg width="14" height="14" viewBox="0 0 14 14" fill="none"
                                     xmlns="http://www.w3.org/2000/svg">
                                     <path d="M7 2.91666V11.0833" stroke="#6F43BF" stroke-width="2"
@@ -45,53 +50,23 @@
                     </div>
                 </div>
             </div>
-        </a>
-        <a class="text-reset" href="#">
-            <div class="list-item border border-primary position-relative">
-                <div class="content d-flex pb-1">
-                    <div class="leading">
-                        <img src="/images/uploads/images171560052496577858.jpg" alt="img">
-                    </div>
-                    <div class="datas">
-                        <h4 class="title max-line-1">
-                            Rubbermaid Commercial 1250 Lb Capacity Standard Duty Tilt
-                            Truck - 1250 Lb Capacity - X 33.5in Width X 72.2in Depth X 43.8in Height - Black - 1
-                            Each
-                        </h4>
-                        <div class="price-details pt-1 pb-2 flex-wrap">
-                            <div class="text-black-50 text-decoration-line-through fs-6">₹15,599</div>
-                            <div class="d-flex align-items-center">
-                                <div class="fs-4 fw-bold mx-3">₹19,999</div>
-                                <div class="text-primary fw-bold hide-col">24% OFF</div>
-                            </div>
-                        </div>
-
-                        <div class="counter">
-                            <button class="btn icon-btn-primary-light mx-2">
-                                <svg width="14" height="14" viewBox="0 0 14 14" fill="none"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M3 7H11.1667" stroke="#6F43BF" stroke-width="2" stroke-linecap="round"
-                                        stroke-linejoin="round" />
-                                </svg>
-                            </button>
-                            <input class="outlined-primary-box" type="number" value="1" disabled>
-                            <button class="btn icon-btn-primary-light mx-2">
-                                <svg width="14" height="14" viewBox="0 0 14 14" fill="none"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M7 2.91666V11.0833" stroke="#6F43BF" stroke-width="2"
-                                        stroke-linecap="round" stroke-linejoin="round" />
-                                    <path d="M2.9165 7H11.0832" stroke="#6F43BF" stroke-width="2" stroke-linecap="round"
-                                        stroke-linejoin="round" />
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </a>
+            {{/each}}
+        </div>
+        <div class="price-data col-12 col-sm-5 col-md-4 my-2 px-2">
+            {{> cart-price-details}}
+            <a href="/checkout" class="btn btn-primary my-2 rounded-3 w-100">CONTINUE</a>
+        </div>
     </div>
-    <div class="price-data col-12 col-sm-5 col-md-3 my-2 px-2">
-        {{> cart-price-details}}
-        <a href="/checkout" class="btn btn-primary my-2 rounded-3 w-100">CONTINUE</a>
+
+    <div id="emptyCart" class="my-4 col-12 {{#if cart.length}}d-none{{/if}}">
+        <div class="d-flex justify-content-around align-items-center m-auto flex-wrap col-12 col-md-9">
+            {{!-- <img class="col-12 col-md-6" src="/images/404.svg" alt="error"> --}}
+            <div class="text-center col-10 col-md-5 my-5">
+                <h1 class="fs-2 text-primary">Your cart is Empty</h1>
+                <a href="/" class="btn btn-primary">Shop now</a>
+            </div>
+        </div>
     </div>
 </div>
+
+<script src="/javascript/product.js"></script>

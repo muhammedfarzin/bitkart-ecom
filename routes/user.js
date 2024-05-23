@@ -6,6 +6,7 @@ import { mongoUri } from "../config/db.js";
 import productController from "../controller/product-controller.js";
 import categoryController from "../controller/category-controller.js";
 import otpController from "../controller/otp-controller.js";
+import cartController from "../controller/cart-controller.js";
 
 const router = Router();
 const MongoStore = MongoDBStore(session);
@@ -156,28 +157,29 @@ router.get('/account', checkUserLoginStatus, (req, res) => {
 });
 
 // Cart
-router.get('/cart', checkUserLoginStatus, (req, res) => {
-    res.render('user/purchase/cart');
+router.get('/cart', checkUserLoginStatus, async (req, res) => {
+    const cart = await cartController.getCartProducts(req.session.user.userId);
+    const priceDetails = await cartController.getPriceSummary(req.session.user.userId, cart);
+    res.render('user/purchase/cart', { cart, priceDetails });
 });
 
-router.post('/cart/addProduct', checkUserLoginStatus, async (req, res) => {
+router.post('/cart/update', checkUserLoginStatus, async (req, res) => {
     const { productId, quantity } = req.body;
     try {
-        const datas = await userController.addToCart(req.session.user.userId, productId, quantity);
-        console.log(datas)
+        const datas = await cartController.updateCart(req.session.user.userId, productId, quantity);
         const cartCount = datas.cart.reduce((count, data) => {
             return count + data.quantity;
         }, 0);
-        console.log(cartCount);
-        res.json({ message: 'Added to cart', cartCount });
+        const priceDetails = await cartController.getPriceSummary(req.session.user.userId);
+        res.json({ message: 'Added to cart', cartCount, updatedQuantity: quantity, priceDetails });
     } catch (err) {
-        console.log(err)
         res.status(400).json({ errMessage: err.message });
     }
-})
+});
 
-router.get('/checkout', checkUserLoginStatus, (req, res) => {
-    res.render('user/purchase/checkout');
+router.get('/checkout', checkUserLoginStatus, async (req, res) => {
+    const priceDetails = await cartController.getPriceSummary(req.session.user.userId);
+    res.render('user/purchase/checkout', { priceDetails });
 });
 
 router.get('/orderSuccess', checkUserLoginStatus, (req, res) => {

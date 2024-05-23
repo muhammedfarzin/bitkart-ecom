@@ -41,24 +41,62 @@ document.addEventListener('DOMContentLoaded', function () {
             transform: 'scale(1)'
         });
     });
-
-
-
 });
 
-function addToCart(productId) {
+const debounce = (mainFunction, delay) => {
+    let timer;
+
+    return function (...args) {
+        clearTimeout(timer);
+        timer = setTimeout(() => {
+            mainFunction(...args);
+        }, delay);
+    };
+};
+
+const debouncedUpdateCart = debounce(function (productId, quantityElem) {
+    let quantity = quantityElem.val();
     $.ajax({
-        url: '/cart/addProduct',
+        url: '/cart/update',
         type: 'POST',
-        data: { productId },
+        data: { productId, quantity },
         dataType: 'json',
         success: function (data) {
             console.log(data);
-            alert('Product Added successfully');
+            if(data.cartCount <= 0) {
+                $('#cartView').addClass('d-none');
+                $('#emptyCart').removeClass('d-none');
+            }
+            if (data.updatedQuantity <= 0) $('#listItem' + productId)?.remove();
+            const deliveryCharge = $('#deliveryCharge');
+            $('#totalPrice')?.text('₹' + data.priceDetails.totalPrice.toLocaleString('en-IN'));
+            $('#totalAmount')?.text('₹' + (data.priceDetails.deliveryCharge + data.priceDetails.totalPrice).toLocaleString('en-IN'));
+            if (data.priceDetails.deliveryCharge != 0) {
+                deliveryCharge?.text('₹' + data.priceDetails.deliveryCharge.toLocaleString('en-IN'));
+                deliveryCharge?.removeClass('text-primary');
+            } else {
+                deliveryCharge?.text('Free');
+                deliveryCharge?.addClass('text-primary');
+            }
         },
         error: function (err) {
-            console.log(err.responseJSON ?? 'err none printed');
             alert(err.responseJSON?.errMessage ?? 'Something went wrong');
+            location.reload();
         }
-    })
+    });
+}, 500);
+
+
+function addToCart(productId) {
+    let quantity = $('#quantity' + productId);
+    if (quantity.val() >= 10) return alert('Sorry, you can only purchase up to 10 units of the same product at a time');
+    quantity.val(parseInt(quantity.val()) + 1);
+    debouncedUpdateCart(productId, quantity);
+}
+
+function removeFromCart(productId) {
+    let quantity = $('#quantity' + productId);
+    if (quantity.val() <= 1 && !confirm('Are really want remove this product from your cart?')) return;;
+    quantity.val(parseInt(quantity.val()) - 1);
+    debouncedUpdateCart(productId, quantity);
 }

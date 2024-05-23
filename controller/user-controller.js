@@ -1,5 +1,4 @@
 import UserModel from "../models/user-model.js";
-import productController from "./product-controller.js";
 
 const userStatusList = ['active', 'blocked'];
 
@@ -87,22 +86,6 @@ const userController = {
         if (!userData) return false;
         if (userData.status != 'active') return false;
         return true;
-    },
-    addToCart: async (userId, productId, quantity) => {
-        if (quantity && quantity > 10) throw new Error('Sorry, you can only purchase up to 10 units of the same product at a time');
-        const product = await productController.getProductById(productId);
-        const user = await UserModel.findById(userId);
-        const cartIndex = user.cart.findIndex(data => data.productId == productId);
-        if (product.quantity < user.cart[cartIndex]?.quantity + (quantity ?? 1)) {
-            throw new Error(`Only ${product.quantity} quantity left for this product`);
-        }
-
-        if (cartIndex != -1) {
-            user.cart[cartIndex].quantity = quantity ?? user.cart[cartIndex].quantity + 1;
-        } else {
-            user.cart.push({ productId, quantity });
-        }
-        return await user.save();
     }
 }
 

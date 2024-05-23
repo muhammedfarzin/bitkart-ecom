@@ -11,8 +11,8 @@ const hbsConfig = hbs.create({
     ],
 
     helpers: {
-        firstImagePath: function (imagePaths) {
-            return imagePaths[0];
+        first: function (data) {
+            return data[0];
         },
         eq: function (value1, value2) {
             return value1 == value2;
@@ -36,6 +36,13 @@ const hbsConfig = hbs.create({
         },
         formatDate: function (date, format) {
             return moment(date).format(format);
+        },
+        formatNumber: function (num) {
+            return num.toLocaleString('en-IN');
+        },
+        sum: (...nums) => {
+            nums = nums.slice(0, -1);
+            return nums.reduce((sum, num) => sum + num, 0);
         }
     }
 });

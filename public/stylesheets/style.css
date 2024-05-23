@@ -122,7 +122,8 @@ nav.navbar {
     transition: 0.15s;
 }
 
-.btn.icon-btn-primary-light:hover svg path {
+.btn.icon-btn-primary-light:hover svg path,
+.btn.icon-btn-primary-light:focus svg path {
     stroke: #fff;
 }
 
