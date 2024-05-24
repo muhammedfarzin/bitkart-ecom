@@ -86,6 +86,50 @@ const userController = {
         if (!userData) return false;
         if (userData.status != 'active') return false;
         return true;
+    },
+    addNewAddress: async (req) => {
+        const userId = req.session.user.userId;
+        const { name, mobile, pincode, locality, address, landmark, state } = req.body;
+        if (!name && !mobile && !pincode && !locality && !address && !landmark && state) {
+            throw new Error('All fields are required');
+        }
+
+        return await UserModel.findByIdAndUpdate(userId, {
+            $push: {
+                address: { name, mobile, pincode, locality, address, landmark, state }
+            }
+        });
+    },
+    getAddresses: async (userId) => {
+        const addresses = (await UserModel.findById(userId).select('address')).address;
+        return addresses.map(address => address.toObject());
+    },
+    getAddressById: async (userId, addressId) => {
+        try {
+            const address = (await UserModel.findById(userId))
+                .address.find(addr => addr._id.toString() === addressId);
+            if (!address) throw new Error('Address not exist');
+            console.log(address)
+            return address.toObject();
+        } catch (err) {
+            throw new Error('Address not exist');
+        }
+    },
+    updateAddress: async (req) => {
+        const userId = req.session.user.userId;
+        const addressId = req.params.id;
+        const { name, mobile, pincode, locality, address, landmark, state } = req.body;
+        if (!name && !mobile && !pincode && !locality && !address && !landmark && state) {
+            throw new Error('All fields are required');
+        }
+        const user = await UserModel.findById(userId);
+        const addressIndex = user.address.findIndex(address => address._id == addressId);
+        if (addressIndex != -1) {
+            user.address[addressIndex] = { name, mobile, pincode, locality, address, landmark, state };
+            return await user.save();
+        } else {
+            await userController.addNewAddress(req)
+        }
     }
 }
 

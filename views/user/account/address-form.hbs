@@ -3,40 +3,41 @@
 <div class="container">
     <div class="col-md-9 my-3">
         <h3 class="text-primary">Enter your Address</h3>
+        <p class="text-danger">{{errMessage}}</p>
         <form method="post" class="my-3">
             <div class="d-flex flex-wrap">
                 <div class="col-12 col-md my-2 px-2">
-                    <input type="text" name="name" id="name"
+                    <input type="text" name="name" id="name" value="{{address.name}}"
                         class="outlined-card placeholder-primary rounded-3 outline-none w-100" placeholder="Name">
                 </div>
                 <div class="col-12 col-md my-2 px-2">
-                    <input type="tel" name="mobile" id="mobile"
+                    <input type="tel" name="mobile" id="mobile" value="{{address.mobile}}"
                         class="outlined-card placeholder-primary rounded-3 outline-none w-100"
                         placeholder="Mobile number">
-                </div>
-            </div>
-            <div class="d-flex flex-wrap">
-                <div class="col-12 col-md my-2 px-2">
-                    <input type="text" name="pincode" id="pincode"
-                        class="outlined-card placeholder-primary rounded-3 outline-none w-100" placeholder="Pincode">
-                </div>
-                <div class="col-12 col-md my-2 px-2">
-                    <input type="text" name="locality" id="locality"
-                        class="outlined-card placeholder-primary rounded-3 outline-none w-100" placeholder="Locality">
                 </div>
             </div>
             <div class="d-flex">
                 <textarea name="address" id="address"
                     class="outlined-card placeholder-primary rounded-3 outline-none w-100 col-12 col-md m-2"
-                    placeholder="Address (Area and Street)"></textarea>
+                    placeholder="Address (Area and Street)">{{address.address}}</textarea>
             </div>
             <div class="d-flex flex-wrap">
                 <div class="col-12 col-md my-2 px-2">
-                    <input type="text" name="landmark" id="landmark"
+                    <input type="text" name="pincode" id="pincode" value="{{address.pincode}}"
+                        class="outlined-card placeholder-primary rounded-3 outline-none w-100" placeholder="Pincode">
+                </div>
+                <div class="col-12 col-md my-2 px-2">
+                    <input type="text" name="locality" id="locality" value="{{address.locality}}"
+                        class="outlined-card placeholder-primary rounded-3 outline-none w-100" placeholder="Locality">
+                </div>
+            </div>
+            <div class="d-flex flex-wrap">
+                <div class="col-12 col-md my-2 px-2">
+                    <input type="text" name="landmark" id="landmark" value="{{address.landmark}}"
                         class="outlined-card placeholder-primary rounded-3 outline-none w-100" placeholder="Landmark">
                 </div>
                 <div class="col-12 col-md my-2 px-2">
-                    <input type="text" name="state" id="state"
+                    <input type="text" name="state" id="state" value="{{address.state}}"
                         class="outlined-card placeholder-primary rounded-3 outline-none w-100" placeholder="State">
                 </div>
             </div>

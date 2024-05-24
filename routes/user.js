@@ -156,6 +156,38 @@ router.get('/account', checkUserLoginStatus, (req, res) => {
     res.render('user/account/account');
 });
 
+router.get('/account/address/add', checkUserLoginStatus, (req, res) => {
+    res.render('user/account/address-form', { errMessage: req.query.errMessage });
+});
+
+router.post('/account/address/add', checkUserLoginStatus, async (req, res) => {
+    try {
+        await userController.addNewAddress(req);
+        res.redirect(req.query.redirect ?? '/account');
+    } catch (err) {
+        res.status(400).redirect(`${req.url}?errMessage=${err.message}`);
+    }
+});
+
+router.get('/account/address/edit/:id', checkUserLoginStatus, async (req, res) => {
+    const addressId = req.params.id;
+    try {
+        const address = await userController.getAddressById(req.session.user.userId, addressId);
+        res.render('user/account/address-form', { address, errMessage: req.query.errMessage });
+    } catch (err) {
+        res.status(400).redirect(`/account/address/add?errMessage=${err.message}&redirect=${req.query.redirect}`);
+    }
+});
+
+router.post('/account/address/edit/:id', checkUserLoginStatus, async (req, res) => {
+    try {
+        await userController.updateAddress(req);
+        res.redirect(req.query.redirect ?? '/account');
+    } catch (err) {
+        res.status(400).redirect(`${req.url}?&errMessage=${err.message}`);
+    }
+});
+
 // Cart
 router.get('/cart', checkUserLoginStatus, async (req, res) => {
     const cart = await cartController.getCartProducts(req.session.user.userId);
@@ -178,16 +210,14 @@ router.post('/cart/update', checkUserLoginStatus, async (req, res) => {
 });
 
 router.get('/checkout', checkUserLoginStatus, async (req, res) => {
-    const priceDetails = await cartController.getPriceSummary(req.session.user.userId);
-    res.render('user/purchase/checkout', { priceDetails });
+    const userId = req.session.user.userId;
+    const addresses = await userController.getAddresses(userId);
+    const priceDetails = await cartController.getPriceSummary(userId);
+    res.render('user/purchase/checkout', { priceDetails, addresses, currentPath: req.url });
 });
 
 router.get('/orderSuccess', checkUserLoginStatus, (req, res) => {
     res.render('user/purchase/order-success');
-});
-
-router.get('/account/address/add', checkUserLoginStatus, (req, res) => {
-    res.render('user/account/address-form');
 });
 
 
