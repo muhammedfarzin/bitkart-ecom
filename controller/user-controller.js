@@ -109,7 +109,6 @@ const userController = {
             const address = (await UserModel.findById(userId))
                 .address.find(addr => addr._id.toString() === addressId);
             if (!address) throw new Error('Address not exist');
-            console.log(address)
             return address.toObject();
         } catch (err) {
             throw new Error('Address not exist');

@@ -216,8 +216,31 @@ router.get('/checkout', checkUserLoginStatus, async (req, res) => {
     res.render('user/purchase/checkout', { priceDetails, addresses, currentPath: req.url });
 });
 
+router.post('/checkout', checkUserLoginStatus, async (req, res) => {
+    try {
+        const paymentMethod = req.body.paymentMethod;
+        if (paymentMethod == 'online') {
+            throw new Error('Online payment currently not available');
+        } else if (paymentMethod == 'cod') {
+            await cartController.placeOrder(req);
+            await cartController.clearCart(req.session.user.userId);
+            req.session.orderDone = true;
+            res.json({ message: 'Order placed successfully', redirect: '/orderSuccess' });
+        } else {
+            throw new Error('Please enter payment method');
+        }
+    } catch (err) {
+        res.status(400).json({ errMessage: err.message });
+    }
+});
+
 router.get('/orderSuccess', checkUserLoginStatus, (req, res) => {
-    res.render('user/purchase/order-success');
+    if (req.session.orderDone) {
+        delete req.session.orderDone;
+        res.render('user/purchase/order-success');
+    } else {
+        res.redirect('/');
+    }
 });
 
 

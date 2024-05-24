@@ -1,5 +1,9 @@
+import OrderModel, { orderStatus } from "../models/order-model.js";
 import UserModel from "../models/user-model.js";
 import productController from "./product-controller.js";
+import userController from "./user-controller.js";
+
+const minForFreeDelivery = 1000;
 
 const cartController = {
     updateCart: async (userId, productId, quantity) => {
@@ -16,6 +20,7 @@ const cartController = {
             }
         }
         const product = await productController.getProductById(productId);
+        productId = product._id;
         const user = await UserModel.findById(userId);
         const cartIndex = user.cart.findIndex(data => data.productId == productId);
         if (product.quantity < (quantity ?? (user.cart[cartIndex]?.quantity + 1))) {
@@ -52,16 +57,55 @@ const cartController = {
         if (!datas) {
             datas = await cartController.getCartProducts(userId);
         }
-
         let totalPrice = 0;
-        let deliveryCharge = 49;
+        let deliveryCharge = datas.length * 100;
+
         datas.forEach(data => {
             const { price, offerPrice } = data.productDetails;
             totalPrice += (offerPrice ?? price) * data.quantity;
         });
-        if (totalPrice >= 500) deliveryCharge = 0;
+        if (totalPrice >= minForFreeDelivery) deliveryCharge = 0;
         return { totalPrice, deliveryCharge };
     },
+    calculateDeliveryCharge: (cartItems) => {
+        const totalAmount = cartItems.reduce((sum, item) => {
+            const { price, offerPrice } = item.productDetails;
+            return sum + (offerPrice || price)
+        }, 0);
+        if (totalAmount >= minForFreeDelivery) return 0;
+        else return cartItems.length * 100;
+    },
+    placeOrder: async (req) => {
+        const userId = req.session.user.userId;
+        const { addressId, paymentMethod } = req.body;
+        const cartProducts = await cartController.getCartProducts(userId);
+        const address = await userController.getAddressById(userId, addressId);
+        const deliveryCharge = cartController.calculateDeliveryCharge(cartProducts);
+        const status = paymentMethod == 'cod' ? orderStatus.confirmed : orderStatus.pending;
+
+        for (const cartItem of cartProducts) {
+            const { productId, quantity } = cartItem;
+            const price = {
+                price: cartItem.quantity * (cartItem.productDetails.offerPrice || cartItem.productDetails.price),
+                deliveryCharge
+            }
+            const newOrder = new OrderModel({
+                address,
+                paymentMethod,
+                userId,
+                productId,
+                quantity,
+                address,
+                price,
+                paymentMethod,
+                status: { status }
+            });
+            await newOrder.save();
+        };
+    },
+    clearCart: async (userId) => {
+        await UserModel.findByIdAndUpdate(userId, { $set: { cart: [] } });
+    }
 }
 
 export default cartController;

@@ -51,7 +51,7 @@ const productSchema = new Schema({
         default: 'active'
     },
     reviews: [String]
-})
+});
 
 productSchema.pre('save', function (next) {
     if (this.price < this.offerPrice) {
@@ -59,6 +59,21 @@ productSchema.pre('save', function (next) {
     }
     (this.quantity <= 0) ? this.status = 'sold out' : this.status = 'active';
     next();
+});
+
+productSchema.pre(['updateOne', 'findOneAndUpdate'], function (next) {
+    const update = this.getUpdate();
+  
+  if (update && update.$inc && update.$inc.quantity) {
+    const updatedQuantity = update.$inc.quantity;
+    const newStatus = (updatedQuantity <= 0) ? 'sold out' : 'active';
+
+    // Update the status field in the update object
+    update.$set = update.$set || {};
+    update.$set.status = newStatus;
+  }
+    
+  next();
 });
 
 productSchema.methods.invalidDataCustomError = function (err) {
