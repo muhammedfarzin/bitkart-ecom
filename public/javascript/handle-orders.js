@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', function () {
             alert('Online payment will coming soon');
         } else if (formObject.paymentMethod == 'cod') {
             $.ajax({
-                url: location.href,
+                url: '/placeOrder',
                 type: 'POST',
                 data: formObject,
                 dataType: 'json',

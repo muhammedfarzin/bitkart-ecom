@@ -231,7 +231,8 @@ router.get('/checkout', checkUserLoginStatus, async (req, res) => {
     else res.render('user/purchase/checkout', { priceDetails, addresses, currentPath: req.url });
 });
 
-router.post('/checkout', checkUserLoginStatus, async (req, res) => {
+// Orders
+router.post('/placeOrder', checkUserLoginStatus, async (req, res) => {
     try {
         const paymentMethod = req.body.paymentMethod;
         if (paymentMethod == 'online') {
@@ -248,6 +249,10 @@ router.post('/checkout', checkUserLoginStatus, async (req, res) => {
         res.status(400).json({ errMessage: err.message });
     }
 });
+
+router.get('/orders/:id', checkUserLoginStatus, (req, res) => {
+    res.render('user/account/order-details', { currentPath: req.url });
+})
 
 router.get('/orderSuccess', checkUserLoginStatus, (req, res) => {
     if (req.session.orderDone) {

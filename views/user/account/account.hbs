@@ -1,7 +1,7 @@
 {{> navbar}}
 
 <aside class="col-md-3 sm-d-none">
-    <a href="#personalDetails" class="btn text-start text-primary bg-light fw-bold my-1 w-100">Personal Details</a>
+    <a href="#" class="btn text-start text-primary bg-light fw-bold my-1 w-100">Personal Details</a>
     <a href="#addresses" class="btn text-start text-primary bg-light fw-bold my-1 w-100">Addresses</a>
     <a href="#orders" class="btn text-start text-primary bg-light fw-bold my-1 w-100">Orders</a>
 </aside>
@@ -85,7 +85,7 @@
         <div class="list">
             {{#each orders}}
             <a class="text-reset" href="/orders/{{this._id}}">
-                <div class="list-item position-relative">
+                <div class="list-item position-relative border-primary">
                     <div class="content d-flex pb-1">
                         {{#with this.productDetails}}
                         <div class="leading">
@@ -95,13 +95,11 @@
                             <h4 class="title max-line-2">{{title}}</h4>
                             {{/with}}
                             <div class="fs-5">₹{{formatNumber this.price.price}}</div>
-                            <div class="d-flex justify-content-end">
-                                <div class="p-1 bg-light rounded-4">
-                                    {{#with (last this.status) as |latestStatus|}}
-                                    <div class="status-view-success text-capitalize">{{latestStatus.status}}</div>
-                                    {{/with}}
-                                </div>
-                            </div>
+                        </div>
+                        <div class="p-1 bg-light rounded-4 position-absolute br-1">
+                            {{#with (last this.status) as |latestStatus|}}
+                            <div class="status-view-success text-capitalize">{{latestStatus.status}}</div>
+                            {{/with}}
                         </div>
                     </div>
                 </div>

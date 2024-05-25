@@ -153,9 +153,11 @@ div.border-primary {
 }
 
 .btn:hover,
-.btn:focus {
+.btn:focus,
+.btn:focus-visible {
     border: 1px solid #6F43BF !important;
     background: #6F43BF !important;
+    color: #fff !important;
 }
 
 .btn.btn-light:hover,
@@ -341,6 +343,10 @@ form {
     font-size: 0.75rem;
 }
 
+.fs-1-15rem {
+    font-size: 1.15rem;
+}
+
 .subtitle {
     font-size: 1.25rem;
 }
@@ -384,6 +390,11 @@ form {
 .br-1 {
     bottom: 0.5rem;
     right: 0.5rem;
+}
+
+.br-2 {
+    bottom: 1rem;
+    right: 1rem;
 }
 
 .icon-btn {
