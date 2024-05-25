@@ -250,9 +250,16 @@ router.post('/placeOrder', checkUserLoginStatus, async (req, res) => {
     }
 });
 
-router.get('/orders/:id', checkUserLoginStatus, (req, res) => {
-    res.render('user/account/order-details', { currentPath: req.url });
-})
+router.get('/orders/:id', checkUserLoginStatus, async (req, res) => {
+    try {
+        const userId = req.session.user.userId;
+        const orderId = req.params.id;
+        const orderDetails = await orderController.getUserOrderDetails(userId, orderId);
+        res.render('user/account/order-details', { orderDetails, currentPath: req.url });
+    } catch (err) {
+        res.render('error', { errMessage: err.message });
+    }
+});
 
 router.get('/orderSuccess', checkUserLoginStatus, (req, res) => {
     if (req.session.orderDone) {

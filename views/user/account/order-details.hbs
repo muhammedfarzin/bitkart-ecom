@@ -2,33 +2,45 @@
 
 <aside class="col-md-3 sm-d-none">
     <a href="#" class="btn text-start text-primary bg-light fw-bold my-1 w-100">Order Details</a>
-    <a href="#orderStatus" class="btn text-start text-primary bg-light fw-bold my-1 w-100">Status</a>
-    <a href="#orderReview" class="btn text-start text-primary bg-light fw-bold my-1 w-100">Review</a>
-    <a href="#orderReturn" class="btn text-start text-primary bg-light fw-bold my-1 w-100">Return</a>
-    <a href="#orderShippingAddress" class="btn text-start text-primary bg-light fw-bold my-1 w-100">Shipping Address</a>
+    <a href="#Status" class="btn text-start text-primary bg-light fw-bold my-1 w-100">Status</a>
+    {{#with (last status)}}
+    {{#if (eq status 'delivered')}}
+    <a href="#Review" class="btn text-start text-primary bg-light fw-bold my-1 w-100">Review</a>
+    <a href="#Return" class="btn text-start text-primary bg-light fw-bold my-1 w-100">Return</a>
+    {{/if}}
+    {{/with}}
+    <a href="#ShippingAddress" class="btn text-start text-primary bg-light fw-bold my-1 w-100">Shipping Address</a>
+    <a href="#PriceDetails" class="btn text-start text-primary bg-light fw-bold my-1 w-100">Price Details</a>
 </aside>
 
+{{#with orderDetails}}
 <div class="container col-md-9 sm me-0">
-    <div id="orderDetails">
+    <div id="Details">
         <h3 class="text-primary my-1">Order Details</h3>
         <div class="list col-12 px-2">
             <div class="list">
                 <div class="list-item position-relative border-primary">
+                    {{#with this.productDetails}}
                     <div class="content d-flex pb-1">
                         <div class="leading">
-                            <img src="/images/uploads/images171592016477019381.webp" alt="img">
+                            <a href="/view/{{_id}}">
+                                <img src="/images/uploads/images171592016477019381.webp" alt="img">
+                            </a>
                         </div>
                         <div class="datas w-100">
-                            <h4 class="title max-line-2">Apple iPhone 15 Pro (1 TB) - White Titanium</h4>
+                            <h4 class="title max-line-2">{{title}}</h4>
                             <div class="price-details pt-1 pb-2 flex-wrap">
-                                <div class="text-black-50 text-decoration-line-through fs-6">₹20,900</div>
+                                <div class="text-black-50 text-decoration-line-through fs-6">₹{{formatNumber price}}
+                                </div>
                                 <div class="d-flex align-items-center">
-                                    <div class="fs-4 fw-bold mx-3">₹19,600</div>
-                                    <div class="text-primary fw-bold hide-col"> 6% OFF</div>
+                                    <div class="fs-4 fw-bold mx-3">₹{{formatNumber offerPrice}}</div>
+                                    <div class="text-primary fw-bold hide-col"> {{getOfferPecentage price offerPrice}}%
+                                        OFF</div>
                                 </div>
                             </div>
+                            {{/with}}
                         </div>
-                        <div class="box-primary text-capitalize rounded-3 position-absolute br-2">Quantity: 1
+                        <div class="box-primary text-capitalize rounded-3 position-absolute br-2">Quantity: {{quantity}}
                         </div>
                     </div>
                 </div>
@@ -36,25 +48,22 @@
         </div>
     </div>
 
-    <div class="mt-4" id="orderStatus">
+    <div class="mt-4" id="Status">
         <h3 class="text-primary my-1">Status</h3>
         <div class="card-primary-light px-3 py-1 my-3 col-12 col-md-6">
+            {{#each status}}
             <div class="d-flex align-items-center my-3">
-                <div class="text-primary fs-1-15rem fw-bold">Order Confirmed</div>
-                <div class="ms-2">at 29th Apr, 2024</div>
+                <div class="text-primary fs-1-15rem fw-bold text-capitalize">{{isEqual this.status 'confirmed' 'order'}}
+                    {{this.status}}</div>
+                <div class="ms-2">at {{formatDate this.date 'MMMM D, YYYY'}}</div>
             </div>
-            <div class="d-flex align-items-center my-3">
-                <div class="text-primary fs-1-15rem fw-bold">Shipped</div>
-                <div class="ms-2">at 30th Apr, 2024</div>
-            </div>
-            <div class="d-flex align-items-center my-3">
-                <div class="text-primary fs-1-15rem fw-bold">Delivered</div>
-                <div class="ms-2">at 30th Apr, 2024</div>
-            </div>
+            {{/each}}
         </div>
     </div>
 
-    <div class="mt-4" id="orderReview">
+    {{#with (last status)}}
+    {{#if (eq status 'delivered')}}
+    <div class="mt-4" id="Review">
         <h3 class="text-primary my-1">Review</h3>
         <div class="flex mt-3 mb-2">
             <svg class="cursor-pointer mx-1" width="32" height="30" viewBox="0 0 32 30" fill="none"
@@ -91,11 +100,11 @@
         <div class="d-flex">
             <textarea name="review" id="review"
                 class="outlined-card placeholder-primary rounded-3 outline-none col-12 col-md my-2"
-                placeholder="Address (Area and Street)" style="height: 100px"></textarea>
+                placeholder="Add your comment" style="height: 100px"></textarea>
         </div>
     </div>
 
-    <div class="mt-4" id="orderReturn">
+    <div class="mt-4" id="Return">
         <h3 class="text-primary my-1">Return</h3>
         <div class="text-primary fs-6 ms-1 mt-3">Return valid up to 7th May 2024</div>
         <div class="card-primary-light p-2 rounded-3 mb-3">
@@ -105,11 +114,9 @@
                     <div class="ms-3">
                         <select class="btn btn-outline-primary rounded-3 w-100" name="returnQuantity"
                             id="returnQuantity">
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                            <option value="5">5</option>
+                            {{#each (range 1 quantity)}}
+                            <option value="{{this}}">{{this}}</option>
+                            {{/each}}
                         </select>
                     </div>
                 </div>
@@ -126,36 +133,26 @@
                 </div>
             </div>
 
+            {{!-- Address List --}}
             <div class="d-flex flex-wrap justify-content-between align-items-end">
                 <div class="list mx-2 mt-3">
+                    {{#each userAddresses}}
                     <div class="d-flex justify-content-between mb-2">
                         <div class="d-flex align-items-start">
                             <input type="radio" value="{id}" class="radio-primary m-2" name="addressId"
                                 id="address{id}">
                             <label for="address{id}">
                                 <div class="cursor-pointer ms-2">
-                                    <div class="fs-6 fw-bold">Henry Arthur</div>
+                                    <div class="fs-6 fw-bold">{{this.name}}</div>
                                     <div class="fs-6">
-                                        2118 Thornridge Cir. Syracuse, Connecticut 35624, 9876543210
+                                        {{this.address}}, {{this.locality}}, {{this.landmark}}, {{this.state}},
+                                        {{this.pincode}}, {{this.mobile}}
                                     </div>
                                 </div>
                             </label>
                         </div>
                     </div>
-                    <div class="d-flex justify-content-between mb-2">
-                        <div class="d-flex align-items-start">
-                            <input type="radio" value="{id}" class="radio-primary m-2" name="addressId"
-                                id="address{id2}">
-                            <label for="address{id2}">
-                                <div class="cursor-pointer ms-2">
-                                    <div class="fs-6 fw-bold">Henry Arthur</div>
-                                    <div class="fs-6">
-                                        2118 Thornridge Cir. Syracuse, Connecticut 35624, 9876543210
-                                    </div>
-                                </div>
-                            </label>
-                        </div>
-                    </div>
+                    {{/each}}
                 </div>
                 <div class="d-flex justify-content-end col m-2">
                     <button class="btn btn-outline-primary">Return</button>
@@ -163,14 +160,39 @@
             </div>
         </div>
     </div>
+    {{/if}}
+    {{/with}}
 
-    <div class="mt-4" id="orderShippingAddress">
+    <div class="mt-4" id="ShippingAddress">
         <h3 class="text-primary my-1">Shipping Address</h3>
+        {{#with address}}
         <div class="card-primary-light rounded-3 p-2 pb-4 my-3">
-            <div class="fs-1-15rem fw-bold">Henry Arthur</div>
-            <div>2118 Thornridge Cir. Syracuse, Connecticut 35624, 9876543210</div>
+            <div class="fs-1-15rem fw-bold">{{name}}</div>
+            <div>
+                {{address}}, {{locality}}, {{landmark}},
+                {{state}}, {{pincode}}, {{mobile}}
+            </div>
+        </div>
+        {{/with}}
+    </div>
+
+
+    <div class="mt-4" id="PriceDetails">
+        <h3 class="text-primary my-1">Price Details</h3>
+        <div class="outlined-card p-2 my-3 col-12 col-md-6">
+            {{#each price}}
+            {{#unless (eq @key '_id')}}
+            <div
+                class="d-flex justify-content-between py-2 {{#if (eq @key 'totalPrice')}}fs-5 fw-bold text-primary{{else}}fs-6{{/if}}">
+                <div class="text-capitalize">{{formatKey @key}}</div>
+                <div id="totalPrice" {{#if (eq this 0)}}class="text-primary">Free{{else}}>₹{{formatNumber this}}{{/if}}
+                </div>
+            </div>
+            {{/unless}}
+            {{/each}}
         </div>
     </div>
 </div>
+{{/with}}
 
 <script src="/javascript/form.js"></script>

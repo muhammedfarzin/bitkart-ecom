@@ -13,15 +13,15 @@ const orderPriceSchema = new Schema(
         promocodeDiscount: {
             type: Number,
         },
-    },
-    {
-        toObject: { virtuals: true },
-        toJSON: { virtuals: true }
+        totalPrice: {
+            type: Number
+        }
     }
 );
 
-orderPriceSchema.virtual('totalAmount').get(function () {
-    return this.price + this.deliveryCharge - (this.promocodeDiscount || 0);
+orderPriceSchema.pre('save', function (next) {
+    this.totalPrice = this.price + this.deliveryCharge - (this.promocodeDiscount || 0);
+    next();
 });
 
 

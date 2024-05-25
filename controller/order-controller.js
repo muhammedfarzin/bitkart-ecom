@@ -1,3 +1,4 @@
+import { Types } from "mongoose";
 import OrderModel, { orderStatus } from "../models/order-model.js";
 import UserModel from "../models/user-model.js";
 import productController from "./product-controller.js";
@@ -117,9 +118,50 @@ const orderController = {
                     as: 'productDetails'
                 }
             },
-            { $addFields: { productDetails: { $arrayElemAt: ['$productDetails', 0] } } }
+            { $addFields: { productDetails: { $arrayElemAt: ['$productDetails', 0] } } },
+            { $sort: { orderedAt: -1 } }
         ]);
         return orders;
+    },
+    getUserOrderDetails: (userId, orderId) => {
+        return new Promise(async (resolve, reject) => {
+            try {
+                orderId = Types.ObjectId.createFromHexString(orderId);
+                const order = (await OrderModel.aggregate([
+                    { $match: { _id: orderId, userId } },
+                    {
+                        $lookup: {
+                            from: 'products',
+                            localField: 'productId',
+                            foreignField: '_id',
+                            as: 'productDetails'
+                        }
+                    },
+                    { $addFields: { productDetails: { $arrayElemAt: ['$productDetails', 0] } } },
+                    {
+                        $lookup: {
+                            from: 'users',
+                            localField: 'userId',
+                            foreignField: '_id',
+                            as: 'userDetails'
+                        }
+                    },
+                    { $addFields: { userAddresses: { $arrayElemAt: ['$userDetails.address', 0] } } },
+                    { $project: { userDetails: 0 } }
+                ]))[0];
+                if (!order) reject(new Error('Invalid order'));
+                console.log(order);
+
+                resolve(order);
+            } catch (err) {
+                if (err.name === 'BSONError') {
+                    reject(new Error('Invalid Order'));
+                } else {
+                    console.log(err);
+                    reject(err);
+                }
+            }
+        });
     }
 }
 

@@ -53,9 +53,19 @@ const hbsConfig = hbs.create({
         formatNumber: function (num) {
             return num.toLocaleString('en-IN');
         },
-        sum: (...nums) => {
+        sum: function (...nums) {
             nums = nums.slice(0, -1);
             return nums.reduce((sum, num) => sum + num, 0);
+        },
+        range: function (start, end) {
+            const result = [];
+            for (let i = start; i <= end; i++) {
+                result.push(i);
+            }
+            return result;
+        },
+        formatKey: function (key) {
+            return key.replace(/([a-z])([A-Z])/g, '$1 $2');
         }
     }
 });
