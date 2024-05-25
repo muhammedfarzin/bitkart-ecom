@@ -99,9 +99,17 @@
 
             {{#if (eq status 'active')}}
             <div class="action-btn d-flex flex-wrap">
-                <div class="btn btn-outline-primary fw-bold me-2 my-1 py-3 col-12 col-md" onclick="addToCart('{{_id}}')">ADD TO CART</div>
-                <div class="btn btn-primary fw-bold me-2 my-1 py-3 col-12 col-md">BUY NOW</div>
+                <button class="btn btn-outline-primary fw-bold me-2 my-1 py-3 col-12 col-md"
+                    onclick="addToCart('{{_id}}')">ADD TO CART</button>
+                <button class="btn btn-primary fw-bold me-2 my-1 py-3 col-12 col-md" onclick="buyNow('{{_id}}')">
+                    BUY NOW
+                </button>
             </div>
+
+            {{#lt quantity 10}}
+            <div class="fs-5 fw-bold text-danger mt-2">Only {{quantity}} left, Hurry up!</div>
+            {{/lt}}
+
             {{else if (eq status 'sold out')}}
             <span class="fs-4 fw-bold text-danger">This product is currently sold out</span>
             {{else}}

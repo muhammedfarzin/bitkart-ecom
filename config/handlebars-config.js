@@ -24,6 +24,13 @@ const hbsConfig = hbs.create({
             if (value1 == value2) return output;
             else return elseOutput;
         },
+        lt: function (a, b, options) {
+            if (a < b) {
+                return options.fn(this);
+            } else {
+                return options.inverse(this);
+            }
+        },
         getOfferPecentage: function (total, value) {
             return Math.floor((total - value) * 100 / total);
         },

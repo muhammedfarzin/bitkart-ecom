@@ -213,7 +213,8 @@ router.get('/checkout', checkUserLoginStatus, async (req, res) => {
     const userId = req.session.user.userId;
     const addresses = await userController.getAddresses(userId);
     const priceDetails = await cartController.getPriceSummary(userId);
-    res.render('user/purchase/checkout', { priceDetails, addresses, currentPath: req.url });
+    if (!priceDetails.totalPrice) res.redirect('/');
+    else res.render('user/purchase/checkout', { priceDetails, addresses, currentPath: req.url });
 });
 
 router.post('/checkout', checkUserLoginStatus, async (req, res) => {

@@ -61,19 +61,19 @@ productSchema.pre('save', function (next) {
     next();
 });
 
-productSchema.pre(['updateOne', 'findOneAndUpdate'], function (next) {
+productSchema.pre(['updateOne', 'findOneAndUpdate'], async function (next) {
     const update = this.getUpdate();
-  
-  if (update && update.$inc && update.$inc.quantity) {
-    const updatedQuantity = update.$inc.quantity;
-    const newStatus = (updatedQuantity <= 0) ? 'sold out' : 'active';
+    if (update.$set) {
+        if (update.$set.quantity <= 0) update.$set.status = 'sold out';
+    } else if (update.$inc) {
+        const quantity = (await this.model.findOne(this.getQuery())).quantity;
+        if ((quantity + update.$inc.quantity) <= 0) {
+            update.$set = update.$set || {};
+            update.$set.status = 'sold out';
+        }
+    }
 
-    // Update the status field in the update object
-    update.$set = update.$set || {};
-    update.$set.status = newStatus;
-  }
-    
-  next();
+    next();
 });
 
 productSchema.methods.invalidDataCustomError = function (err) {

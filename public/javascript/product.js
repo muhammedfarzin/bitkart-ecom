@@ -54,7 +54,7 @@ const debounce = (mainFunction, delay) => {
     };
 };
 
-const debouncedUpdateCart = debounce(function (productId, quantityElem) {
+const debouncedUpdateCart = debounce(function (productId, quantityElem, redirect) {
     let quantity = quantityElem.val();
     $.ajax({
         url: '/cart/update',
@@ -62,8 +62,8 @@ const debouncedUpdateCart = debounce(function (productId, quantityElem) {
         data: { productId, quantity },
         dataType: 'json',
         success: function (data) {
-            console.log(data);
-            if(data.cartCount <= 0) {
+            if (redirect) return location.href = redirect;
+            if (data.cartCount <= 0) {
                 $('#cartView').addClass('d-none');
                 $('#emptyCart').removeClass('d-none');
             }
@@ -87,11 +87,11 @@ const debouncedUpdateCart = debounce(function (productId, quantityElem) {
 }, 500);
 
 
-function addToCart(productId) {
+function addToCart(productId, redirect) {
     let quantity = $('#quantity' + productId);
     if (quantity.val() >= 10) return alert('Sorry, you can only purchase up to 10 units of the same product at a time');
     quantity.val(parseInt(quantity.val()) + 1);
-    debouncedUpdateCart(productId, quantity);
+    debouncedUpdateCart(productId, quantity, redirect);
 }
 
 function removeFromCart(productId) {
@@ -99,4 +99,8 @@ function removeFromCart(productId) {
     if (quantity.val() <= 1 && !confirm('Are really want remove this product from your cart?')) return;;
     quantity.val(parseInt(quantity.val()) - 1);
     debouncedUpdateCart(productId, quantity);
+}
+
+function buyNow(productId) {
+    addToCart(productId, '/checkout');
 }
