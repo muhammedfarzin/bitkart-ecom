@@ -9,23 +9,24 @@
 <div class="container col-md-9 me-0">
     <div id="personalDetails">
         <h3 class="text-primary my-1">Personal Details</h3>
+        {{#with user}}
         <form method="post" class="col-12" id="personalDetailsFrm">
             <div class="d-flex m-3">
                 <div class="col-12 col-md me-3">
                     <label for="name" class="fs-6 fw-bold my-2">Name</label>
-                    <input type="text" name="name" id="name" value="Henry Arthur"
+                    <input type="text" name="name" id="name" value="{{name}}"
                         class="outlined-card placeholder-primary outline-none w-100" placeholder="Enter name">
                 </div>
                 <div class="col-12 col-md">
                     <label for="mobile" class="fs-6 fw-bold my-2">Mobile Number</label>
-                    <input type="tel" name="mobile" id="mobile" value="9876543210"
+                    <input type="tel" name="mobile" id="mobile" value="{{mobile}}"
                         class="outlined-card placeholder-primary outline-none w-100" placeholder="Enter mobile number">
                 </div>
             </div>
             <div class="m-3">
                 <div class="w-100">
                     <label for="email" class="fs-6 fw-bold my-2">Email Address</label>
-                    <input type="email" name="email" id="email" value="michelle.rivera@example.com"
+                    <input type="email" name="email" id="email" value="{{email}}"
                         class="outlined-card placeholder-primary outline-none w-100" placeholder="Enter email address">
                 </div>
             </div>
@@ -46,18 +47,23 @@
                 <button type="submit" class="btn btn-primary w-100 rounded-4">UPDATE</button>
             </div>
         </form>
+        {{/with}}
     </div>
 
     <div class="mt-4" id="addresses">
         <h3 class="text-primary my-1">Addresses</h3>
         <div class="list">
+            {{#each user.address}}
             <div class="card-primary-light d-flex justify-content-between align-items-start m-3">
                 <div class="datas ps-2 pb-4">
-                    <div class="fs-5 fw-bold">Henry Arthur</div>
-                    <div class="fs-6">2118 Thornridge Cir. Syracuse, Connecticut 35624, 9876543210</div>
+                    <div class="fs-5 fw-bold">{{this.name}}</div>
+                    <div class="fs-6">
+                        {{this.address}}, {{this.locality}}, {{this.landmark}}, {{this.state}},
+                        {{this.pincode}}, {{this.mobile}}
+                    </div>
                 </div>
                 <div class="actions">
-                    <div class="icon-btn">
+                    <a href="account/address/edit/{{this._id}}?redirect={{@root.currentPath}}" class="icon-btn">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path
                                 d="M11 4H4C3.46957 4 2.96086 4.21071 2.58579 4.58579C2.21071 4.96086 2 5.46957 2 6V20C2 20.5304 2.21071 21.0391 2.58579 21.4142C2.96086 21.7893 3.46957 22 4 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V13"
@@ -66,75 +72,40 @@
                                 d="M18.5 2.49998C18.8978 2.10216 19.4374 1.87866 20 1.87866C20.5626 1.87866 21.1022 2.10216 21.5 2.49998C21.8978 2.89781 22.1213 3.43737 22.1213 3.99998C22.1213 4.56259 21.8978 5.10216 21.5 5.49998L12 15L8 16L9 12L18.5 2.49998Z"
                                 stroke="#6F43BF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                         </svg>
-                    </div>
+                    </a>
                 </div>
             </div>
-            <div class="card-primary-light d-flex justify-content-between align-items-start m-3">
-                <div class="datas ps-2 pb-4">
-                    <div class="fs-5 fw-bold">Henry Arthur</div>
-                    <div class="fs-6">2118 Thornridge Cir. Syracuse, Connecticut 35624, 9876543210</div>
-                </div>
-                <div class="actions">
-                    <div class="icon-btn">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path
-                                d="M11 4H4C3.46957 4 2.96086 4.21071 2.58579 4.58579C2.21071 4.96086 2 5.46957 2 6V20C2 20.5304 2.21071 21.0391 2.58579 21.4142C2.96086 21.7893 3.46957 22 4 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V13"
-                                stroke="#6F43BF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                            <path
-                                d="M18.5 2.49998C18.8978 2.10216 19.4374 1.87866 20 1.87866C20.5626 1.87866 21.1022 2.10216 21.5 2.49998C21.8978 2.89781 22.1213 3.43737 22.1213 3.99998C22.1213 4.56259 21.8978 5.10216 21.5 5.49998L12 15L8 16L9 12L18.5 2.49998Z"
-                                stroke="#6F43BF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                        </svg>
-                    </div>
-                </div>
-            </div>
+            {{/each}}
         </div>
     </div>
 
     <div class="mt-4" id="orders">
         <h3 class="text-primary my-1">Orders</h3>
         <div class="list">
-            <a class="text-reset" href="#">
+            {{#each orders}}
+            <a class="text-reset" href="/orders/{{this._id}}">
                 <div class="list-item position-relative">
                     <div class="content d-flex pb-1">
+                        {{#with this.productDetails}}
                         <div class="leading">
-                            <img src="/images/uploads/images171560052496577858.jpg" alt="img">
+                            <img src="{{first imagePaths}}" alt="img">
                         </div>
-                        <div class="datas">
-                            <h4 class="title max-line-2">Rubbermaid Commercial 1250 Lb Capacity Standard Duty Tilt
-                                Truck - 1250 Lb Capacity - X 33.5in Width X 72.2in Depth X 43.8in Height - Black - 1
-                                Each</h4>
-                            <div class="fs-5">₹2499</div>
+                        <div class="datas w-100">
+                            <h4 class="title max-line-2">{{title}}</h4>
+                            {{/with}}
+                            <div class="fs-5">₹{{formatNumber this.price.price}}</div>
                             <div class="d-flex justify-content-end">
                                 <div class="p-1 bg-light rounded-4">
-                                    <div class="status-view-success">Shipped</div>
+                                    {{#with (last this.status) as |latestStatus|}}
+                                    <div class="status-view-success text-capitalize">{{latestStatus.status}}</div>
+                                    {{/with}}
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </a>
-            <a class="text-reset" href="#">
-                <div class="list-item position-relative">
-                    <div class="content d-flex pb-1">
-                        <div class="leading">
-                            <img src="/images/uploads/images171560052496577858.jpg" alt="img">
-                        </div>
-                        <div class="datas">
-                            <h4 class="title max-line-2">Rubbermaid Commercial 1250 Lb Capacity Standard Duty Tilt
-                                Truck - 1250 Lb Capacity - X 33.5in Width X 72.2in Depth X 43.8in Height - Black - 1
-                                Each</h4>
-                            <div class="fs-5">₹2499</div>
-                            <div class="d-flex justify-content-end">
-                                <div class="p-1 bg-light rounded-4">
-                                    <div class="status-view-primary">
-                                        Delivered
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </a>
+            {{/each}}
         </div>
     </div>
 </div>

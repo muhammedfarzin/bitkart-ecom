@@ -80,6 +80,10 @@ const userController = {
             return [];
         }
     },
+    findUserById: async (userId) => {
+        const user = await UserModel.findById(userId);
+        return user.toObject();
+    },
     checkUserStatus: async (user) => {
         if (!user) return false;
         const userData = await UserModel.findById(user.userId);

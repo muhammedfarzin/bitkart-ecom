@@ -14,6 +14,12 @@ const hbsConfig = hbs.create({
         first: function (data) {
             return data[0];
         },
+        last: function (data) {
+            if (data && data.length > 0) {
+                return data[data.length - 1];
+            }
+            return null;
+        },
         eq: function (value1, value2) {
             return value1 == value2;
         },

@@ -5,7 +5,7 @@ import userController from "./user-controller.js";
 
 const minForFreeDelivery = 1000;
 
-const cartController = {
+const orderController = {
     updateCart: async (userId, productId, quantity) => {
         if (quantity) {
             quantity = parseInt(quantity);
@@ -55,7 +55,7 @@ const cartController = {
     },
     getPriceSummary: async (userId, datas) => {
         if (!datas) {
-            datas = await cartController.getCartProducts(userId);
+            datas = await orderController.getCartProducts(userId);
         }
         let totalPrice = 0;
         let deliveryCharge = datas.length * 100;
@@ -78,9 +78,9 @@ const cartController = {
     placeOrder: async (req) => {
         const userId = req.session.user.userId;
         const { addressId, paymentMethod } = req.body;
-        const cartProducts = await cartController.getCartProducts(userId);
+        const cartProducts = await orderController.getCartProducts(userId);
         const address = await userController.getAddressById(userId, addressId);
-        const deliveryCharge = cartController.calculateDeliveryCharge(cartProducts);
+        const deliveryCharge = orderController.calculateDeliveryCharge(cartProducts);
         const status = paymentMethod == 'cod' ? orderStatus.confirmed : orderStatus.pending;
 
         for (const cartItem of cartProducts) {
@@ -105,7 +105,22 @@ const cartController = {
     },
     clearCart: async (userId) => {
         await UserModel.findByIdAndUpdate(userId, { $set: { cart: [] } });
+    },
+    getUserOrders: async (userId) => {
+        const orders = await OrderModel.aggregate([
+            { $match: { userId } },
+            {
+                $lookup: {
+                    from: 'products',
+                    localField: 'productId',
+                    foreignField: '_id',
+                    as: 'productDetails'
+                }
+            },
+            { $addFields: { productDetails: { $arrayElemAt: ['$productDetails', 0] } } }
+        ]);
+        return orders;
     }
 }
 
-export default cartController;
+export default orderController;

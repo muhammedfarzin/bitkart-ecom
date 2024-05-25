@@ -6,7 +6,7 @@ import { mongoUri } from "../config/db.js";
 import productController from "../controller/product-controller.js";
 import categoryController from "../controller/category-controller.js";
 import otpController from "../controller/otp-controller.js";
-import cartController from "../controller/cart-controller.js";
+import orderController from "../controller/order-controller.js";
 
 const router = Router();
 const MongoStore = MongoDBStore(session);
@@ -152,10 +152,15 @@ router.get('/logout', (req, res) => {
 });
 
 // Account
-router.get('/account', checkUserLoginStatus, (req, res) => {
-    res.render('user/account/account');
+router.get('/account', checkUserLoginStatus, async (req, res) => {
+    const userId = req.session.user.userId;
+    const user = await userController.findUserById(userId);
+    const orders = await orderController.getUserOrders(userId);
+    console.log(user, orders);
+    res.render('user/account/account', { user, orders, currentPath: req.url });
 });
 
+// Mange Address
 router.get('/account/address/add', checkUserLoginStatus, (req, res) => {
     res.render('user/account/address-form', { errMessage: req.query.errMessage });
 });
@@ -190,19 +195,19 @@ router.post('/account/address/edit/:id', checkUserLoginStatus, async (req, res) 
 
 // Cart
 router.get('/cart', checkUserLoginStatus, async (req, res) => {
-    const cart = await cartController.getCartProducts(req.session.user.userId);
-    const priceDetails = await cartController.getPriceSummary(req.session.user.userId, cart);
+    const cart = await orderController.getCartProducts(req.session.user.userId);
+    const priceDetails = await orderController.getPriceSummary(req.session.user.userId, cart);
     res.render('user/purchase/cart', { cart, priceDetails });
 });
 
 router.post('/cart/update', checkUserLoginStatus, async (req, res) => {
     const { productId, quantity } = req.body;
     try {
-        const datas = await cartController.updateCart(req.session.user.userId, productId, quantity);
+        const datas = await orderController.updateCart(req.session.user.userId, productId, quantity);
         const cartCount = datas.cart.reduce((count, data) => {
             return count + data.quantity;
         }, 0);
-        const priceDetails = await cartController.getPriceSummary(req.session.user.userId);
+        const priceDetails = await orderController.getPriceSummary(req.session.user.userId);
         res.json({ message: 'Added to cart', cartCount, updatedQuantity: quantity, priceDetails });
     } catch (err) {
         res.status(400).json({ errMessage: err.message });
@@ -212,7 +217,7 @@ router.post('/cart/update', checkUserLoginStatus, async (req, res) => {
 router.get('/checkout', checkUserLoginStatus, async (req, res) => {
     const userId = req.session.user.userId;
     const addresses = await userController.getAddresses(userId);
-    const priceDetails = await cartController.getPriceSummary(userId);
+    const priceDetails = await orderController.getPriceSummary(userId);
     if (!priceDetails.totalPrice) res.redirect('/');
     else res.render('user/purchase/checkout', { priceDetails, addresses, currentPath: req.url });
 });
@@ -223,8 +228,8 @@ router.post('/checkout', checkUserLoginStatus, async (req, res) => {
         if (paymentMethod == 'online') {
             throw new Error('Online payment currently not available');
         } else if (paymentMethod == 'cod') {
-            await cartController.placeOrder(req);
-            await cartController.clearCart(req.session.user.userId);
+            await orderController.placeOrder(req);
+            await orderController.clearCart(req.session.user.userId);
             req.session.orderDone = true;
             res.json({ message: 'Order placed successfully', redirect: '/orderSuccess' });
         } else {

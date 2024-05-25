@@ -41,9 +41,6 @@ const userSchema = new Schema({
     wishlist: {
         type: [String]
     },
-    orders: {
-        type: [String]
-    },
     status: {
         type: String,
         required: true
