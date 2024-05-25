@@ -17,6 +17,31 @@ const userController = {
                 });
         })
     },
+    updateUser: async (userId, data) => {
+        return new Promise(async (resolve, reject) => {
+            const { name, mobile, email, password } = data;
+            if (!name || !mobile || !email || !password) throw new Error('All fields are mandatory');
+            const newPassword = data.newPassword || undefined;
+            const user = await UserModel.findById(userId);
+
+            if (user.comparePassword(password)) {
+                user.name = name;
+                user.mobile = mobile;
+                user.email = email;
+                user.password = newPassword || password;
+                user.save()
+                    .then((data => {
+                        const { name, email, mobile } = data;
+                        resolve({ name, email, mobile });
+                    }))
+                    .catch((err) => {
+                        reject(user.customError(err));
+                    });
+            } else {
+                reject(new Error('Incorrect password, please try again'));
+            }
+        });
+    },
     checkMobileAndEmail: async (mobile, email) => {
         if (await UserModel.findOne({ mobile })) return { message: 'User with mobile number is already exist' };
         if (await UserModel.findOne({ email })) return { message: 'User with email address is already exist' };

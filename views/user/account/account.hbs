@@ -1,17 +1,18 @@
 {{> navbar}}
 
-<aside class="col-md-3">
+<aside class="col-md-3 sm-d-none">
     <a href="#personalDetails" class="btn text-start text-primary bg-light fw-bold my-1 w-100">Personal Details</a>
     <a href="#addresses" class="btn text-start text-primary bg-light fw-bold my-1 w-100">Addresses</a>
     <a href="#orders" class="btn text-start text-primary bg-light fw-bold my-1 w-100">Orders</a>
 </aside>
 
-<div class="container col-md-9 me-0">
+<div class="container col-md-9 sm me-0">
     <div id="personalDetails">
         <h3 class="text-primary my-1">Personal Details</h3>
+        <span class="text-danger fw-normal" id="err-message">{{errMessage}}</span>
         {{#with user}}
-        <form method="post" class="col-12" id="personalDetailsFrm">
-            <div class="d-flex m-3">
+        <form method="post" action="/updateUser" class="col-12" id="personalDetailsFrm">
+            <div class="d-flex flex-wrap m-3">
                 <div class="col-12 col-md me-3">
                     <label for="name" class="fs-6 fw-bold my-2">Name</label>
                     <input type="text" name="name" id="name" value="{{name}}"
@@ -30,7 +31,7 @@
                         class="outlined-card placeholder-primary outline-none w-100" placeholder="Enter email address">
                 </div>
             </div>
-            <div class="d-flex m-3">
+            <div class="d-flex flex-wrap m-3">
                 <div class="col-12 col-md me-3">
                     <label for="password" class="fs-6 fw-bold my-2">Current Password</label>
                     <input type="password" name="password" id="password"
@@ -109,3 +110,5 @@
         </div>
     </div>
 </div>
+
+<script src="/javascript/form.js"></script>

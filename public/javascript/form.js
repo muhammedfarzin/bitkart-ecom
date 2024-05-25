@@ -5,6 +5,7 @@ function isImage(file) {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
+    const errMessage = $('#err-message');
     const imagesInput = document.getElementById('image-input');
     const imageGallery = document.getElementById('image-gallery');
     const popupWindow = document.getElementById('popup-image');
@@ -57,7 +58,6 @@ document.addEventListener('DOMContentLoaded', function () {
         e.preventDefault();
         let email = $('#email');
         let password = $('#password');
-        let errMessage = $('#err-message');
 
         email.removeClass('err');
         password.removeClass('err');
@@ -80,7 +80,6 @@ document.addEventListener('DOMContentLoaded', function () {
         let confPassword = $('#conf-password');
         let name = $('#name');
         let mobile = $('#mobile');
-        let errMessage = $('#err-message');
 
         errMessage.text('');
         email.removeClass('err');
@@ -112,6 +111,43 @@ document.addEventListener('DOMContentLoaded', function () {
             confPassword.addClass('err');
         } else {
             $('#signup-frm')[0].submit();
+        }
+    });
+
+    $('#personalDetailsFrm').submit((e) => {
+        e.preventDefault();
+        const formData = $('#personalDetailsFrm').serializeArray().reduce((obj, item) => {
+            obj[item.name] = item.value;
+            return obj;
+        }, {});
+
+        errMessage.text('');
+        $('#name').removeClass('err');
+        $('#mobile').removeClass('err');
+        $('#email').removeClass('err');
+        $('#password').removeClass('err');
+        $('#newPassword').removeClass('err');
+
+        if (!formData.name) {
+            errMessage.text('Please enter name');
+            $('#name').addClass('err');
+        } else if (!formData.mobile) {
+            errMessage.text('Please enter mobile number');
+            $('#mobile').addClass('err');
+        } else if (!formData.email) {
+            errMessage.text('Please enter email address');
+            $('#email').addClass('err');
+        } else if (!formData.password) {
+            errMessage.text('Please enter password');
+            $('#password').addClass('err');
+        } else if (!mobilePattern.test(formData.mobile)) {
+            errMessage.text('Please enter a valid 10-digit mobile number')
+            $('#mobile').addClass('err');
+        } else if (formData.newPassword && formData.newPassword.length < 8) {
+            errMessage.text('Password must be atleast 8 characters');
+            $('#newPassword').addClass('err');
+        } else {
+            $('#personalDetailsFrm')[0].submit();
         }
     });
 

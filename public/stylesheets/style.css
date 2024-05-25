@@ -47,6 +47,10 @@
         display: unset !important;
     }
 
+    .sm.me-0 {
+        margin: 0 auto !important;
+    }
+
     .list-item img {
         width: 6rem !important;
         height: 6rem !important;

@@ -156,8 +156,17 @@ router.get('/account', checkUserLoginStatus, async (req, res) => {
     const userId = req.session.user.userId;
     const user = await userController.findUserById(userId);
     const orders = await orderController.getUserOrders(userId);
-    console.log(user, orders);
-    res.render('user/account/account', { user, orders, currentPath: req.url });
+    res.render('user/account/account', { user, orders, currentPath: req.url, errMessage: req.query.errMessage });
+});
+
+router.post('/updateUser', checkUserLoginStatus, async (req, res) => {
+    try {
+        const newData = await userController.updateUser(req.session.user.userId, req.body);
+        req.session.user = { ...req.session.user, ...newData };
+        res.redirect('/account');
+    } catch (err) {
+        res.redirect('/account?errMessage=' + err.message);
+    }
 });
 
 // Mange Address
