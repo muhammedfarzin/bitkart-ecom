@@ -7,6 +7,7 @@ import { mongoUri } from "../config/db.js";
 import userController from "../controller/user-controller.js";
 import categoryController from "../controller/category-controller.js";
 import productController from "../controller/product-controller.js";
+import orderController from "../controller/order-controller.js";
 
 const router = Router();
 const MongoStore = MongoDBStore(session);
@@ -81,7 +82,7 @@ router.get('/login', (req, res) => {
 
 router.post('/login', (req, res) => {
     if (checkLogin(req.session)) {
-        res.redirect(dashboardRoute);
+        return res.redirect(dashboardRoute);
     }
     const { email, password } = req.body;
     if (email == process.env.ADMIN_EMAIL && password == process.env.ADMIN_PASSWORD) {
@@ -127,7 +128,7 @@ router.patch(`${sideMenuPath.users}/block`, async (req, res) => {
     } catch (err) {
         res.status(400).json({ errMessage: err.message });
     }
-})
+});
 
 router.patch(`${sideMenuPath.users}/unblock`, async (req, res) => {
     try {
@@ -136,7 +137,14 @@ router.patch(`${sideMenuPath.users}/unblock`, async (req, res) => {
     } catch (err) {
         res.status(400).json({ errMessage: err.message });
     }
-})
+});
+
+// Orders routes
+router.get(sideMenuPath.orders, async (req, res) => {
+    const orders = await orderController.getOrders();
+    const sideMenus = getSideMenus(sideMenuPath.orders);
+    res.render('admin/orders/orders', { orders, sideMenus });
+});
 
 router.get(sideMenuPath.orders, (req, res) => {
     const sideMenus = getSideMenus(sideMenuPath.orders);

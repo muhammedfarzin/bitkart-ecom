@@ -107,6 +107,26 @@ const orderController = {
     clearCart: async (userId) => {
         await UserModel.findByIdAndUpdate(userId, { $set: { cart: [] } });
     },
+    getOrders: () => {
+        return new Promise(async (resolve, reject) => {
+            // const orders = await OrderModel.find().limit(20).sort({ orderedAt: -1 });
+            const orders = await OrderModel.aggregate([
+                { $sort: { orderedAt: -1 } },
+                { $limit: 20 },
+                {
+                    $lookup: {
+                        from: 'products',
+                        localField: 'productId',
+                        foreignField: '_id',
+                        as: 'products'
+                    }
+                },
+                { $addFields: { products: { $arrayElemAt: ['$products', 0] } } }
+            ]);
+            console.log(orders);
+            resolve(orders);
+        });
+    },
     getUserOrders: async (userId) => {
         const orders = await OrderModel.aggregate([
             { $match: { userId } },
