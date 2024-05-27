@@ -229,8 +229,8 @@ div.border-primary {
 .sidebar {
     position: sticky;
     top: 4.5rem;
+    height: calc(100vh - 70px);
     max-width: 320px;
-    max-height: 80vh;
     background-color: #F0EBF8;
     border-radius: 2vw;
     margin-right: 1rem;
@@ -385,6 +385,16 @@ form {
 
 .top-bar>.actions>*:not(:first-child) {
     padding-left: 1rem;
+}
+
+.tr-1 {
+    top: 0.5rem;
+    right: 0.5rem;
+}
+
+.tr-2 {
+    top: 1rem;
+    right: 1rem;
 }
 
 .br-1 {

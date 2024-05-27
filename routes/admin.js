@@ -146,9 +146,25 @@ router.get(sideMenuPath.orders, async (req, res) => {
     res.render('admin/orders/orders', { orders, sideMenus });
 });
 
-router.get(sideMenuPath.orders, (req, res) => {
-    const sideMenus = getSideMenus(sideMenuPath.orders);
-    res.render('admin/orders/orders', { sideMenus });
+router.get(`${sideMenuPath.orders}/:id`, async (req, res) => {
+    try {
+        const order = await orderController.getOrderById(req.params.id);
+        const sideMenus = getSideMenus(sideMenuPath.orders);
+        res.render('admin/orders/view-order', { order, sideMenu, currentPath: req.urls });
+    } catch (err) {
+        res.render('admin/error', { errMessage: err.message });
+    }
+});
+
+router.post(`${sideMenuPath.orders}/:id/updateStatus`, async (req, res) => {
+    try {
+        const orderId = req.params.id;
+        const response = await orderController.updateStatus(orderId, req.body.status);
+        console.log(response);
+        res.json(response);
+    } catch (err) {
+        res.status(400).json({ errMessage: err.message });
+    }
 });
 
 // Products routes

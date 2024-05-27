@@ -5,6 +5,7 @@ import productController from "./product-controller.js";
 import userController from "./user-controller.js";
 
 const minForFreeDelivery = 1000;
+const orderStatusList = Object.values(orderStatus);
 
 const orderController = {
     updateCart: async (userId, productId, quantity) => {
@@ -127,6 +128,49 @@ const orderController = {
             resolve(orders);
         });
     },
+    getOrderById: (orderId) => {
+        return new Promise(async (resolve, reject) => {
+            try {
+                orderId = Types.ObjectId.createFromHexString(orderId);
+                const order = (await OrderModel.aggregate([
+                    { $match: { _id: orderId } },
+                    {
+                        $lookup: {
+                            from: 'products',
+                            localField: 'productId',
+                            foreignField: '_id',
+                            as: 'productData'
+                        }
+                    },
+                    {
+                        $lookup: {
+                            from: 'users',
+                            localField: 'userId',
+                            foreignField: '_id',
+                            as: 'userInfo'
+                        }
+                    },
+                    {
+                        $addFields: {
+                            productData: { $arrayElemAt: ['$productData', 0] },
+                            userInfo: { $arrayElemAt: ['$userInfo', 0] }
+                        }
+                    }
+                ]))[0];
+
+                if (!order) throw new Error('Invalid order');
+                console.log(order);
+                resolve(order);
+            } catch (err) {
+                if (err.name === 'BSONError') {
+                    reject(new Error('Invalid Order'));
+                } else {
+                    console.log(err);
+                    reject(err);
+                }
+            }
+        });
+    },
     getUserOrders: async (userId) => {
         const orders = await OrderModel.aggregate([
             { $match: { userId } },
@@ -173,6 +217,34 @@ const orderController = {
                 console.log(order);
 
                 resolve(order);
+            } catch (err) {
+                if (err.name === 'BSONError') {
+                    reject(new Error('Invalid Order'));
+                } else {
+                    console.log(err);
+                    reject(err);
+                }
+            }
+        });
+    },
+    updateStatus: (orderId, newStatus) => {
+        return new Promise(async (resolve, reject) => {
+            try {
+                orderId = Types.ObjectId.createFromHexString(orderId);
+                const order = await OrderModel.findById(orderId);
+                if (!order) throw new Error('Invalid order');
+                if (!orderStatusList.includes(newStatus)) throw new Error('Invalid order status');
+                const currentStatus = order.status[order.status.length - 1].status;
+                const currentStatusIndex = orderStatusList.findIndex((status) => currentStatus == status);
+                const newStatusIndex = orderStatusList.findIndex((status) => newStatus == status);
+                if (currentStatusIndex > newStatusIndex) {
+                    reject(new Error('You can\'t reverse order status'));
+                } else if (newStatusIndex - currentStatusIndex != 1) {
+                    reject(new Error('You can\'t skip order status'));
+                } else {
+                    await order.updateOne({ $push: { status: { status: newStatus } } });
+                    resolve({ message: 'Order status updated' });
+                }
             } catch (err) {
                 if (err.name === 'BSONError') {
                     reject(new Error('Invalid Order'));

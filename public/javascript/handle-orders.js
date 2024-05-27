@@ -33,3 +33,19 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 });
+
+function changeOrderStatus(status, elem) {
+    $.ajax({
+        url: location.href + '/updateStatus',
+        type: 'POST',
+        data: { status },
+        dataType: 'json',
+        success: function (data) {
+            alert(data.message);
+            elem.classList.replace('btn-outline-primary', 'btn-primary');
+        },
+        error: function (err) {
+            alert(err.responseJSON?.errMessage ?? 'Something went wrong');
+        }
+    });
+}

@@ -22,193 +22,49 @@
                 </div>
             </div>
         </div>
+        {{#if orders}}
         <div class="list">
-            <a class="text-reset" href="#">
+            {{#each orders}}
+            <a class="text-reset" href="/admin/orders/{{this._id}}">
                 <div class="list-item">
                     <div class="content d-flex pb-1">
                         <div class="leading">
-                            <img src="https://store.storeimages.cdn-apple.com/4668/as-images.apple.com/is/MTJV3?wid=1144&hei=1144&fmt=jpeg&qlt=90&.v=1694014871985"
-                                alt="img">
+                            {{#with this.products}}
+                            <img src="{{first imagePaths}}" alt="img">
                         </div>
                         <div class="datas">
-                            <div class="text-primary fs-7">Product id: 98765431</div>
-                            <h4 class="title max-line-1 mb-3">Rubbermaid Commercial 1250 Lb Capacity Standard Duty Tilt
-                                Truck
-                                -
-                                1250 Lb
-                                Capacity - X 33.5in Width X 72.2in Depth X 43.8in Height - Black - 1 Each</h4>
-                            <div class="text-primary fs-7">User id: 6579895</div>
-                            <div class="subtitle">Henry Arthur, 2118 Thornridge Cir. Syracuse, Connecticut 35624,
-                                9876543210
+                            <div class="text-primary fs-7">Product id: {{_id}}</div>
+                            <h4 class="title max-line-1 mb-3">{{title}}</h4>
+                            {{/with}}
+                            <div class="text-primary fs-7">User id: {{this.userId}}</div>
+                            {{#with this.address}}
+                            <div class="subtitle">
+                                {{address}}, {{locality}}, {{landmark}},
+                                {{state}}, {{pincode}}, {{mobile}}
                             </div>
+                            {{/with}}
                         </div>
                     </div>
 
                     {{!-- Bottom of the list --}}
                     <div class="bottom d-flex justify-content-end">
                         <div class="p-1 bg-light rounded-4">
-                            <div class="status-view-primary">
-                                Delivered
+                            <div class="status-view-primary text-capitalize">
+                                {{#with (last this.status)}}
+                                {{status}}
+                                {{/with}}
                             </div>
                         </div>
                     </div>
                 </div>
             </a>
-            <a class="text-reset" href="#">
-                <div class="list-item">
-                    <div class="content d-flex pb-1">
-                        <div class="leading">
-                            <img src="https://store.storeimages.cdn-apple.com/4668/as-images.apple.com/is/MTJV3?wid=1144&hei=1144&fmt=jpeg&qlt=90&.v=1694014871985"
-                                alt="img">
-                        </div>
-                        <div class="datas">
-                            <div class="text-primary fs-7">Product id: 98765431</div>
-                            <h4 class="title max-line-1 mb-3">Rubbermaid Commercial 1250 Lb Capacity Standard Duty Tilt
-                                Truck
-                                -
-                                1250 Lb
-                                Capacity - X 33.5in Width X 72.2in Depth X 43.8in Height - Black - 1 Each</h4>
-                            <div class="text-primary fs-7">User id: 6579895</div>
-                            <div class="subtitle">Henry Arthur, 2118 Thornridge Cir. Syracuse, Connecticut 35624,
-                                9876543210
-                            </div>
-                        </div>
-                    </div>
-
-                    {{!-- Bottom of the list --}}
-                    <div class="bottom d-flex justify-content-end">
-                        <div class="p-1 bg-light rounded-4">
-                            <div class="status-view-primary">
-                                Delivered
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </a>
-            <a class="text-reset" href="#">
-                <div class="list-item">
-                    <div class="content d-flex pb-1">
-                        <div class="leading">
-                            <img src="https://store.storeimages.cdn-apple.com/4668/as-images.apple.com/is/MTJV3?wid=1144&hei=1144&fmt=jpeg&qlt=90&.v=1694014871985"
-                                alt="img">
-                        </div>
-                        <div class="datas">
-                            <div class="text-primary fs-7">Product id: 98765431</div>
-                            <h4 class="title max-line-1 mb-3">Rubbermaid Commercial 1250 Lb Capacity Standard Duty Tilt
-                                Truck
-                                -
-                                1250 Lb
-                                Capacity - X 33.5in Width X 72.2in Depth X 43.8in Height - Black - 1 Each</h4>
-                            <div class="text-primary fs-7">User id: 6579895</div>
-                            <div class="subtitle">Henry Arthur, 2118 Thornridge Cir. Syracuse, Connecticut 35624,
-                                9876543210
-                            </div>
-                        </div>
-                    </div>
-
-                    {{!-- Bottom of the list --}}
-                    <div class="bottom d-flex justify-content-end">
-                        <div class="p-1 bg-light rounded-4">
-                            <div class="status-view-primary">
-                                Delivered
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </a>
-            <a class="text-reset" href="#">
-                <div class="list-item">
-                    <div class="content d-flex pb-1">
-                        <div class="leading">
-                            <img src="https://store.storeimages.cdn-apple.com/4668/as-images.apple.com/is/MTJV3?wid=1144&hei=1144&fmt=jpeg&qlt=90&.v=1694014871985"
-                                alt="img">
-                        </div>
-                        <div class="datas">
-                            <div class="text-primary fs-7">Product id: 98765431</div>
-                            <h4 class="title max-line-1 mb-3">Rubbermaid Commercial 1250 Lb Capacity Standard Duty Tilt
-                                Truck
-                                -
-                                1250 Lb
-                                Capacity - X 33.5in Width X 72.2in Depth X 43.8in Height - Black - 1 Each</h4>
-                            <div class="text-primary fs-7">User id: 6579895</div>
-                            <div class="subtitle">Henry Arthur, 2118 Thornridge Cir. Syracuse, Connecticut 35624,
-                                9876543210
-                            </div>
-                        </div>
-                    </div>
-
-                    {{!-- Bottom of the list --}}
-                    <div class="bottom d-flex justify-content-end">
-                        <div class="p-1 bg-light rounded-4">
-                            <div class="status-view-primary">
-                                Delivered
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </a>
-            <a class="text-reset" href="#">
-                <div class="list-item">
-                    <div class="content d-flex pb-1">
-                        <div class="leading">
-                            <img src="https://store.storeimages.cdn-apple.com/4668/as-images.apple.com/is/MTJV3?wid=1144&hei=1144&fmt=jpeg&qlt=90&.v=1694014871985"
-                                alt="img">
-                        </div>
-                        <div class="datas">
-                            <div class="text-primary fs-7">Product id: 98765431</div>
-                            <h4 class="title max-line-1 mb-3">Rubbermaid Commercial 1250 Lb Capacity Standard Duty Tilt
-                                Truck
-                                -
-                                1250 Lb
-                                Capacity - X 33.5in Width X 72.2in Depth X 43.8in Height - Black - 1 Each</h4>
-                            <div class="text-primary fs-7">User id: 6579895</div>
-                            <div class="subtitle">Henry Arthur, 2118 Thornridge Cir. Syracuse, Connecticut 35624,
-                                9876543210
-                            </div>
-                        </div>
-                    </div>
-
-                    {{!-- Bottom of the list --}}
-                    <div class="bottom d-flex justify-content-end">
-                        <div class="p-1 bg-light rounded-4">
-                            <div class="status-view-primary">
-                                Delivered
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </a>
-            <a class="text-reset" href="#">
-                <div class="list-item">
-                    <div class="content d-flex pb-1">
-                        <div class="leading">
-                            <img src="https://store.storeimages.cdn-apple.com/4668/as-images.apple.com/is/MTJV3?wid=1144&hei=1144&fmt=jpeg&qlt=90&.v=1694014871985"
-                                alt="img">
-                        </div>
-                        <div class="datas">
-                            <div class="text-primary fs-7">Product id: 98765431</div>
-                            <h4 class="title max-line-1 mb-3">Rubbermaid Commercial 1250 Lb Capacity Standard Duty Tilt
-                                Truck
-                                -
-                                1250 Lb
-                                Capacity - X 33.5in Width X 72.2in Depth X 43.8in Height - Black - 1 Each</h4>
-                            <div class="text-primary fs-7">User id: 6579895</div>
-                            <div class="subtitle">Henry Arthur, 2118 Thornridge Cir. Syracuse, Connecticut 35624,
-                                9876543210
-                            </div>
-                        </div>
-                    </div>
-
-                    {{!-- Bottom of the list --}}
-                    <div class="bottom d-flex justify-content-end">
-                        <div class="p-1 bg-light rounded-4">
-                            <div class="status-view-primary">
-                                Delivered
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </a>
+            {{/each}}
         </div>
+
+        {{else}}
+        <div class="d-flex justify-content-center">
+            <img class="col-12 col-md-6" src="/images/nodata.svg" alt="No data">
+        </div>
+        {{/if}}
     </div>
 </div>
