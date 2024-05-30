@@ -4,10 +4,20 @@ import { Types } from "mongoose"
 
 const productStatuslist = ['active', 'inactive', 'sold out'];
 
+function validateOffer(price, offerPrice) {
+    price = Number(price);
+    offerPrice = Number(offerPrice);
+    if (isNaN(price) || isNaN(offerPrice)) throw new Error('Invalid price or offer price');
+    if (price < offerPrice) throw new Error('Price cannot less than offer price');
+    if (price == offerPrice) return { price, offerPrice: null };
+    return { price, offerPrice };
+}
+
 const productController = {
     addProduct: (datas) => {
         return new Promise((resolve, reject) => {
-            const { title, description, price, offerPrice, category: categoryId, quantity } = datas.body;
+            const { title, description, category: categoryId, quantity } = datas.body;
+            const { price, offerPrice } = validateOffer(datas.body.price, datas.body.offerPrice);
             const imagePaths = datas.files.map(image => image.path.replace('public', ''));
             const product = new ProductModel({ title, description, price, offerPrice, categoryId, quantity, imagePaths });
             product.save()
@@ -62,7 +72,8 @@ const productController = {
     updateProduct: (productId, req) => {
         return new Promise(async (resolve, reject) => {
             try {
-                const { title, description, price, offerPrice, category, quantity, status } = req.body;
+                const { title, description, category, quantity, status } = req.body;
+                const { price, offerPrice } = validateOffer(req.body.price, req.body.offerPrice);
                 if (!productStatuslist.includes(status)) throw new Error('Invalid status');
                 const imagePaths = req.files.length > 0 ? req.files.map(image => image.path.replace('public', '')) : undefined;
                 const currentImagePaths = (await productController.getProductById(productId)).imagePaths;
@@ -81,8 +92,9 @@ const productController = {
     getProductOverview: (productId) => {
         return new Promise(async (resolve, reject) => {
             try {
+                productId = Types.ObjectId.createFromHexString(productId);
                 const product = await ProductModel.aggregate([
-                    { $match: { _id: Types.ObjectId.createFromHexString(productId) } },
+                    { $match: { _id: productId } },
                     { $addFields: { categoryId: { $toObjectId: '$categoryId' } } }, // Convert categoryId to ObjectId
                     {
                         $lookup: {
@@ -126,7 +138,11 @@ const productController = {
                 ]);
                 resolve(product[0]);
             } catch (err) {
-                reject(err);
+                if (err.name === 'BSONError') {
+                    reject(new Error('Product not found'));
+                } else {
+                    reject(err);
+                }
             }
         })
     }

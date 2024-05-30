@@ -5,7 +5,7 @@
 
     {{#if hideLogout}}
     {{else}}
-    {{> searchbox for='for products' class='sm-d-none col-4 col-lg-6'}}
+    {{> searchbox for='for products' method='get' action='/search' class='sm-d-none col-4 col-lg-6'}}
 
     <div class="actions sm-d-none col-4 col-lg-3">
         <a href="/cart" class="icon-btn"><img src="/images/icons/shopping-cart.svg" alt="cart"></a>
@@ -27,7 +27,7 @@
                     <a href="/"> <img src="/images/bitkart.svg" alt="logo"></a>
                     <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                 </div>
-                {{> searchbox for='for products' class='m-2'}}
+                {{> searchbox for='for products' method='get' action='/search' class='m-2'}}
 
                 <a href="/cart" class="btn btn-outline-primary">
                     <div class="d-inline-flex align-items-center"><img class="mx-2"

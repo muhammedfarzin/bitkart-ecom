@@ -150,7 +150,7 @@ router.get(`${sideMenuPath.orders}/:id`, async (req, res) => {
     try {
         const order = await orderController.getOrderById(req.params.id);
         const sideMenus = getSideMenus(sideMenuPath.orders);
-        res.render('admin/orders/view-order', { order, sideMenu, currentPath: req.urls });
+        res.render('admin/orders/view-order', { order, sideMenus, currentPath: req.urls });
     } catch (err) {
         res.render('admin/error', { errMessage: err.message });
     }

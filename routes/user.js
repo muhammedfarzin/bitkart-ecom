@@ -138,17 +138,25 @@ router.get('/', checkUserLoginStatus, async (req, res) => {
     res.render('user/index', { products, categories });
 });
 
-
 // Product overview
 router.get('/view/:id', checkUserLoginStatus, async (req, res) => {
-    const product = await productController.getProductOverview(req.params.id);
-    const relatedProducts = await productController.getProductsByCategory(product.categoryId);
-    res.render('user/products/products', { product, relatedProducts });
+    try {
+        const product = await productController.getProductOverview(req.params.id);
+        const relatedProducts = await productController.getProductsByCategory(product.categoryId);
+        res.render('user/products/products', { product, relatedProducts });
+    } catch (err) {
+        res.render('error', { errMessage: err.message });
+    }
 });
 
 router.get('/logout', (req, res) => {
     req.session.destroy();
     res.redirect('/login');
+});
+
+// Search
+router.get('/search', checkUserLoginStatus, (req, res) => {
+    res.render('user/search/search-view');
 });
 
 // Account
