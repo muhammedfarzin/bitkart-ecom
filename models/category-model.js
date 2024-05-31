@@ -4,7 +4,9 @@ const categorySchema = new Schema({
     title: {
         type: String,
         required: true,
-        unique: true
+        unique: true,
+        lowercase: true,
+        trim: true
     },
     description: {
         type: String,
@@ -22,7 +24,7 @@ const categorySchema = new Schema({
         type: Date,
         default: Date.now,
     }
-})
+});
 
 const CategoryModel = model('category', categorySchema, 'categories');
 

@@ -260,6 +260,7 @@ router.post(`${sideMenuPath.categories}/edit/:id`, upload.single('image'), async
         await categoryController.updateCategory(req.params.id, req);
         res.redirect(dashboardRoute + sideMenuPath.categories);
     } catch (err) {
+        console.log(err)
         res.redirect(`${dashboardRoute}${req.path}?errMessage=${err.message}`);
     }
 });

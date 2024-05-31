@@ -249,7 +249,6 @@ const orderController = {
                 if (err.name === 'BSONError') {
                     reject(new Error('Invalid Order'));
                 } else {
-                    console.log(err);
                     reject(err);
                 }
             }

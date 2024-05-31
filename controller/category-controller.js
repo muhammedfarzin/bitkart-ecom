@@ -62,7 +62,13 @@ const categoryController = {
             }
             CategoryModel.findByIdAndUpdate(id, { title, description, imagePath })
                 .then(data => resolve(data))
-                .catch(err => reject(err));
+                .catch(err => {
+                    if (err.code == 11000 && err.codeName == 'DuplicateKey') {
+                        reject(new Error(`${err.keyValue.title} is already exist`));
+                    } else {
+                        reject(err);
+                    }
+                });
         })
     },
     deleteCategory: async (id) => {

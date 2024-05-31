@@ -793,3 +793,7 @@ input#promocode.text-uppercase {
 input#promocode.text-uppercase::placeholder {
     text-transform: none;
 }
+
+.f-uppercase::first-letter {
+    text-transform: uppercase;
+}
