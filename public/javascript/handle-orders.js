@@ -32,6 +32,20 @@ document.addEventListener('DOMContentLoaded', function () {
             alert('Please select payment a payment method');
         }
     });
+
+    $('#cancelOrderBtn').on('click', (e) => {
+        $.ajax({
+            url: location.href,
+            type: 'DELETE',
+            success: function (data) {
+                alert(data.message ?? 'Order cancelled');
+                location.reload();
+            },
+            error: function (err) {
+                alert(err.responseJSON?.errMessage ?? 'Something went wrong');
+            }
+        });
+    });
 });
 
 function changeOrderStatus(status, elem) {
@@ -42,7 +56,7 @@ function changeOrderStatus(status, elem) {
         dataType: 'json',
         success: function (data) {
             alert(data.message);
-            elem.classList.replace('btn-outline-primary', 'btn-primary');
+            elem?.classList.replace('btn-outline-primary', 'btn-primary');
         },
         error: function (err) {
             alert(err.responseJSON?.errMessage ?? 'Something went wrong');

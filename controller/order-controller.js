@@ -214,7 +214,6 @@ const orderController = {
                     { $project: { userDetails: 0 } }
                 ]))[0];
                 if (!order) reject(new Error('Invalid order'));
-                console.log(order);
 
                 resolve(order);
             } catch (err) {
@@ -239,7 +238,7 @@ const orderController = {
                 const newStatusIndex = orderStatusList.findIndex((status) => newStatus == status);
                 if (currentStatusIndex > newStatusIndex) {
                     reject(new Error('You can\'t reverse order status'));
-                } else if (newStatusIndex - currentStatusIndex != 1) {
+                } else if (newStatusIndex - currentStatusIndex != 1 && newStatus != orderStatus.cancelled) {
                     reject(new Error('You can\'t skip order status'));
                 } else {
                     await order.updateOne({ $push: { status: { status: newStatus } } });

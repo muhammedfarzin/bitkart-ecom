@@ -7,6 +7,7 @@ import productController from "../controller/product-controller.js";
 import categoryController from "../controller/category-controller.js";
 import otpController from "../controller/otp-controller.js";
 import orderController from "../controller/order-controller.js";
+import { orderStatus } from "../models/order-model.js";
 
 const router = Router();
 const MongoStore = MongoDBStore(session);
@@ -274,6 +275,15 @@ router.get('/orders/:id', checkUserLoginStatus, async (req, res) => {
         res.render('user/account/order-details', { orderDetails, currentPath: req.url });
     } catch (err) {
         res.render('error', { errMessage: err.message });
+    }
+});
+
+router.delete('/orders/:id', checkUserLoginStatus, async (req, res) => {
+    try {
+        await orderController.updateStatus(req.params.id, orderStatus.cancelled);
+        res.json({ message: 'Order cancelled' });
+    } catch (err) {
+        res.status(400).json({ errMessage: err.message });
     }
 });
 

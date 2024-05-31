@@ -16,7 +16,15 @@
 {{#with orderDetails}}
 <div class="container col-md-9 sm me-0">
     <div id="Details">
-        <h3 class="text-primary my-1">Order Details</h3>
+        <div class="d-flex justify-content-between pe-2">
+            <h3 class="text-primary my-1">Order Details</h3>
+
+            {{#with (last status)}}
+            {{#if (eq status 'confirmed')}}
+            <button class="btn btn-danger" id="cancelOrderBtn">Cancel order</button>
+            {{/if}}
+            {{/with}}
+        </div>
         <div class="list col-12 px-2">
             <div class="list">
                 <div class="list-item position-relative border-primary">
@@ -195,4 +203,4 @@
 </div>
 {{/with}}
 
-<script src="/javascript/form.js"></script>
+<script src="/javascript/handle-orders.js"></script>
