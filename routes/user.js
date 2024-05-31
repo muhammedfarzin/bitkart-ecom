@@ -161,11 +161,19 @@ router.get('/search', checkUserLoginStatus, (req, res) => {
 
 // Account
 router.get('/account', checkUserLoginStatus, async (req, res) => {
-    const userId = req.session.user.userId;
-    const user = await userController.findUserById(userId);
-    const orders = await orderController.getUserOrders(userId);
-    res.render('user/account/account', { user, orders, currentPath: req.url, errMessage: req.query.errMessage });
+    const user = await userController.findUserById(req.session.user.userId);
+    res.render('user/account/account', { user, errMessage: req.query.errMessage });
 });
+
+router.get('/account/address', checkUserLoginStatus, async (req, res) => {
+    const address = await userController.getAddresses(req.session.user.userId);
+    res.render('user/account/address-manage', { address, currentPath: req.url });
+});;
+
+router.get('/account/orders', checkUserLoginStatus, async (req, res) => {
+    const orders = await orderController.getUserOrders(req.session.user.userId);
+    res.render('user/account/orders', { orders, currentPath: req.url });
+});;
 
 router.post('/updateUser', checkUserLoginStatus, async (req, res) => {
     try {

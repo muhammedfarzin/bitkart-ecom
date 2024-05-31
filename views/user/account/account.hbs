@@ -1,10 +1,6 @@
 {{> navbar}}
 
-<aside class="col-md-3 sm-d-none">
-    <a href="#" class="btn text-start text-primary bg-light fw-bold my-1 w-100">Personal Details</a>
-    <a href="#addresses" class="btn text-start text-primary bg-light fw-bold my-1 w-100">Addresses</a>
-    <a href="#orders" class="btn text-start text-primary bg-light fw-bold my-1 w-100">Orders</a>
-</aside>
+{{> account-sidebar}}
 
 <div class="container col-md-9 sm me-0">
     <div id="personalDetails">
@@ -49,67 +45,6 @@
             </div>
         </form>
         {{/with}}
-    </div>
-
-    <div class="mt-4" id="addresses">
-        <h3 class="text-primary my-1">Addresses</h3>
-        <div class="list">
-            {{#each user.address}}
-            <div class="card-primary-light d-flex justify-content-between align-items-start m-3">
-                <div class="datas ps-2 pb-4">
-                    <div class="fs-5 fw-bold">{{this.name}}</div>
-                    <div class="fs-6">
-                        {{this.address}}, {{this.locality}}, {{this.landmark}}, {{this.state}},
-                        {{this.pincode}}, {{this.mobile}}
-                    </div>
-                </div>
-                <div class="actions">
-                    <a href="account/address/edit/{{this._id}}?redirect={{@root.currentPath}}" class="icon-btn">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path
-                                d="M11 4H4C3.46957 4 2.96086 4.21071 2.58579 4.58579C2.21071 4.96086 2 5.46957 2 6V20C2 20.5304 2.21071 21.0391 2.58579 21.4142C2.96086 21.7893 3.46957 22 4 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V13"
-                                stroke="#6F43BF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                            <path
-                                d="M18.5 2.49998C18.8978 2.10216 19.4374 1.87866 20 1.87866C20.5626 1.87866 21.1022 2.10216 21.5 2.49998C21.8978 2.89781 22.1213 3.43737 22.1213 3.99998C22.1213 4.56259 21.8978 5.10216 21.5 5.49998L12 15L8 16L9 12L18.5 2.49998Z"
-                                stroke="#6F43BF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                        </svg>
-                    </a>
-                </div>
-            </div>
-            {{/each}}
-        </div>
-    </div>
-
-    <div class="mt-4" id="orders">
-        <h3 class="text-primary my-1">Orders</h3>
-        {{#if orders}}
-        <div class="list">
-            {{#each orders}}
-            <a class="text-reset" href="/orders/{{this._id}}">
-                <div class="list-item position-relative border-primary">
-                    <div class="content d-flex pb-1">
-                        {{#with this.productDetails}}
-                        <div class="leading">
-                            <img src="{{first imagePaths}}" alt="img">
-                        </div>
-                        <div class="datas w-100">
-                            <h4 class="title max-line-2">{{title}}</h4>
-                            {{/with}}
-                            <div class="fs-5">₹{{formatNumber this.price.price}}</div>
-                        </div>
-                        <div class="p-1 bg-light rounded-4 position-absolute br-1">
-                            {{#with (last this.status) as |latestStatus|}}
-                            <div class="status-view-success text-capitalize">{{latestStatus.status}}</div>
-                            {{/with}}
-                        </div>
-                    </div>
-                </div>
-            </a>
-            {{/each}}
-        </div>
-        {{else}}
-        <div class="w-100 text-center text-primary fs-5 fw-bold mb-5 mt-3">You didn't ordered anything yet!</div>
-        {{/if}}
     </div>
 </div>
 
