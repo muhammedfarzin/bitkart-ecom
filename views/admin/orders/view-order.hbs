@@ -81,6 +81,27 @@
                 </div>
             </div>
 
+            {{#if returnQuantity}}
+            <div class="mt-4" id="returnDetails">
+                <h3 class="text-primary my-1">Return pickup details</h3>
+                {{#with pickupAddress}}
+                <div class="card-primary-light rounded-3 p-2 my-3">
+                    <div class="text-primary">Quantity: {{@root.order.returnQuantity}}</div>
+                    <div class="text-primary fs-5 fw-bold">
+                        Return amount: ₹{{formatNumber @root.order.returnAmount}}
+                    </div>
+                    <div class="card-primary-light rounded-2">
+                        <div class="fs-1-15rem fw-bold">{{name}}</div>
+                        <div>
+                            {{address}}, {{locality}}, {{landmark}},
+                            {{state}}, {{pincode}}, {{mobile}}
+                        </div>
+                    </div>
+                </div>
+                {{/with}}
+            </div>
+            {{/if}}
+
             <div class="mt-4" id="UserData">
                 <h3 class="text-primary fs-4">Ordered By</h3>
                 <div class="list">

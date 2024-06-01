@@ -159,7 +159,6 @@ const orderController = {
                 ]))[0];
 
                 if (!order) throw new Error('Invalid order');
-                console.log(order);
                 resolve(order);
             } catch (err) {
                 if (err.name === 'BSONError') {
@@ -244,6 +243,32 @@ const orderController = {
                     await order.updateOne({ $push: { status: { status: newStatus } } });
                     resolve({ message: 'Order status updated' });
                 }
+            } catch (err) {
+                if (err.name === 'BSONError') {
+                    reject(new Error('Invalid Order'));
+                } else {
+                    reject(err);
+                }
+            }
+        });
+    },
+    returnOrder: (userId, orderId, data) => {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const returnQuantity = parseInt(data.returnQuantity);
+                if(isNaN(returnQuantity)) throw new Error('Please enter valid quantity');
+                if (!returnQuantity || !data.addressId) throw new Error('Please select quantity and addressId');
+                const pickupAddress = await userController.getAddressById(userId, data.addressId);
+                const order = await OrderModel.findById(orderId);
+                if (!order) throw new Error('Invalid order');
+                if (!pickupAddress) throw new Error('Invalid address ID');
+                if (returnQuantity > order.quantity) throw new Error('Return quantity is cannot be more than order quantity');
+
+                const returnAmount = (order.price.price / order.quantity) * returnQuantity;
+
+                await orderController.updateStatus(orderId, orderStatus.return);
+                await order.updateOne({ pickupAddress, returnQuantity, returnAmount });
+                resolve({ message: 'Return request submitted' });
             } catch (err) {
                 if (err.name === 'BSONError') {
                     reject(new Error('Invalid Order'));

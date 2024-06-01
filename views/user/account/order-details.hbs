@@ -3,12 +3,14 @@
 <aside class="col-md-3 sm-d-none">
     <a href="#" class="btn text-start text-primary bg-light fw-bold my-1 w-100">Order Details</a>
     <a href="#Status" class="btn text-start text-primary bg-light fw-bold my-1 w-100">Status</a>
-    {{#with (last status)}}
-    {{#if (eq status 'delivered')}}
+
+    {{#with (last orderDetails.status)}}
+    {{#or (eq status 'delivered') (eq status 'return')}}
     <a href="#Review" class="btn text-start text-primary bg-light fw-bold my-1 w-100">Review</a>
     <a href="#Return" class="btn text-start text-primary bg-light fw-bold my-1 w-100">Return</a>
-    {{/if}}
+    {{/or}}
     {{/with}}
+
     <a href="#ShippingAddress" class="btn text-start text-primary bg-light fw-bold my-1 w-100">Shipping Address</a>
     <a href="#PriceDetails" class="btn text-start text-primary bg-light fw-bold my-1 w-100">Price Details</a>
 </aside>
@@ -61,8 +63,11 @@
         <div class="card-primary-light px-3 py-1 my-3 col-12 col-md-6">
             {{#each status}}
             <div class="d-flex align-items-center my-3">
-                <div class="text-primary fs-1-15rem fw-bold text-capitalize">{{isEqual this.status 'confirmed' 'order'}}
-                    {{this.status}}</div>
+                <div
+                    class="{{isEqualElse this.status 'cancelled' 'text-danger' 'text-primary'}} fs-1-15rem fw-bold text-capitalize">
+                    {{isEqual this.status 'confirmed' 'order'}}
+                    {{this.status}}
+                </div>
                 <div class="ms-2">at {{formatDate this.date 'MMMM D, YYYY'}}</div>
             </div>
             {{/each}}
@@ -70,7 +75,7 @@
     </div>
 
     {{#with (last status)}}
-    {{#if (eq status 'delivered')}}
+    {{#or (eq status 'delivered') (eq status 'return')}}
     <div class="mt-4" id="Review">
         <h3 class="text-primary my-1">Review</h3>
         <div class="flex mt-3 mb-2">
@@ -111,65 +116,91 @@
                 placeholder="Add your comment" style="height: 100px"></textarea>
         </div>
     </div>
+    {{/or}}
 
+    {{#if (eq status 'delivered')}}
     <div class="mt-4" id="Return">
         <h3 class="text-primary my-1">Return</h3>
         <div class="text-primary fs-6 ms-1 mt-3">Return valid up to 7th May 2024</div>
         <div class="card-primary-light p-2 rounded-3 mb-3">
-            <div class="d-flex justify-content-between align-items-center">
-                <div class="d-flex align-items-center ms-2">
-                    <div class="text-primary fs-1-15rem fw-bold">Quantity</div>
-                    <div class="ms-3">
-                        <select class="btn btn-outline-primary rounded-3 w-100" name="returnQuantity"
-                            id="returnQuantity">
-                            {{#each (range 1 @root.orderDetails.quantity)}}
-                            <option value="{{this}}">{{this}}</option>
-                            {{/each}}
-                        </select>
-                    </div>
-                </div>
-                <div>
-                    {{!-- Add button --}}
-                    <a href="/account/address/add?redirect={{@root.currentPath}}" class="icon-btn">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M12 5V19" stroke="#6F43BF" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round" />
-                            <path d="M5 12H19" stroke="#6F43BF" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round" />
-                        </svg>
-                    </a>
-                </div>
-            </div>
-
-            {{!-- Address List --}}
-            <div class="d-flex flex-wrap justify-content-between align-items-end">
-                <div class="list mx-2 mt-3">
-                    {{#each @root.orderDetails.userAddresses}}
-                    <div class="d-flex justify-content-between mb-2">
-                        <div class="d-flex align-items-start">
-                            <input type="radio" value="{{_id}}" class="radio-primary m-2" name="addressId"
-                                id="address{{_id}}">
-                            <label for="address{{_id}}">
-                                <div class="cursor-pointer ms-2">
-                                    <div class="fs-6 fw-bold">{{this.name}}</div>
-                                    <div class="fs-6">
-                                        {{this.address}}, {{this.locality}}, {{this.landmark}}, {{this.state}},
-                                        {{this.pincode}}, {{this.mobile}}
-                                    </div>
-                                </div>
-                            </label>
+            <form id="returnOrderFrm">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="d-flex align-items-center ms-2">
+                        <div class="text-primary fs-1-15rem fw-bold">Quantity</div>
+                        <div class="ms-3">
+                            <select class="btn btn-outline-primary rounded-3 w-100" name="returnQuantity"
+                                id="returnQuantity">
+                                {{#each (range 1 @root.orderDetails.quantity)}}
+                                <option value="{{this}}">{{this}}</option>
+                                {{/each}}
+                            </select>
                         </div>
                     </div>
-                    {{/each}}
+                    <div>
+                        {{!-- Add button --}}
+                        <a href="/account/address/add?redirect={{@root.currentPath}}" class="icon-btn">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path d="M12 5V19" stroke="#6F43BF" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" />
+                                <path d="M5 12H19" stroke="#6F43BF" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" />
+                            </svg>
+                        </a>
+                    </div>
                 </div>
-                <div class="d-flex justify-content-end col m-2">
-                    <button class="btn btn-outline-primary">Return</button>
+
+                {{!-- Address List --}}
+                <div class="d-flex flex-wrap justify-content-between align-items-end">
+                    <div class="list mx-2 mt-3">
+                        {{#each @root.orderDetails.userAddresses}}
+                        <div class="d-flex justify-content-between mb-2">
+                            <div class="d-flex align-items-start">
+                                <input type="radio" value="{{_id}}" class="radio-primary m-2" name="addressId"
+                                    id="address{{_id}}">
+                                <label for="address{{_id}}">
+                                    <div class="cursor-pointer ms-2">
+                                        <div class="fs-6 fw-bold">{{this.name}}</div>
+                                        <div class="fs-6">
+                                            {{this.address}}, {{this.locality}}, {{this.landmark}}, {{this.state}},
+                                            {{this.pincode}}, {{this.mobile}}
+                                        </div>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                        {{/each}}
+                    </div>
+                    <div class="d-flex justify-content-end col m-2">
+                        <button class="btn btn-outline-primary">Return</button>
+                    </div>
                 </div>
-            </div>
+            </form>
         </div>
     </div>
     {{/if}}
     {{/with}}
+
+    {{#if returnQuantity}}
+    <div class="mt-4" id="returnDetails">
+        <h3 class="text-primary my-1">Return pickup details</h3>
+        {{#with pickupAddress}}
+        <div class="card-primary-light rounded-3 p-2 my-3">
+            <div class="text-primary">Quantity: {{@root.orderDetails.returnQuantity}}</div>
+            <div class="text-primary fs-5 fw-bold">
+                Return amount: ₹{{formatNumber @root.orderDetails.returnAmount}}
+            </div>
+            <div class="card-primary-light rounded-2">
+                <div class="fs-1-15rem fw-bold">{{name}}</div>
+                <div>
+                    {{address}}, {{locality}}, {{landmark}},
+                    {{state}}, {{pincode}}, {{mobile}}
+                </div>
+            </div>
+        </div>
+        {{/with}}
+    </div>
+    {{/if}}
 
     <div class="mt-4" id="ShippingAddress">
         <h3 class="text-primary my-1">Shipping Address</h3>

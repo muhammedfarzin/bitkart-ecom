@@ -160,7 +160,6 @@ router.post(`${sideMenuPath.orders}/:id/updateStatus`, async (req, res) => {
     try {
         const orderId = req.params.id;
         const response = await orderController.updateStatus(orderId, req.body.status);
-        console.log(response);
         res.json(response);
     } catch (err) {
         res.status(400).json({ errMessage: err.message });

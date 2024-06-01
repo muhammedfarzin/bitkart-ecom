@@ -8,6 +8,7 @@ export const orderStatus = {
     confirmed: 'confirmed',
     shipped: 'shipped',
     delivered: 'delivered',
+    return: 'return',
     cancelled: 'cancelled'
 }
 
@@ -57,12 +58,18 @@ const orderSchema = new Schema({
         ],
         required: true,
     },
-    review: {
-        type: Types.ObjectId
-    },
     promocode: {
         type: String
     },
+    pickupAddress: {
+        type: addressSchema
+    },
+    returnQuantity: {
+        type: Number,
+        min: 0,
+        max: 10
+    },
+    returnAmount: Number,
     orderedAt: {
         type: Date,
         default: Date.now

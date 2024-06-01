@@ -287,6 +287,16 @@ router.delete('/orders/:id', checkUserLoginStatus, async (req, res) => {
     }
 });
 
+router.patch('/orders/:id/return', checkUserLoginStatus, async (req, res) => {
+    const userId = req.session.user.userId;
+    try {
+        await orderController.returnOrder(userId, req.params.id, req.body);
+        res.json({ message: 'Your return request status has been updated' });
+    } catch (err) {
+        res.status(400).json({ errMessage: err.message });
+    }
+});
+
 router.get('/orderSuccess', checkUserLoginStatus, (req, res) => {
     if (req.session.orderDone) {
         delete req.session.orderDone;

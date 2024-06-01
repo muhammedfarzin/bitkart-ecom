@@ -46,6 +46,28 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     });
+
+    $('#returnOrderFrm').submit((e) => {
+        e.preventDefault();
+        let formData = $('#returnOrderFrm').serializeArray();
+        let formObject = {};
+        $.each(formData, function () {
+            formObject[this.name] = this.value;
+        });
+        console.log(formObject);
+        $.ajax({
+            url: location.href + '/return',
+            type: 'PATCH',
+            data: formObject,
+            dataType: 'json',
+            success: function (data) {
+                location.reload();
+            },
+            error: function (err) {
+                alert(err.responseJSON?.errMessage ?? 'Something went wrong');
+            }
+        });
+    });
 });
 
 function changeOrderStatus(status, elem) {
@@ -56,7 +78,7 @@ function changeOrderStatus(status, elem) {
         dataType: 'json',
         success: function (data) {
             alert(data.message);
-            elem?.classList.replace('btn-outline-primary', 'btn-primary');
+            location.reload();
         },
         error: function (err) {
             alert(err.responseJSON?.errMessage ?? 'Something went wrong');
