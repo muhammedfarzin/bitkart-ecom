@@ -10,21 +10,22 @@ document.addEventListener('DOMContentLoaded', function () {
         $.each(formData, function () {
             formObject[this.name] = this.value;
         });
-        console.log(formObject);
         if (!formObject.addressId) return alert('Please select an address');
-        if (formObject.paymentMethod == 'online') {
-            alert('Online payment will coming soon');
-        } else if (formObject.paymentMethod == 'cod') {
+
+        if (formObject.paymentMethod == 'cod' || formObject.paymentMethod == 'online') {
             $.ajax({
                 url: '/placeOrder',
                 type: 'POST',
                 data: formObject,
                 dataType: 'json',
                 success: function (data) {
-                    location.href = data.redirect ?? '/';
+                    if (data.orderPlaced) {
+                        location.href = data.redirect ?? '/';
+                    } else {
+                        razorpayPayment(data);
+                    }
                 },
                 error: function (err) {
-                    console.log(err);
                     alert(err.responseJSON?.errMessage ?? 'Something went wrong');
                 }
             });
@@ -54,7 +55,6 @@ document.addEventListener('DOMContentLoaded', function () {
         $.each(formData, function () {
             formObject[this.name] = this.value;
         });
-        console.log(formObject);
         $.ajax({
             url: location.href + '/return',
             type: 'PATCH',
@@ -76,8 +76,7 @@ document.addEventListener('DOMContentLoaded', function () {
         $.each(formData, function () {
             formObject[this.name] = this.value;
         });
-        console.log(formObject)
-        if(false) {
+        if (formObject.starRating < 1 || formObject.starRating > 5) {
             alert('Please select valid starRating');
         } else {
             $.ajax({
@@ -123,4 +122,49 @@ function changeStarRating(value) {
     });
     $('#starRating').val(value);
     $('#submitBtn').prop('disabled', false);
+}
+
+function razorpayPayment(order) {
+    let options = {
+        "key": 'rzp_test_yKUJBZ1MBQQioC',
+        "amount": order.amount,
+        "currency": "INR",
+        "name": "Bitkart",
+        "image": "/images/bitkart.svg",
+        "order_id": order.id,
+        "handler": function (response) {
+            verifyPayment(response, order);
+        },
+        "theme": {
+            "color": "#6F43BF"
+        }
+    }
+
+    let razorpayObject = new Razorpay(options);
+    razorpayObject.open();
+    razorpayObject.on('payment.failed', function (response) {
+        alert("This step of Payment Failed");
+    });
+}
+
+function verifyPayment(payment, order) {
+    $.ajax({
+        url: '/orders/verifyPayment',
+        type: 'POST',
+        data: {
+            payment,
+            order
+        },
+        dataType: 'json',
+        success: function (data) {
+            if (data.orderPlaced) {
+                location.href = data.redirect ?? '/';
+            } else {
+                alert(data.message);
+            }
+        },
+        error: function (err) {
+            alert(err.responseJSON?.errMessage ?? 'Something went wrong');
+        }
+    });
 }

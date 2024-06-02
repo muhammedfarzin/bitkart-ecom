@@ -3,10 +3,18 @@ import OrderModel, { orderStatus } from "../models/order-model.js";
 import UserModel from "../models/user-model.js";
 import productController from "./product-controller.js";
 import userController from "./user-controller.js";
+import Razorpay from "razorpay";
 import ReviewModel from "../models/review-model.js";
+import crypto from 'crypto'
 
 const minForFreeDelivery = 1000;
 const orderStatusList = Object.values(orderStatus);
+const razorpaySecret = 'BtKsp1TjsaxRftECkAfj99pG';
+
+const razorpayInstance = new Razorpay({
+    key_id: 'rzp_test_yKUJBZ1MBQQioC',
+    key_secret: razorpaySecret
+});
 
 const orderController = {
     updateCart: async (userId, productId, quantity) => {
@@ -85,6 +93,14 @@ const orderController = {
         const address = await userController.getAddressById(userId, addressId);
         const deliveryCharge = orderController.calculateDeliveryCharge(cartProducts);
         const status = paymentMethod == 'cod' ? orderStatus.confirmed : orderStatus.pending;
+        const newOrderIds = [];
+        let razorpayResponse;
+
+        if (paymentMethod == 'online') {
+            const priceDetails = await orderController.getPriceSummary(userId)
+            const totalAmount = priceDetails.totalPrice + priceDetails.deliveryCharge;
+            razorpayResponse = await orderController.generateRazorpay(totalAmount);
+        }
 
         for (const cartItem of cartProducts) {
             const { productId, quantity } = cartItem;
@@ -101,10 +117,12 @@ const orderController = {
                 address,
                 price,
                 paymentMethod,
-                status: { status }
+                status: { status },
+                razorpayId: razorpayResponse?.id
             });
-            await newOrder.save();
+            await newOrder.save().then(response => newOrderIds.push(response._id));
         };
+        return razorpayResponse
     },
     clearCart: async (userId) => {
         await UserModel.findByIdAndUpdate(userId, { $set: { cart: [] } });
@@ -125,7 +143,6 @@ const orderController = {
                 },
                 { $addFields: { products: { $arrayElemAt: ['$products', 0] } } }
             ]);
-            console.log(orders);
             resolve(orders);
         });
     },
@@ -165,7 +182,6 @@ const orderController = {
                 if (err.name === 'BSONError') {
                     reject(new Error('Invalid Order'));
                 } else {
-                    console.log(err);
                     reject(err);
                 }
             }
@@ -173,7 +189,7 @@ const orderController = {
     },
     getUserOrders: async (userId) => {
         const orders = await OrderModel.aggregate([
-            { $match: { userId } },
+            { $match: { userId, "status.status": { $ne: "pending" } } },
             {
                 $lookup: {
                     from: 'products',
@@ -246,7 +262,6 @@ const orderController = {
                 if (err.name === 'BSONError') {
                     reject(new Error('Invalid Order'));
                 } else {
-                    console.log(err);
                     reject(err);
                 }
             }
@@ -266,6 +281,9 @@ const orderController = {
                     reject(new Error('You can\'t reverse order status'));
                 } else if (newStatusIndex - currentStatusIndex != 1 && newStatus != orderStatus.cancelled) {
                     reject(new Error('You can\'t skip order status'));
+                } else if (newStatus == orderStatus.confirmed) {
+                    await order.updateOne({ $set: { status: [{ status: newStatus }] } });
+                    resolve({ message: 'Order status updated' });
                 } else {
                     await order.updateOne({ $push: { status: { status: newStatus } } });
                     resolve({ message: 'Order status updated' });
@@ -328,6 +346,45 @@ const orderController = {
             await reviewData.save();
             return { message: 'Review submited' };
         }
+    },
+    generateRazorpay: (amount) => {
+        return new Promise((resolve, reject) => {
+            const options = {
+                amount: amount * 100,
+                currency: 'INR'
+            }
+            razorpayInstance.orders.create(options)
+                .then(response => {
+                    resolve(response);
+                })
+                .catch(err => {
+                    reject(err.description);
+                });
+        });
+    },
+    verifyPayment: (data) => {
+        return new Promise(async (resolve, reject) => {
+            const { payment, order } = data;
+            try {
+                let hmac = crypto.createHmac('sha256', razorpaySecret);
+                hmac.update(payment.razorpay_order_id + '|' + payment.razorpay_payment_id);
+                hmac = hmac.digest('hex');
+                if (hmac == payment.razorpay_signature) {
+                    const userOrder = await OrderModel.findOne({ razorpayId: order.id });
+                    if (!userOrder) reject('Something went wrong. Please try again');
+                    await orderController.updateStatus(userOrder._id.toString(), orderStatus.confirmed);
+                    resolve({
+                        message: 'Your order placed succesfully',
+                        orderPlaced: true,
+                        redirect: '/orderSuccess'
+                    });
+                } else {
+                    throw new Error('Your payment is failed');
+                }
+            } catch (err) {
+                reject(err);
+            }
+        });
     }
 }
 

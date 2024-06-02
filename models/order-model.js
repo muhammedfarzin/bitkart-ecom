@@ -70,6 +70,7 @@ const orderSchema = new Schema({
         max: 10
     },
     returnAmount: Number,
+    razorpayId: String,
     orderedAt: {
         type: Date,
         default: Date.now

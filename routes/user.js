@@ -252,18 +252,16 @@ router.get('/checkout', checkUserLoginStatus, async (req, res) => {
 router.post('/placeOrder', checkUserLoginStatus, async (req, res) => {
     try {
         const paymentMethod = req.body.paymentMethod;
-        if (paymentMethod == 'online') {
-            throw new Error('Online payment currently not available');
-        } else if (paymentMethod == 'cod') {
-            await orderController.placeOrder(req);
-            await orderController.clearCart(req.session.user.userId);
+        if (paymentMethod == 'cod' || paymentMethod == 'online') {
+            const response = await orderController.placeOrder(req);
+            if (!response) await orderController.clearCart(req.session.user.userId);
             req.session.orderDone = true;
-            res.json({ message: 'Order placed successfully', redirect: '/orderSuccess' });
+            res.json(response ?? { message: 'Order placed successfully', orderPlaced: true, redirect: '/orderSuccess' });
         } else {
             throw new Error('Please enter payment method');
         }
     } catch (err) {
-        res.status(400).json({ errMessage: err.message });
+        res.status(400).json({ errMessage: err?.message });
     }
 });
 
@@ -297,6 +295,12 @@ router.patch('/orders/:id/return', checkUserLoginStatus, async (req, res) => {
     }
 });
 
+router.post('/orders/verifyPayment', checkUserLoginStatus, (req, res) => {
+    orderController.verifyPayment(req.body)
+        .then(response => res.json(response))
+        .catch(err => res.status(400).json({ errMessage: err.message }));
+});
+
 // Reviews
 router.post('/orders/:id/addReview', checkUserLoginStatus, async (req, res) => {
     try {
@@ -305,8 +309,7 @@ router.post('/orders/:id/addReview', checkUserLoginStatus, async (req, res) => {
         const response = await orderController.addReview(userId, orderId, req.body);
         res.json(response);
     } catch (err) {
-        console.log(err)
-        res.status(400).json({errMessage: err.message});
+        res.status(400).json({ errMessage: err.message });
     }
 });
 
