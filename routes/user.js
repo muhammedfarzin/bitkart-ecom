@@ -297,7 +297,7 @@ router.patch('/orders/:id/return', checkUserLoginStatus, async (req, res) => {
     }
 });
 
-// Ratings
+// Reviews
 router.post('/orders/:id/addReview', checkUserLoginStatus, async (req, res) => {
     try {
         const userId = req.session.user.userId;

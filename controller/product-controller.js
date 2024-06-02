@@ -106,7 +106,7 @@ const productController = {
                     },
                     {
                         $lookup: {
-                            from: 'productReviews',
+                            from: 'reviews',
                             let: { productId: '$_id' },
                             pipeline: [
                                 {

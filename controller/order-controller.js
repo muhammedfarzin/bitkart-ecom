@@ -207,11 +207,37 @@ const orderController = {
                             from: 'users',
                             localField: 'userId',
                             foreignField: '_id',
-                            as: 'userDetails'
+                            as: 'userAddresses'
                         }
                     },
-                    { $addFields: { userAddresses: { $arrayElemAt: ['$userDetails.address', 0] } } },
-                    { $project: { userDetails: 0 } }
+                    { $addFields: { userAddresses: { $arrayElemAt: ['$userAddresses.address', 0] } } },
+                    {
+                        $lookup: {
+                            from: 'reviews',
+                            let: {
+                                userId: '$userId',
+                                productId: '$productId'
+                            },
+                            let: {
+                                userId: '$userId',
+                                productId: '$productId'
+                            },
+                            pipeline: [
+                                {
+                                    $match: {
+                                        $expr: {
+                                            $and: [
+                                                { $eq: ['$$userId', '$userId'] },
+                                                { $eq: ['$$productId', '$productId'] }
+                                            ]
+                                        }
+                                    }
+                                }
+                            ],
+                            as: 'review'
+                        }
+                    },
+                    { $addFields: { review: { $arrayElemAt: ['$review', 0] } } },
                 ]))[0];
                 if (!order) reject(new Error('Invalid order'));
 
@@ -290,7 +316,7 @@ const orderController = {
         const oldReview = await ReviewModel.findOne({ userId, productId });
 
         if (oldReview) {
-            await oldReview.updateOne({ starRating, review });  
+            await oldReview.updateOne({ starRating, review });
             return { message: 'Review updated' }
         } else {
             const reviewData = new ReviewModel({
