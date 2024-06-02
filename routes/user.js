@@ -297,6 +297,19 @@ router.patch('/orders/:id/return', checkUserLoginStatus, async (req, res) => {
     }
 });
 
+// Ratings
+router.post('/orders/:id/addReview', checkUserLoginStatus, async (req, res) => {
+    try {
+        const userId = req.session.user.userId;
+        const orderId = req.params.id;
+        const response = await orderController.addReview(userId, orderId, req.body);
+        res.json(response);
+    } catch (err) {
+        console.log(err)
+        res.status(400).json({errMessage: err.message});
+    }
+});
+
 router.get('/orderSuccess', checkUserLoginStatus, (req, res) => {
     if (req.session.orderDone) {
         delete req.session.orderDone;

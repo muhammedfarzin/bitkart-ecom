@@ -3,6 +3,7 @@ import OrderModel, { orderStatus } from "../models/order-model.js";
 import UserModel from "../models/user-model.js";
 import productController from "./product-controller.js";
 import userController from "./user-controller.js";
+import ReviewModel from "../models/review-model.js";
 
 const minForFreeDelivery = 1000;
 const orderStatusList = Object.values(orderStatus);
@@ -256,7 +257,7 @@ const orderController = {
         return new Promise(async (resolve, reject) => {
             try {
                 const returnQuantity = parseInt(data.returnQuantity);
-                if(isNaN(returnQuantity)) throw new Error('Please enter valid quantity');
+                if (isNaN(returnQuantity)) throw new Error('Please enter valid quantity');
                 if (!returnQuantity || !data.addressId) throw new Error('Please select quantity and addressId');
                 const pickupAddress = await userController.getAddressById(userId, data.addressId);
                 const order = await OrderModel.findById(orderId);
@@ -277,6 +278,30 @@ const orderController = {
                 }
             }
         });
+    },
+    addReview: async (userId, orderId, data) => {
+        const starRating = data.starRating
+        const review = data.review;
+        const order = await OrderModel.findById(orderId);
+        if (!starRating || isNaN(starRating)) throw new Error('Please enter a valid star rating');
+        if (!order) throw new Error('Invalid order');
+
+        const productId = order.productId;
+        const oldReview = await ReviewModel.findOne({ userId, productId });
+
+        if (oldReview) {
+            await oldReview.updateOne({ starRating, review });  
+            return { message: 'Review updated' }
+        } else {
+            const reviewData = new ReviewModel({
+                userId,
+                productId,
+                starRating,
+                review
+            });
+            await reviewData.save();
+            return { message: 'Review submited' };
+        }
     }
 }
 

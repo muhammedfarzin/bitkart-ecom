@@ -68,6 +68,32 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     });
+
+    $('#reviewForm').submit((e) => {
+        e.preventDefault();
+        let formData = $('#reviewForm').serializeArray();
+        let formObject = {};
+        $.each(formData, function () {
+            formObject[this.name] = this.value;
+        });
+        console.log(formObject)
+        if(false) {
+            alert('Please select valid starRating');
+        } else {
+            $.ajax({
+                url: location.href + '/addReview',
+                type: 'POST',
+                data: formObject,
+                dataType: 'json',
+                success: function (data) {
+                    alert(data.message || 'Review submitted');
+                },
+                error: function (err) {
+                    alert(err.responseJSON?.errMessage ?? 'Something went wrong');
+                }
+            });
+        }
+    })
 });
 
 function changeOrderStatus(status, elem) {
@@ -84,4 +110,17 @@ function changeOrderStatus(status, elem) {
             alert(err.responseJSON?.errMessage ?? 'Something went wrong');
         }
     });
+}
+
+function changeStarRating(value) {
+    const starRatingList = $('.starRating');
+    starRatingList.each((index, element) => {
+        if (index < value) {
+            $(element).css('fill', '#6F43BF');
+        } else {
+            $(element).css('fill', 'none');
+        }
+    });
+    $('#starRating').val(value);
+    $('#submitBtn').prop('disabled', false);
 }
