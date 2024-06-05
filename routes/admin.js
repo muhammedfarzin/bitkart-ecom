@@ -64,13 +64,22 @@ function getSideMenus(pathName) {
     })
 };
 
-function checkLogin(session, isLogin) {
+function checkLogin(session) {
     if (session.admin && session.admin == process.env.ADMIN_EMAIL) {
         return true;
     } else {
         return false;
     }
 };
+
+function checkLoginStatus(req, res, next) {
+    if (checkLogin(req.session)) {
+        next();
+    } else {
+        req.session.destroy();
+        res.redirect(loginRoute);
+    }
+}
 
 // Routes
 router.get('/login', (req, res) => {
@@ -93,24 +102,14 @@ router.post('/login', (req, res) => {
     }
 });
 
-// Check login
-router.use((req, res, next) => {
-    if (checkLogin(req.session)) {
-        next();
-    } else {
-        req.session.destroy();
-        res.redirect(loginRoute);
-    }
-});
-
 // Routes needs authorization
 
-router.get(sideMenuPath.dashboard, (req, res) => {
+router.get(sideMenuPath.dashboard, checkLoginStatus, (req, res) => {
     const sideMenus = getSideMenus(sideMenuPath.dashboard);
     res.render('admin/index', { sideMenus });
 });
 
-router.get(sideMenuPath.users, async (req, res) => {
+router.get(sideMenuPath.users, checkLoginStatus, async (req, res) => {
     let users, searchQuery = req.query.search;
     if (searchQuery) {
         users = await userController.findUsersByQuery(searchQuery);
@@ -121,18 +120,9 @@ router.get(sideMenuPath.users, async (req, res) => {
     res.render('admin/users/users', { users, sideMenus, searchQuery });
 });
 
-router.patch(`${sideMenuPath.users}/block`, async (req, res) => {
+router.patch(`${sideMenuPath.users}/toggleStatus`, checkLoginStatus, async (req, res) => {
     try {
-        const response = await userController.blockUser(req.body.userId);
-        res.json(response);
-    } catch (err) {
-        res.status(400).json({ errMessage: err.message });
-    }
-});
-
-router.patch(`${sideMenuPath.users}/unblock`, async (req, res) => {
-    try {
-        const response = await userController.unBlockUser(req.body.userId);
+        const response = await userController.toggleUserStatus(req.body.userId);
         res.json(response);
     } catch (err) {
         res.status(400).json({ errMessage: err.message });
@@ -140,13 +130,13 @@ router.patch(`${sideMenuPath.users}/unblock`, async (req, res) => {
 });
 
 // Orders routes
-router.get(sideMenuPath.orders, async (req, res) => {
+router.get(sideMenuPath.orders, checkLoginStatus, async (req, res) => {
     const orders = await orderController.getOrders();
     const sideMenus = getSideMenus(sideMenuPath.orders);
     res.render('admin/orders/orders', { orders, sideMenus });
 });
 
-router.get(`${sideMenuPath.orders}/:id`, async (req, res) => {
+router.get(`${sideMenuPath.orders}/:id`, checkLoginStatus, async (req, res) => {
     try {
         const order = await orderController.getOrderById(req.params.id);
         const sideMenus = getSideMenus(sideMenuPath.orders);
@@ -156,7 +146,7 @@ router.get(`${sideMenuPath.orders}/:id`, async (req, res) => {
     }
 });
 
-router.post(`${sideMenuPath.orders}/:id/updateStatus`, async (req, res) => {
+router.post(`${sideMenuPath.orders}/:id/updateStatus`, checkLoginStatus, async (req, res) => {
     try {
         const orderId = req.params.id;
         const response = await orderController.updateStatus(orderId, req.body.status);
@@ -167,7 +157,7 @@ router.post(`${sideMenuPath.orders}/:id/updateStatus`, async (req, res) => {
 });
 
 // Products routes
-router.get(sideMenuPath.products, async (req, res) => {
+router.get(sideMenuPath.products, checkLoginStatus, async (req, res) => {
     let products;
     if (req.query.search) {
         products = await productController.searchProducts(req.query.search);
@@ -178,13 +168,13 @@ router.get(sideMenuPath.products, async (req, res) => {
     res.render('admin/products/products', ({ products, sideMenus, searchQuery: req.query.search }));
 });
 
-router.get(`${sideMenuPath.products}/add`, async (req, res) => {
+router.get(`${sideMenuPath.products}/add`, checkLoginStatus, async (req, res) => {
     const categories = await categoryController.getAllCategoryTitles();
     const sideMenus = getSideMenus();
     res.render('admin/products/products-form', ({ categories, sideMenus, errMessage: req.query.errMessage }));
 });
 
-router.post(`${sideMenuPath.products}/add`, upload.array('images', 5), async (req, res) => {
+router.post(`${sideMenuPath.products}/add`, checkLoginStatus, upload.array('images', 5), async (req, res) => {
     try {
         await productController.addProduct(req);
         res.redirect(dashboardRoute + sideMenuPath.products);
@@ -193,7 +183,7 @@ router.post(`${sideMenuPath.products}/add`, upload.array('images', 5), async (re
     }
 });
 
-router.get(`${sideMenuPath.products}/edit/:id`, async (req, res) => {
+router.get(`${sideMenuPath.products}/edit/:id`, checkLoginStatus, async (req, res) => {
     try {
         const product = await productController.getProductById(req.params.id);
         const categories = await categoryController.getAllCategoryTitles();
@@ -204,7 +194,7 @@ router.get(`${sideMenuPath.products}/edit/:id`, async (req, res) => {
     }
 })
 
-router.post(`${sideMenuPath.products}/edit/:id`, upload.array('images', 5), async (req, res) => {
+router.post(`${sideMenuPath.products}/edit/:id`, checkLoginStatus, upload.array('images', 5), async (req, res) => {
     try {
         await productController.updateProduct(req.params.id, req);
         res.redirect(dashboardRoute + sideMenuPath.products);
@@ -214,7 +204,7 @@ router.post(`${sideMenuPath.products}/edit/:id`, upload.array('images', 5), asyn
 })
 
 // Category routes
-router.get(sideMenuPath.categories, async (req, res) => {
+router.get(sideMenuPath.categories, checkLoginStatus, async (req, res) => {
     let categories;
     if (req.query.search) {
         categories = await categoryController.searchCategories(req.query.search);
@@ -225,12 +215,12 @@ router.get(sideMenuPath.categories, async (req, res) => {
     res.render('admin/categories/categories', ({ categories, sideMenus, searchQuery: req.query.search }));
 });
 
-router.get(`${sideMenuPath.categories}/create`, (req, res) => {
+router.get(`${sideMenuPath.categories}/create`, checkLoginStatus, (req, res) => {
     const sideMenus = getSideMenus();
     res.render('admin/categories/category-form', ({ sideMenus }));
 });
 
-router.post(`${sideMenuPath.categories}/create`, upload.single('image'), async (req, res) => {
+router.post(`${sideMenuPath.categories}/create`, checkLoginStatus, upload.single('image'), async (req, res) => {
     try {
         if (!req.file) {
             throw new Error('Please upload category image');
@@ -243,7 +233,7 @@ router.post(`${sideMenuPath.categories}/create`, upload.single('image'), async (
     }
 });
 
-router.get(`${sideMenuPath.categories}/edit/:id`, async (req, res) => {
+router.get(`${sideMenuPath.categories}/edit/:id`, checkLoginStatus, async (req, res) => {
     try {
         const category = await categoryController.getCategoryById(req.params.id);
         const products = await productController.getProductsByCategory(req.params.id);
@@ -254,7 +244,7 @@ router.get(`${sideMenuPath.categories}/edit/:id`, async (req, res) => {
     }
 });
 
-router.post(`${sideMenuPath.categories}/edit/:id`, upload.single('image'), async (req, res) => {
+router.post(`${sideMenuPath.categories}/edit/:id`, checkLoginStatus, upload.single('image'), async (req, res) => {
     try {
         await categoryController.updateCategory(req.params.id, req);
         res.redirect(dashboardRoute + sideMenuPath.categories);
@@ -264,7 +254,7 @@ router.post(`${sideMenuPath.categories}/edit/:id`, upload.single('image'), async
     }
 });
 
-router.delete(`${sideMenuPath.categories}/delete`, async (req, res) => {
+router.delete(`${sideMenuPath.categories}/delete`, checkLoginStatus, async (req, res) => {
     try {
         const response = await categoryController.deleteCategory(req.body.categoryId);
         res.json(response);
