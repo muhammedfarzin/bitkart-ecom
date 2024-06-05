@@ -90,6 +90,24 @@ const userController = {
             throw new Error('Invalid user');
         }
     },
+    toggleUserStatus: async (userId) => {
+        try {
+            const user = await UserModel.findById(userId);
+            if (!user) throw new Error('Invalid User');
+            if (user.status == userStatusList[0]) {
+                user.status = userStatusList[1];
+            } else {
+                user.status = userStatusList[0];
+            }
+            await user.save();
+            return {
+                message: `User ${user.name} is now ${user.status}`,
+                newStatus: user.status
+            }
+        } catch (err) {
+            throw err;
+        }
+    },
     findUsersByQuery: async (searchQuery) => {
         try {
             let users = await UserModel.find({

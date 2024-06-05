@@ -156,8 +156,15 @@ router.get('/logout', (req, res) => {
 });
 
 // Search
-router.get('/search', checkUserLoginStatus, (req, res) => {
-    res.render('user/search/search-view');
+router.get('/search', checkUserLoginStatus, async (req, res) => {
+    const searchResults = req.query.search && await productController.searchUserProducts(req.query);
+    const context = {
+        searchResults,
+        searchQuery: req.query.search,
+        minAmount: req.query.minAmount,
+        maxAmount: req.query.maxAmount
+    }
+    res.render('user/search/search-view', context);
 });
 
 // Account

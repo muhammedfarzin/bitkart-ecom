@@ -41,6 +41,17 @@ document.addEventListener('DOMContentLoaded', function () {
             transform: 'scale(1)'
         });
     });
+
+    $('#sortByPriceFrm').submit(e => {
+        e.preventDefault();
+        let formData = $('#sortByPriceFrm').serializeArray();
+        const url = new URL(location.href);
+
+        $.each(formData, function () {
+            if (this.value) url.searchParams.set(this.name, this.value);
+        });
+        location.replace(url);
+    });
 });
 
 const debounce = (mainFunction, delay) => {

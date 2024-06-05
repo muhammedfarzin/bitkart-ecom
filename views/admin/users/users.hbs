@@ -35,7 +35,7 @@
                         <td class="text-capitalize" id="status{{this._id}}">{{this.status}}</td>
                         <td class="d-flex">
                             <button class="btn {{isEqualElse this.status 'active' 'btn-danger' 'btn-primary'}} col"
-                                onclick="{{isEqual this.status 'blocked' 'un'}}blockUser('{{this._id}}')"
+                                onclick="toggleUserStatus('{{this._id}}')"
                                 id="block{{this._id}}">
                                 {{isEqualElse this.status 'active' 'Block' 'Unblock'}}
                             </button>
