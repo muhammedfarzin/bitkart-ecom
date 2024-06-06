@@ -1,3 +1,4 @@
+import { Types } from "mongoose";
 import UserModel from "../models/user-model.js";
 
 const userStatusList = ['active', 'blocked'];
@@ -145,6 +146,19 @@ const userController = {
             return await user.save();
         } else {
             await userController.addNewAddress(req)
+        }
+    },
+    removeAddress: async (userId, addressId) => {
+        try {
+            addressId = Types.ObjectId.createFromHexString(addressId);
+            await UserModel.findByIdAndUpdate(userId, { $pull: { address: { _id: addressId } } });
+            return { message: 'Address deleted' };
+        } catch (err) {
+            if (err.name === 'BSONError') {
+                throw new Error('Invalid address');
+            } else {
+                throw err;
+            }
         }
     },
     getAddresses: async (userId) => {

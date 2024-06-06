@@ -218,3 +218,16 @@ document.addEventListener('DOMContentLoaded', function () {
         cropper = null;
     })
 });
+
+function removeAddress(addressId) {
+    $.ajax({
+        url: '/account/address/remove/' + addressId,
+        type: 'DELETE',
+        success: function (data) {
+            $('#address' + addressId).remove();
+        },
+        error: function (err) {
+            alert(err.responseJSON?.errMessage ?? 'Something went wrong');
+        }
+    })
+}

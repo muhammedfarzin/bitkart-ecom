@@ -230,6 +230,15 @@ router.post('/account/address/edit/:id', checkUserLoginStatus, async (req, res) 
     }
 });
 
+router.delete('/account/address/remove/:id', checkUserLoginStatus, async (req, res) => {
+    try {
+        const response = await userController.removeAddress(req.session.user.userId, req.params.id);
+        res.json(response);
+    } catch (err) {
+        res.status(400).json({ errMessage: err.message });
+    }
+});
+
 // Cart
 router.get('/cart', checkUserLoginStatus, async (req, res) => {
     const cart = await orderController.getCartProducts(req.session.user.userId);
