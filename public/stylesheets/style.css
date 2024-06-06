@@ -658,7 +658,8 @@ textarea#description::-webkit-scrollbar {
     display: none;
 }
 
-input.err {
+input.err,
+textarea.err {
     border: 1px solid #dc3545;
     background: #ffdddd;
 }

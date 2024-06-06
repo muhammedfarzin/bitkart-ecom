@@ -1,4 +1,5 @@
-const mobilePattern = /^\d{10}$/;
+const mobilePattern = /^[6-9]\d{9}$/gi;
+const passwordRegex = /^(?=.*[a-zA-Z])(?=.*[a-zA-Z0-9]{3,})(?!.*(.)\1\1).{8,}$/;
 
 function isImage(file) {
     return file && file['type'].split('/')[0] === 'image';
@@ -103,8 +104,8 @@ document.addEventListener('DOMContentLoaded', function () {
         } else if (!mobilePattern.test(mobile.val())) {
             errMessage.text('Please enter a valid 10-digit mobile number')
             mobile.addClass('err');
-        } else if (password.val().length < 8) {
-            errMessage.text('Password must be atleast 8 characters');
+        } else if (!passwordRegex.test(password.val())) {
+            errMessage.text('Please enter a valid password');
             password.addClass('err');
         } else if (password.val() != confPassword.val()) {
             errMessage.text('Your password and confirm password entries do not match');
@@ -148,6 +149,32 @@ document.addEventListener('DOMContentLoaded', function () {
             $('#newPassword').addClass('err');
         } else {
             $('#personalDetailsFrm')[0].submit();
+        }
+    });
+
+    $('#addressFrm').submit((e) => {
+        e.preventDefault();
+        errMessage.text('');
+        formData = $('#addressFrm').serializeArray();
+        let formObject = {};
+        $.each(formData, function () {
+            const value = this.value.trim();
+            if (!value) {
+                $('#' + this.name).addClass('err');
+                const currentMessage = errMessage.text();
+                errMessage.text(currentMessage + (currentMessage ? ', ' : 'Please enter ') + this.name);
+            } else $('#' + this.name).removeClass('err');
+            formObject[this.name] = value;
+        });
+        if (!errMessage.text()) {
+            const mobile = $('#mobile');
+            if (!mobilePattern.test(mobile.val())) {
+                errMessage.text('Please enter a valid mobile number');
+                mobile.addClass('err');
+            } else {
+                mobile.removeClass('err');
+                $('#addressFrm')[0].submit();
+            }
         }
     });
 

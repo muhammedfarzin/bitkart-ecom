@@ -68,6 +68,7 @@ router.post('/login', checkForLogin, (req, res) => {
     userController.verifyUser(email, password)
         .then(userData => {
             req.session.user = userData;
+            req.session.save();
             res.redirect('/');
         })
         .catch(err => {
@@ -109,6 +110,7 @@ router.post('/verifyEmail', async (req, res) => {
             const response = await userController.createUser(userData)
             req.session.user = response;
             delete req.session.tempUserData;
+            req.session.save();
             res.json({ path: '/', message: 'Signup successful' });
         } else {
             throw new Error('Invalid OTP, please try again');
@@ -201,9 +203,11 @@ router.get('/account/address/add', checkUserLoginStatus, (req, res) => {
 router.post('/account/address/add', checkUserLoginStatus, async (req, res) => {
     try {
         await userController.addNewAddress(req);
-        res.redirect(req.query.redirect ?? '/account');
+        res.redirect(req.query.redirect ?? '/account/address');
     } catch (err) {
-        res.status(400).redirect(`${req.url}?errMessage=${err.message}`);
+        const url = new URL(req.originalUrl, req.protocol + '://' + req.get('host'));
+        url.searchParams.set('errMessage', err.message);
+        res.status(400).redirect(url);
     }
 });
 

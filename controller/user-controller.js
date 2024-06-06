@@ -74,22 +74,6 @@ const userController = {
             return err;
         }
     },
-    blockUser: async (userId) => {
-        try {
-            const newData = await UserModel.findByIdAndUpdate(userId, { status: userStatusList[1] });
-            return { message: `User ${newData.name} is blocked` }
-        } catch (err) {
-            throw new Error('Invalid user');
-        }
-    },
-    unBlockUser: async (userId) => {
-        try {
-            const newData = await UserModel.findByIdAndUpdate(userId, { status: userStatusList[0] });
-            return { message: `User ${newData.name} is now active` }
-        } catch (err) {
-            throw new Error('Invalid user');
-        }
-    },
     toggleUserStatus: async (userId) => {
         try {
             const user = await UserModel.findById(userId);
@@ -137,7 +121,7 @@ const userController = {
     addNewAddress: async (req) => {
         const userId = req.session.user.userId;
         const { name, mobile, pincode, locality, address, landmark, state } = req.body;
-        if (!name && !mobile && !pincode && !locality && !address && !landmark && state) {
+        if (!name && !mobile && !pincode && !locality && !address && !landmark && !state) {
             throw new Error('All fields are required');
         }
 
@@ -146,6 +130,22 @@ const userController = {
                 address: { name, mobile, pincode, locality, address, landmark, state }
             }
         });
+    },
+    updateAddress: async (req) => {
+        const userId = req.session.user.userId;
+        const addressId = req.params.id;
+        const { name, mobile, pincode, locality, address, landmark, state } = req.body;
+        if (!name && !mobile && !pincode && !locality && !address && !landmark && !state) {
+            throw new Error('All fields are required');
+        }
+        const user = await UserModel.findById(userId);
+        const addressIndex = user.address.findIndex(address => address._id == addressId);
+        if (addressIndex != -1) {
+            user.address[addressIndex] = { name, mobile, pincode, locality, address, landmark, state };
+            return await user.save();
+        } else {
+            await userController.addNewAddress(req)
+        }
     },
     getAddresses: async (userId) => {
         const addresses = (await UserModel.findById(userId).select('address')).address;
@@ -161,22 +161,6 @@ const userController = {
             throw new Error('Address not exist');
         }
     },
-    updateAddress: async (req) => {
-        const userId = req.session.user.userId;
-        const addressId = req.params.id;
-        const { name, mobile, pincode, locality, address, landmark, state } = req.body;
-        if (!name && !mobile && !pincode && !locality && !address && !landmark && state) {
-            throw new Error('All fields are required');
-        }
-        const user = await UserModel.findById(userId);
-        const addressIndex = user.address.findIndex(address => address._id == addressId);
-        if (addressIndex != -1) {
-            user.address[addressIndex] = { name, mobile, pincode, locality, address, landmark, state };
-            return await user.save();
-        } else {
-            await userController.addNewAddress(req)
-        }
-    }
 }
 
 export default userController;

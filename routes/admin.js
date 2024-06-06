@@ -96,6 +96,7 @@ router.post('/login', (req, res) => {
     const { email, password } = req.body;
     if (email == process.env.ADMIN_EMAIL && password == process.env.ADMIN_PASSWORD) {
         req.session.admin = email
+        req.session.save();
         res.redirect(dashboardRoute);
     } else {
         res.status(401).render('admin/login', { errMessage: 'Invalid username or password' });

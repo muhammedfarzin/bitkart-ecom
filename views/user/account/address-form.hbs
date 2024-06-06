@@ -3,8 +3,8 @@
 <div class="container">
     <div class="col-md-9 my-3">
         <h3 class="text-primary">Enter your Address</h3>
-        <p class="text-danger">{{errMessage}}</p>
-        <form method="post" class="my-3">
+        <p class="text-danger" id="err-message">{{errMessage}}</p>
+        <form method="post" class="my-3" id="addressFrm">
             <div class="d-flex flex-wrap">
                 <div class="col-12 col-md my-2 px-2">
                     <input type="text" name="name" id="name" value="{{address.name}}"
@@ -47,3 +47,5 @@
         </form>
     </div>
 </div>
+
+<script src="/javascript/form.js"></script>
