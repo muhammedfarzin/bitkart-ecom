@@ -1,10 +1,8 @@
 import mongoose from "mongoose";
 
-export const mongoUri = 'mongodb://localhost:27017/bitkart';
-
 export default async function connect() {
     try {
-        await mongoose.connect(mongoUri)
+        await mongoose.connect(process.env.MONGO_URI);
         console.log("Database connected");
     } catch (e) {
         console.log(e.message);

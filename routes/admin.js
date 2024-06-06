@@ -3,7 +3,6 @@ import session from "express-session";
 import path from "path";
 import MongoDBStore from "connect-mongodb-session";
 import multer from "multer";
-import { mongoUri } from "../config/db.js";
 import userController from "../controller/user-controller.js";
 import categoryController from "../controller/category-controller.js";
 import productController from "../controller/product-controller.js";
@@ -22,7 +21,7 @@ const multerStorage = multer.diskStorage({
 const upload = multer({ storage: multerStorage });
 
 const sessionStore = new MongoStore({
-    uri: mongoUri,
+    uri: process.env.MONGO_URI,
     collection: 'sessions',
 });
 

@@ -21,8 +21,10 @@
                             <div class="fs-5">₹{{formatNumber this.price.price}}</div>
                         </div>
                         <div class="p-1 bg-light rounded-4 position-absolute br-1">
-                            {{#with (last this.status) as |latestStatus|}}
-                            <div class="status-view-success text-capitalize">{{latestStatus.status}}</div>
+                            {{#with (last this.status)}}
+                            <div
+                                class="{{#or (eq status 'confirmed') (eq status 'shipped')}}status-view-success{{else or (eq status 'cancelled') (eq status 'return')}}status-view-danger{{else}}status-view-primary{{/or}} text-capitalize">
+                                {{status}}</div>
                             {{/with}}
                         </div>
                     </div>

@@ -76,7 +76,7 @@
             {{#each status}}
             <div class="d-flex align-items-center my-3">
                 <div
-                    class="{{isEqualElse this.status 'cancelled' 'text-danger' 'text-primary'}} fs-1-15rem fw-bold text-capitalize">
+                    class="{{#or (eq status 'cancelled') (eq status 'return')}}text-danger{{else}}text-primary{{/or}} fs-1-15rem fw-bold text-capitalize">
                     {{isEqual this.status 'confirmed' 'order'}}
                     {{this.status}}
                 </div>

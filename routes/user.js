@@ -2,7 +2,6 @@ import { Router } from "express";
 import session from "express-session";
 import MongoDBStore from "connect-mongodb-session";
 import userController from "../controller/user-controller.js";
-import { mongoUri } from "../config/db.js";
 import productController from "../controller/product-controller.js";
 import categoryController from "../controller/category-controller.js";
 import otpController from "../controller/otp-controller.js";
@@ -13,7 +12,7 @@ const router = Router();
 const MongoStore = MongoDBStore(session);
 
 const sessionStore = new MongoStore({
-    uri: mongoUri,
+    uri: process.env.MONGO_URI,
     collection: 'sessions',
 });
 

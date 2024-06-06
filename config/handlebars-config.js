@@ -44,8 +44,9 @@ const hbsConfig = hbs.create({
                 return options.inverse(this);
             }
         },
-        or: function (a, b, options) {
-            if (a || b) {
+        or: function (...datas) {
+            const [options, ...values] = datas.reverse();
+            if (values.some(value => value)) {
                 return options.fn(this);
             } else {
                 return options.inverse(this);
