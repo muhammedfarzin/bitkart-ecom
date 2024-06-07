@@ -1,3 +1,5 @@
+const primaryColor = '#6F43BF';
+
 document.addEventListener('DOMContentLoaded', function () {
     const closePopupBtn = $('#closePopupBtn');
     const popup = $('#popup-image')
@@ -114,4 +116,42 @@ function removeFromCart(productId) {
 
 function buyNow(productId) {
     addToCart(productId, '/checkout');
+}
+
+function addToWishlist(productId) {
+    const wishlistIcon = $('#wishlistIcon' + productId);
+    const wishlistBtn = $('#wishlistBtn' + productId);
+    wishlistIcon.css('fill', primaryColor + 80);
+    $.ajax({
+        url: '/wishlist/add',
+        type: 'POST',
+        data: { productId },
+        dataType: 'json',
+        success: function (data) {
+            wishlistIcon.css('fill', primaryColor);
+            wishlistBtn.attr('onclick', `removeFromWishlist('${productId}'); return false`);
+        },
+        error: function (err) {
+            wishlistIcon.css('fill', 'none');
+        }
+    });
+}
+
+function removeFromWishlist(productId) {
+    const wishlistIcon = $('#wishlistIcon' + productId);
+    const wishlistBtn = $('#wishlistBtn' + productId);
+    wishlistIcon.css('fill', primaryColor + 80);
+    $.ajax({
+        url: '/wishlist/remove',
+        type: 'DELETE',
+        data: { productId },
+        dataType: 'json',
+        success: function (data) {
+            wishlistIcon.css('fill', 'none');
+            wishlistBtn.attr('onclick', `addToWishlist('${productId}'); return false`);
+        },
+        error: function (err) {
+            wishlistIcon.css('fill', primaryColor);
+        }
+    });
 }

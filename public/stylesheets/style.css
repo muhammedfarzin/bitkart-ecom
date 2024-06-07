@@ -423,6 +423,16 @@ form {
     background-color: #6F43BF33;
 }
 
+.product-image .icon-btn {
+    background-color: #ffffff33;
+    border-radius: 50%;
+}
+
+.product-image .icon-btn:hover {
+    border-radius: 25%;
+    background-color: #6F43BF33;
+}
+
 .text-btn {
     color: #6F43BF;
     padding: 0.5rem 1rem;

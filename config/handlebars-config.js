@@ -81,6 +81,9 @@ const hbsConfig = hbs.create({
         },
         formatKey: function (key) {
             return key.replace(/([a-z])([A-Z])/g, '$1 $2');
+        },
+        includes: function (arr, data) {
+            return arr.includes(data);
         }
     }
 });

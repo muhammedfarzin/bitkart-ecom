@@ -1,4 +1,4 @@
-import { Schema, model } from "mongoose"
+import { Schema, Types, model } from "mongoose"
 import bcrypt from "bcrypt";
 import addressSchema from "./schemas/address-schema.js";
 
@@ -39,7 +39,7 @@ const userSchema = new Schema({
         type: [addressSchema]
     },
     wishlist: {
-        type: [String]
+        type: [Types.ObjectId]
     },
     status: {
         type: String,

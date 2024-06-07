@@ -72,7 +72,11 @@ const productController = {
                         $or: [
                             { title: { $regex: searchQuery, $options: 'i' } },
                             { description: { $regex: searchQuery, $options: 'i' } },
-                        ],
+                        ]
+                    }
+                },
+                {
+                    $match: {
                         $or: [
                             { price: { $lte: maxAmount, $gte: minAmount } },
                             { offerPrice: { $lte: maxAmount, $gte: minAmount } }

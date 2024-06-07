@@ -84,6 +84,7 @@ const userRouterController = {
         try {
             const product = await productController.getProductOverview(req.params.id);
             const relatedProducts = await productController.getProductsByCategory(product.categoryId);
+            if (req.session.user.wishlist.includes(product._id)) product.isWishlisted = true;
             res.render('user/products/products', { product, relatedProducts });
         } catch (err) {
             res.render('error', { errMessage: err.message });
@@ -93,6 +94,7 @@ const userRouterController = {
         const searchResults = req.query.search && await productController.searchUserProducts(req.query);
         const context = req.query.search && {
             searchResults,
+            userWishlist: req.session.user.wishlist,
             searchQuery: req.query.search,
             minAmount: req.query.minAmount,
             maxAmount: req.query.maxAmount
@@ -120,6 +122,20 @@ const userRouterController = {
     },
     showWishlist: (req, res) => {
         res.render('user/products/wishlist');
+    },
+    addToWishlist: (req, res) => {
+        const { productId } = req.body;
+        const { userId } = req.session.user;
+        userController.addToWishlist(userId, productId)
+            .then(response => res.json(response))
+            .catch(err => res.status(400).json({ errMessage: err.message }));
+    },
+    removeFromWishlist: (req, res) => {
+        const { productId } = req.body;
+        const { userId } = req.session.user;
+        userController.removeFromWishlist(userId, productId)
+            .then(response => res.json(response))
+            .catch(err => res.status(400).json({ errMessage: err.message }));
     },
     updateCart: async (req, res) => {
         const { productId, quantity } = req.body;
@@ -261,7 +277,10 @@ const userRouterController = {
 
 
 export async function checkUserLoginStatus(req, res, next) {
-    if (await userController.checkUserStatus(req.session.user)) {
+    const response = await userController.checkUserStatus(req.session.user);
+    if (response) {
+        req.session.user = response;
+        req.session.save();
         next();
     } else {
         req.session.destroy();

@@ -1,5 +1,6 @@
 import { Types } from "mongoose";
 import UserModel from "../models/user-model.js";
+import ProductModel from "../models/product-model.js";
 
 const userStatusList = ['active', 'blocked'];
 
@@ -11,7 +12,7 @@ const userController = {
             user.save()
                 .then((data => {
                     const { _id: userId, name, email, mobile, cart, status } = data;
-                    resolve({ userId, name, email, mobile, cart, status });
+                    resolve({ userId, name, email, mobile, cart, wishlist, status });
                 }))
                 .catch((err) => {
                     reject(user.customError(err));
@@ -59,7 +60,7 @@ const userController = {
                     reject(new Error('The user was blocked by admin'));
                 }
                 const { _id: userId, name, email, mobile, cart, status } = user;
-                resolve({ userId, name, email, mobile, cart, status })
+                resolve({ userId, name, email, mobile, cart, wishlist, status })
             } catch (err) {
                 reject(err);
             }
@@ -117,7 +118,8 @@ const userController = {
         const userData = await UserModel.findById(user.userId);
         if (!userData) return false;
         if (userData.status != 'active') return false;
-        return true;
+        const { _id: userId, name, email, mobile, cart, wishlist, status } = userData;
+        return { userId, name, email, mobile, cart, wishlist, status };
     },
     addNewAddress: async (req) => {
         const userId = req.session.user.userId;
@@ -175,6 +177,45 @@ const userController = {
             throw new Error('Address not exist');
         }
     },
+    addToWishlist: (userId, productId) => {
+        return new Promise(async (resolve, reject) => {
+            try {
+                productId = Types.ObjectId.createFromHexString(productId);
+                const product = await ProductModel.findById(productId);
+                if (!product) throw new Error('Product not found');
+
+                const user = await UserModel.findById(userId);
+                if (!user.wishlist.includes(productId)) {
+                    await user.updateOne({ $push: { wishlist: productId } });
+                }
+                resolve({ message: 'Product added to the wishlist' });
+            } catch (err) {
+                if (err.name === 'BSONError') {
+                    reject(new Error('Product not found'));
+                } else {
+                    reject(err);
+                }
+            }
+        });
+    },
+    removeFromWishlist: (userId, productId) => {
+        return new Promise(async (resolve, reject) => {
+            try {
+                productId = Types.ObjectId.createFromHexString(productId);
+                const user = await UserModel.findById(userId);
+                if (user.wishlist.includes(productId)) {
+                    await user.updateOne({ $pull: { wishlist: productId } });
+                }
+                resolve({ message: 'Product is removed from the wishlist' });
+            } catch (err) {
+                if (err.name === 'BSONError') {
+                    reject(new Error('Product not found'));
+                } else {
+                    reject(err);
+                }
+            }
+        });
+    }
 }
 
 export default userController;
