@@ -3,6 +3,7 @@
 <div class="container">
     <h3 class="text-primary my-1">Your Wishlists</h3>
 
+    {{#if products}}
     <div class="list d-flex flex-wrap">
         {{#each products}}
         <a class="text-reset col-12 col-lg-6" href="/view/{{_id}}">
@@ -45,7 +46,8 @@
                 <div class="action-btn d-flex flex-wrap">
                     <button class="btn btn-outline-primary fw-bold me-2 my-1 py-2 col-12 col-md"
                         onclick="addToCart('{{_id}}'); return false">Add to Cart</button>
-                    <button class="btn btn-primary fw-bold my-1 py-2 col-12 col-md" onclick="buyNow('{{_id}}'); return false">
+                    <button class="btn btn-primary fw-bold my-1 py-2 col-12 col-md"
+                        onclick="buyNow('{{_id}}'); return false">
                         Buy Now
                     </button>
                 </div>
@@ -53,9 +55,14 @@
         </a>
         {{/each}}
     </div>
-    {{!-- <div class="d-flex justify-content-around align-items-center flex-wrap col-12 col-md-9">
-        <img class="col-12 col-md-8" src="/images/search-products.svg" alt="error">
-    </div> --}}
+    {{else}}
+    <div class="d-flex justify-content-around align-items-center flex-wrap m-auto col-12 col-md-9">
+        <img class="col-12 col-md-6" src="/images/search-products.svg" alt="error">
+        <div class="text-center col-12 col-md-5 my-5">
+            <h1 class="fs-2 text-primary">Your wishlist is Empty</h1>
+        </div>
+    </div>
+    {{/if}}
 </div>
 
 <script src="/javascript/product.js"></script>
