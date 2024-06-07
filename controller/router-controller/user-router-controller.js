@@ -6,6 +6,7 @@ import orderController from "../order-controller.js";
 import { orderStatus } from "../../models/order-model.js";
 
 const userRouterController = {
+    // Authentications
     login: (req, res) => {
         const { email, password } = req.body;
         userController.verifyUser(email, password)
@@ -72,6 +73,8 @@ const userRouterController = {
         req.session.destroy();
         res.redirect('/login');
     },
+
+    // Products
     showHome: async (req, res) => {
         const products = await productController.getProducts();
         const categories = await categoryController.getCategories();
@@ -96,6 +99,8 @@ const userRouterController = {
         }
         res.render('user/search/search-view', context);
     },
+
+    // Accounts
     showPersonalDetailsForm: async (req, res) => {
         const user = await userController.findUserById(req.session.user.userId);
         res.render('user/account/account', { user, errMessage: req.query.errMessage });
@@ -103,10 +108,6 @@ const userRouterController = {
     showAddressList: async (req, res) => {
         const address = await userController.getAddresses(req.session.user.userId);
         res.render('user/account/address-manage', { address, currentPath: req.url });
-    },
-    showOrdersList: async (req, res) => {
-        const orders = await orderController.getUserOrders(req.session.user.userId);
-        res.render('user/account/orders', { orders, currentPath: req.url });
     },
     updateUser: async (req, res) => {
         try {
@@ -117,6 +118,24 @@ const userRouterController = {
             res.redirect('/account?errMessage=' + err.message);
         }
     },
+    showWishlist: (req, res) => {
+        res.render('user/products/wishlist');
+    },
+    updateCart: async (req, res) => {
+        const { productId, quantity } = req.body;
+        try {
+            const datas = await orderController.updateCart(req.session.user.userId, productId, quantity);
+            const cartCount = datas.cart.reduce((count, data) => {
+                return count + data.quantity;
+            }, 0);
+            const priceDetails = await orderController.getPriceSummary(req.session.user.userId);
+            res.json({ message: 'Added to cart', cartCount, updatedQuantity: quantity, priceDetails });
+        } catch (err) {
+            res.status(400).json({ errMessage: err.message });
+        }
+    },
+
+    // Address
     showAddAddressForm: (req, res) => {
         res.render('user/account/address-form', { errMessage: req.query.errMessage });
     },
@@ -155,23 +174,16 @@ const userRouterController = {
             res.status(400).json({ errMessage: err.message });
         }
     },
+
+    // Orders
+    showOrdersList: async (req, res) => {
+        const orders = await orderController.getUserOrders(req.session.user.userId);
+        res.render('user/account/orders', { orders, currentPath: req.url });
+    },
     showCart: async (req, res) => {
         const cart = await orderController.getCartProducts(req.session.user.userId);
         const priceDetails = await orderController.getPriceSummary(req.session.user.userId, cart);
         res.render('user/purchase/cart', { cart, priceDetails });
-    },
-    updateCart: async (req, res) => {
-        const { productId, quantity } = req.body;
-        try {
-            const datas = await orderController.updateCart(req.session.user.userId, productId, quantity);
-            const cartCount = datas.cart.reduce((count, data) => {
-                return count + data.quantity;
-            }, 0);
-            const priceDetails = await orderController.getPriceSummary(req.session.user.userId);
-            res.json({ message: 'Added to cart', cartCount, updatedQuantity: quantity, priceDetails });
-        } catch (err) {
-            res.status(400).json({ errMessage: err.message });
-        }
     },
     showCheckout: async (req, res) => {
         const userId = req.session.user.userId;

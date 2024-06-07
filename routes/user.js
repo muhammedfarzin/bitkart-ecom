@@ -85,6 +85,9 @@ router.post('/account/address/edit/:id', checkUserLoginStatus, userRouterControl
 
 router.delete('/account/address/remove/:id', checkUserLoginStatus, userRouterController.deleteAddress);
 
+// Wishlist
+router.get('/wishlist', checkUserLoginStatus, userRouterController.showWishlist);
+
 // Cart
 router.get('/cart', checkUserLoginStatus, userRouterController.showCart);
 

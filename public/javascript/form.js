@@ -1,4 +1,4 @@
-const mobilePattern = /^[6-9]\d{9}$/gi;
+const mobilePattern = /^[6-9]\d{9}$/i;
 const passwordRegex = /^(?=.*[a-zA-Z])(?=.*[a-zA-Z0-9]{3,})(?!.*(.)\1\1).{8,}$/;
 
 function isImage(file) {
@@ -132,8 +132,9 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!formData.name) {
             errMessage.text('Please enter name');
             $('#name').addClass('err');
-        } else if (!formData.mobile) {
-            errMessage.text('Please enter mobile number');
+        } else if (!mobilePattern.test(formData.mobile)) {
+            console.log('working wrong')
+            errMessage.text('Please enter a valid 10-digit mobile numberssssss');
             $('#mobile').addClass('err');
         } else if (!formData.email) {
             errMessage.text('Please enter email address');
@@ -141,11 +142,8 @@ document.addEventListener('DOMContentLoaded', function () {
         } else if (!formData.password) {
             errMessage.text('Please enter password');
             $('#password').addClass('err');
-        } else if (!mobilePattern.test(formData.mobile)) {
-            errMessage.text('Please enter a valid 10-digit mobile number')
-            $('#mobile').addClass('err');
-        } else if (formData.newPassword && formData.newPassword.length < 8) {
-            errMessage.text('Password must be atleast 8 characters');
+        } else if (formData.newPassword && !passwordRegex.test(formData.newPassword)) {
+            errMessage.text('Please enter a valid strong password (password must contain atleast 8 character)');
             $('#newPassword').addClass('err');
         } else {
             $('#personalDetailsFrm')[0].submit();
