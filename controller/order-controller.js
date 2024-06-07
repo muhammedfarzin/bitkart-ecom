@@ -129,8 +129,8 @@ const orderController = {
     },
     getOrders: () => {
         return new Promise(async (resolve, reject) => {
-            // const orders = await OrderModel.find().limit(20).sort({ orderedAt: -1 });
             const orders = await OrderModel.aggregate([
+                { $match: { "status.status": { $ne: orderStatus.pending } } },
                 { $sort: { orderedAt: -1 } },
                 { $limit: 20 },
                 {
@@ -189,7 +189,7 @@ const orderController = {
     },
     getUserOrders: async (userId) => {
         const orders = await OrderModel.aggregate([
-            { $match: { userId, "status.status": { $ne: "pending" } } },
+            { $match: { userId, "status.status": { $ne: orderStatus.pending } } },
             {
                 $lookup: {
                     from: 'products',

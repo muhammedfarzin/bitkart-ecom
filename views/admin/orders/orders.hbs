@@ -49,11 +49,12 @@
                     {{!-- Bottom of the list --}}
                     <div class="bottom d-flex justify-content-end">
                         <div class="p-1 bg-light rounded-4">
-                            <div class="status-view-primary text-capitalize">
-                                {{#with (last this.status)}}
+                            {{#with (last this.status)}}
+                            <div
+                                class="{{#or (eq status 'confirmed') (eq status 'shipped')}}status-view-success{{else or (eq status 'cancelled') (eq status 'return')}}status-view-danger{{else}}status-view-primary{{/or}} text-capitalize">
                                 {{status}}
-                                {{/with}}
                             </div>
+                            {{/with}}
                         </div>
                     </div>
                 </div>

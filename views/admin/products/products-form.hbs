@@ -57,7 +57,7 @@
                         <div class="col-12 col-md">
                             <div class="fs-6 fw-bold text-primary my-2">Offer Price</div>
                             <input type="number" name="offerPrice" id="offer-price" min="10"
-                                value="{{product.offerPrice}}"
+                                value="{{#if product.offerPrice}}product.offerPrice{{/if}}"
                                 class="outlined-card placeholder-primary outline-none w-100"
                                 placeholder="Enter offer price">
                         </div>

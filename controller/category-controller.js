@@ -3,22 +3,34 @@ import CategoryModel from "../models/category-model.js";
 
 const categoryController = {
     createCategory: (datas) => {
-        return new Promise((resolve, reject) => {
+        return new Promise(async (resolve, reject) => {
             const imagePath = datas.file.path.replace('public', '');
-            const { title, description } = datas.body;
-            if (!title && !description) {
-                return reject(new Error('Please enter title and description'));
+            try {
+                const { title, description } = datas.body;
+                if (!title && !description) {
+                    return reject(new Error('Please enter title and description'));
+                }
+                const oldCategory = await CategoryModel.findOne({ title });
+                if (oldCategory && oldCategory.isDeleted) {
+                    const oldImagePath = oldCategory.imagePath;
+                    const response = await oldCategory.updateOne({ description, imagePath, isDeleted: false }, { new: true });
+                    fs.unlink('public' + oldImagePath, (err) => err && console.log('Image is not deleted:', err.message));
+                    resolve(response);
+                } else {
+                    const category = new CategoryModel({ title, description, imagePath });
+                    const newData = await category.save();
+                    resolve(newData);
+                }
+            } catch (err) {
+                fs.unlink('public' + imagePath, (err => {
+                    if (err) console.log('Image is not deleted: ' + err.message);
+                }));
+                if (err.code === 11000) {
+                    reject(new Error(`category ${err.keyValue.title} is already exist`));
+                } else {
+                    reject(err);
+                }
             }
-
-            const category = new CategoryModel({ title, description, imagePath });
-            category.save()
-                .then(data => resolve(data))
-                .catch(err => {
-                    fs.unlink('public' + imagePath, (err => {
-                        if (err) console.log('Image is not deleted: ' + err.message);
-                    }))
-                    reject(err)
-                });
         })
     },
     getCategories: async () => {
@@ -31,7 +43,8 @@ const categoryController = {
                 $or: [
                     { title: { $regex: searchQuery, $options: 'i' } },
                     { description: { $regex: searchQuery, $options: 'i' } },
-                ]
+                ],
+                isDeleted: false
             });
             if (!categories.length) categories = [await CategoryModel.findById(searchQuery)];
             return categories.map(user => user.toObject());
@@ -53,22 +66,27 @@ const categoryController = {
         return datas.map(category => category.toObject());
     },
     updateCategory: (id, datas) => {
-        return new Promise((resolve, reject) => {
+        return new Promise(async (resolve, reject) => {
             const imagePath = datas.file?.path.replace('public', '');
-            if (imagePath) fs.unlinkSync('public' + datas.body.currentImage)
             const { title, description } = datas.body;
-            if (!title && !description) {
-                return reject(new Error('Please enter title and description'));
+            try {
+                if (!title && !description) {
+                    return reject(new Error('Please enter title and description'));
+                }
+                const category = await CategoryModel.findById(id);
+                const oldImagepath = category.imagePath;
+                const response = await category.updateOne({ title, description, imagePath }, { new: true });
+
+                if (imagePath) fs.unlink('public' + oldImagepath, (err) => err && console.error('Old image is not deleted:', err.message));
+                resolve(response);
+            } catch (err) {
+                if (imagePath) fs.unlink('public' + imagePath, (err) => err && console.error('Image is not deleted:', err.message));
+                if (err.code == 11000) {
+                    reject(new Error(`category ${err.keyValue.title} is already exist`));
+                } else {
+                    reject(err);
+                }
             }
-            CategoryModel.findByIdAndUpdate(id, { title, description, imagePath })
-                .then(data => resolve(data))
-                .catch(err => {
-                    if (err.code == 11000 && err.codeName == 'DuplicateKey') {
-                        reject(new Error(`${err.keyValue.title} is already exist`));
-                    } else {
-                        reject(err);
-                    }
-                });
         })
     },
     deleteCategory: async (id) => {

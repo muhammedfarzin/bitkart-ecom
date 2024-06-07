@@ -6,7 +6,7 @@
     <div class="container">
         <div class="top-bar d-flex justify-content-between align-items-center flex-wrap">
             <div class="title col">
-                <h1 class="text-primary">Create category</h1>
+                <h1 class="text-primary">{{#if category}} Update {{else}} Create {{/if}} Category</h1>
             </div>
         </div>
         <form method="post" enctype="multipart/form-data">
@@ -59,7 +59,6 @@
                             </div>
                         </div>
                     </div>
-                    <input type="text" name="currentImage" id="currentImage" value="{{category.imagePath}}" hidden>
                 </div>
         </form>
 
