@@ -47,6 +47,46 @@ const productController = {
             throw new Error('Invalid product');
         }
     },
+    getProductByIds: async (productIds) => {
+        const products = await ProductModel.aggregate([
+            { $match: { _id: { $in: productIds } } },
+            {
+                $lookup: {
+                    from: 'reviews',
+                    let: { productId: '$_id' },
+                    pipeline: [
+                        {
+                            $match: {
+                                $expr: { $eq: [{ $toString: '$productId' }, { $toString: '$$productId' }] }
+                            },
+                        },
+                        {
+                            $lookup: {
+                                from: 'users',
+                                localField: 'userId',
+                                foreignField: '_id',
+                                as: 'user'
+                            }
+                        },
+                        {
+                            $addFields: {
+                                userId: { $toObjectId: '$userId' },
+                                user: { $arrayElemAt: ['$user', 0] },
+                            }
+                        },
+                    ],
+                    as: 'reviews'
+                }
+            },
+            {
+                $addFields: {
+                    rating: { $avg: '$reviews.starRating' },
+                    totalReviews: { $size: '$reviews' }
+                }
+            }
+        ]);
+        return products;
+    },
     searchProducts: async (searchQuery) => {
         try {
             let products = await ProductModel.find({

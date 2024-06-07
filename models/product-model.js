@@ -49,8 +49,7 @@ const productSchema = new Schema({
     status: {
         type: String,
         default: 'active'
-    },
-    reviews: [String]
+    }
 });
 
 productSchema.pre('save', function (next) {

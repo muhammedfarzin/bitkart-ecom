@@ -120,8 +120,24 @@ const userRouterController = {
             res.redirect('/account?errMessage=' + err.message);
         }
     },
-    showWishlist: (req, res) => {
-        res.render('user/products/wishlist');
+    updateCart: async (req, res) => {
+        const { productId, quantity } = req.body;
+        try {
+            const datas = await orderController.updateCart(req.session.user.userId, productId, quantity);
+            const cartCount = datas.cart.reduce((count, data) => {
+                return count + data.quantity;
+            }, 0);
+            const priceDetails = await orderController.getPriceSummary(req.session.user.userId);
+            res.json({ message: 'Added to cart', cartCount, updatedQuantity: quantity, priceDetails });
+        } catch (err) {
+            res.status(400).json({ errMessage: err.message });
+        }
+    },
+
+    // Wishlist
+    showWishlist: async (req, res) => {
+        const products = await productController.getProductByIds(req.session.user.wishlist);
+        res.render('user/products/wishlist', {products});
     },
     addToWishlist: (req, res) => {
         const { productId } = req.body;
@@ -136,19 +152,6 @@ const userRouterController = {
         userController.removeFromWishlist(userId, productId)
             .then(response => res.json(response))
             .catch(err => res.status(400).json({ errMessage: err.message }));
-    },
-    updateCart: async (req, res) => {
-        const { productId, quantity } = req.body;
-        try {
-            const datas = await orderController.updateCart(req.session.user.userId, productId, quantity);
-            const cartCount = datas.cart.reduce((count, data) => {
-                return count + data.quantity;
-            }, 0);
-            const priceDetails = await orderController.getPriceSummary(req.session.user.userId);
-            res.json({ message: 'Added to cart', cartCount, updatedQuantity: quantity, priceDetails });
-        } catch (err) {
-            res.status(400).json({ errMessage: err.message });
-        }
     },
 
     // Address
