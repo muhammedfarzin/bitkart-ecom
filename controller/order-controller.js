@@ -73,7 +73,7 @@ const orderController = {
 
         datas.forEach(data => {
             const { price, offerPrice } = data.productDetails;
-            totalPrice += (offerPrice ?? price) * data.quantity;
+            totalPrice += (offerPrice || price) * data.quantity;
         });
         if (totalPrice >= minForFreeDelivery) deliveryCharge = 0;
         return { totalPrice, deliveryCharge };
@@ -267,7 +267,7 @@ const orderController = {
             }
         });
     },
-    updateStatus: (orderId, newStatus) => {
+    updateStatus: (orderId, newStatus, refundAmount) => {
         return new Promise(async (resolve, reject) => {
             try {
                 orderId = Types.ObjectId.createFromHexString(orderId);
@@ -286,6 +286,11 @@ const orderController = {
                     resolve({ message: 'Order status updated' });
                 } else {
                     await order.updateOne({ $push: { status: { status: newStatus } } });
+                    if (newStatus == orderStatus.return || (newStatus == orderStatus.cancelled && order.paymentMethod == 'online')) {
+                        const user = await UserModel.findById(order.userId);
+                        refundAmount = refundAmount ?? order.price.totalPrice;
+                        user.wallet.creditAmount(refundAmount, `Refund of the order ${orderId}`);
+                    }
                     resolve({ message: 'Order status updated' });
                 }
             } catch (err) {
@@ -309,9 +314,9 @@ const orderController = {
                 if (!pickupAddress) throw new Error('Invalid address ID');
                 if (returnQuantity > order.quantity) throw new Error('Return quantity is cannot be more than order quantity');
 
-                const returnAmount = (order.price.price / order.quantity) * returnQuantity;
+                const returnAmount = (order.price.totalPrice / order.quantity) * returnQuantity;
 
-                await orderController.updateStatus(orderId, orderStatus.return);
+                await orderController.updateStatus(orderId, orderStatus.return, returnAmount);
                 await order.updateOne({ pickupAddress, returnQuantity, returnAmount });
                 resolve({ message: 'Return request submitted' });
             } catch (err) {

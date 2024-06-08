@@ -1,6 +1,7 @@
 import { Schema, Types, model } from "mongoose"
 import bcrypt from "bcrypt";
 import addressSchema from "./schemas/address-schema.js";
+import walletSchema from "./schemas/wallet-shema.js";
 
 const cartSchema = new Schema({
     productId: {
@@ -41,6 +42,7 @@ const userSchema = new Schema({
     wishlist: {
         type: [Types.ObjectId]
     },
+    wallet: walletSchema,
     status: {
         type: String,
         required: true

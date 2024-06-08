@@ -59,7 +59,7 @@ const userController = {
                 } else if (user.status == 'blocked') {
                     reject(new Error('The user was blocked by admin'));
                 }
-                const { _id: userId, name, email, mobile, cart, status } = user;
+                const { _id: userId, name, email, mobile, cart, wishlist, status } = user;
                 resolve({ userId, name, email, mobile, cart, wishlist, status })
             } catch (err) {
                 reject(err);
