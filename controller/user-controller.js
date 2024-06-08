@@ -121,6 +121,13 @@ const userController = {
         const { _id: userId, name, email, mobile, cart, wishlist, status } = userData;
         return { userId, name, email, mobile, cart, wishlist, status };
     },
+    getWalletDatas: async (userId) => {
+        const wallet = (await UserModel.findById(userId)).toObject().wallet;
+        wallet.transactions = wallet.transactions.sort((a, b) => {
+            return new Date(b.transactionDate) - new Date(a.transactionDate);
+        })
+        return wallet;
+    },
     addNewAddress: async (req) => {
         const userId = req.session.user.userId;
         const { name, mobile, pincode, locality, address, landmark, state } = req.body;

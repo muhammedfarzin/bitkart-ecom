@@ -74,6 +74,8 @@ router.get('/account/orders', checkUserLoginStatus, userRouterController.showOrd
 
 router.post('/updateUser', checkUserLoginStatus, userRouterController.updateUser);
 
+router.get('/account/wallet', checkUserLoginStatus, userRouterController.showWalletDatas);
+
 // Mange Address
 router.get('/account/address/add', checkUserLoginStatus, userRouterController.showAddAddressForm);
 

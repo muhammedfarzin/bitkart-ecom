@@ -133,11 +133,15 @@ const userRouterController = {
             res.status(400).json({ errMessage: err.message });
         }
     },
+    showWalletDatas: async (req, res) => {
+        const wallet = await userController.getWalletDatas(req.session.user.userId);
+        res.render('user/account/wallet', { wallet });
+    },
 
     // Wishlist
     showWishlist: async (req, res) => {
         const products = await productController.getProductByIds(req.session.user.wishlist);
-        res.render('user/products/wishlist', {products});
+        res.render('user/products/wishlist', { products });
     },
     addToWishlist: (req, res) => {
         const { productId } = req.body;

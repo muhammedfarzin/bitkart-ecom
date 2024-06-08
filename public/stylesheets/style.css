@@ -808,3 +808,18 @@ input#promocode.text-uppercase::placeholder {
 .f-uppercase::first-letter {
     text-transform: uppercase;
 }
+
+thead.table-primary,
+table.table-primary {
+    --bs-table-color: #fff;
+    --bs-table-bg: #6F43BFDD;
+    --bs-table-border-color: #6F43BFDD;
+    --bs-table-striped-bg: #6F43BFDD;
+    --bs-table-striped-color: #fff;
+    --bs-table-active-bg: #6F43BFDD;
+    --bs-table-active-color: #fff;
+    --bs-table-hover-bg: #6F43BFDD;
+    --bs-table-hover-color: #fff;
+    color: #fff;
+    border-color: #6F43BFDD;
+}

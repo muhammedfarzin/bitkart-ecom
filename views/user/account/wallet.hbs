@@ -1,0 +1,34 @@
+{{> navbar}}
+
+{{> account-sidebar}}
+
+<div class="container col-md-9 sm me-0">
+    <div class="text-primary fs-2 fw-bold text-center my-3">
+        Balance: ₹{{formatNumber wallet.balance}}
+    </div>
+    <div class="mt-4 w-100">
+        <h3 class="text-primary">Transactions</h3>
+        <div class="list">
+            <table class="table table-striped table-hover">
+                <thead class="table-primary">
+                    <tr>
+                        <th>Date</th>
+                        <th>Description</th>
+                        <th>Amount</th>
+                        <th>Balance</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each wallet.transactions}}
+                    <tr>
+                        <td>{{formatDate transactionDate 'MMMM D, YYYY'}}</td>
+                        <td>{{description}}</td>
+                        <td class="{{isEqualElse transactionType 'credit' 'text-success' 'text-danger'}} fw-bold">₹{{formatNumber amount}}</td>
+                        <td class="text-primary fw-bold">₹{{formatNumber balance}}</td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
