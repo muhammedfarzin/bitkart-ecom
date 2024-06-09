@@ -52,7 +52,7 @@ walletSchema.methods.debitAmount = async function (amount, description) {
 
     this.balance -= amount;
     this.transactions.push({
-        amount: -amount,
+        amount: amount,
         balance: this.balance,
         description,
         transactionType: transactionTypes.debit

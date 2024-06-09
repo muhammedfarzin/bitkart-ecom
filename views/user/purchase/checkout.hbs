@@ -50,9 +50,25 @@
                 </div>
                 {{/if}}
             </div>
+
+            {{!-- Payment Options --}}
             <div class="outlined-card p-0 my-3">
-                <div class="text-primary fs-4 fw-medium p-2 m-2">Payment Optins</div>
+                <div class="text-primary fs-4 fw-medium p-2 m-2">Payment Options</div>
                 <div class="list mx-2">
+                    {{#with priceDetails}}
+                    {{#lte (sum totalPrice deliveryCharge) @root.walletBalance}}
+                    <div class="d-flex align-items-start mb-3">
+                        <input class="radio-primary my-1 mx-2" value="wallet" type="radio"
+                            name="paymentMethod" id="paymentWallet">
+                        <label for="paymentWallet" class="cursor-pointer fw-bold ms-2">
+                            Wallet
+                            <div class="box-primary d-inline py-1 px-2">
+                                ₹{{formatNumber (sum totalPrice deliveryCharge)}}
+                            </div>
+                        </label>
+                    </div>
+                    {{/lte}}
+                    {{/with}}
                     <div class="d-flex align-items-start mb-3">
                         <input type="radio" class="radio-primary my-1 mx-2" value="online" name="paymentMethod"
                             id="paymentOnline">

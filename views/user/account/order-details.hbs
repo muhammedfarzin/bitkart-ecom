@@ -40,6 +40,7 @@
                         <div class="datas w-100">
                             <h4 class="title max-line-2">{{title}}</h4>
                             <div class="price-details pt-1 pb-2 flex-wrap">
+                                {{#if offerPrice}}
                                 <div class="text-black-50 text-decoration-line-through fs-6">₹{{formatNumber price}}
                                 </div>
                                 <div class="d-flex align-items-center">
@@ -47,6 +48,9 @@
                                     <div class="text-primary fw-bold hide-col"> {{getOfferPecentage price offerPrice}}%
                                         OFF</div>
                                 </div>
+                                {{else}}
+                                <div class="fs-4 fw-bold mx-3">₹{{formatNumber price}}</div>
+                                {{/if}}
                             </div>
                             {{/with}}
                         </div>
@@ -61,11 +65,11 @@
     <div class="mt-4" id="PaymentMethod">
         <h3 class="text-primary fs-4">Payment Method</h3>
         <div class="card-primary-light text-center rounded-pill p-2 my-3 col-7 col-sm-6 col-md-4 col-lg-3">
-            <div class="text-primary fs-1-15rem fw-bold">
+            <div class="text-primary fs-1-15rem fw-bold text-capitalize">
                 {{#if (eq paymentMethod 'cod')}}
                 Cash on Delivery
                 {{else}}
-                Online
+                {{paymentMethod}}
                 {{/if}}</div>
         </div>
     </div>

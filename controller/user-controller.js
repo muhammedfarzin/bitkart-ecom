@@ -118,8 +118,8 @@ const userController = {
         const userData = await UserModel.findById(user.userId);
         if (!userData) return false;
         if (userData.status != 'active') return false;
-        const { _id: userId, name, email, mobile, cart, wishlist, status } = userData;
-        return { userId, name, email, mobile, cart, wishlist, status };
+        const { _id: userId, name, email, mobile, cart, wishlist, wallet: { balance: walletBalance }, status } = userData;
+        return { userId, name, email, mobile, cart, wishlist, walletBalance, status };
     },
     getWalletDatas: async (userId) => {
         const wallet = (await UserModel.findById(userId)).toObject().wallet;

@@ -212,13 +212,20 @@ const userRouterController = {
         const userId = req.session.user.userId;
         const addresses = await userController.getAddresses(userId);
         const priceDetails = await orderController.getPriceSummary(userId);
-        if (!priceDetails.totalPrice) res.redirect('/');
-        else res.render('user/purchase/checkout', { priceDetails, addresses, currentPath: req.url });
+        if (!priceDetails.totalPrice) return res.redirect('/');
+
+        const context = {
+            priceDetails,
+            addresses,
+            currentPath: req.url,
+            walletBalance: req.session.user.walletBalance
+        };
+        res.render('user/purchase/checkout', context);
     },
     placeOrder: async (req, res) => {
         try {
             const paymentMethod = req.body.paymentMethod;
-            if (paymentMethod == 'cod' || paymentMethod == 'online') {
+            if (/^(cod|online|wallet)$/.test(paymentMethod)) {
                 const response = await orderController.placeOrder(req);
                 if (!response) await orderController.clearCart(req.session.user.userId);
                 req.session.orderDone = true;

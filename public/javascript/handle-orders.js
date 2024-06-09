@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
         if (!formObject.addressId) return alert('Please select an address');
 
-        if (formObject.paymentMethod == 'cod' || formObject.paymentMethod == 'online') {
+        if (/^(cod|online|wallet)$/.test(formObject.paymentMethod)) {
             $.ajax({
                 url: '/placeOrder',
                 type: 'POST',
@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             });
         } else {
-            alert('Please select payment a payment method');
+            alert('Please select a valid payment method');
         }
     });
 

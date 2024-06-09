@@ -30,7 +30,7 @@ const orderSchema = new Schema({
         required: true,
         validate: {
             validator: function (value) {
-                return /^(online|cod)$/.test(value);
+                return /^(online|cod|wallet)$/.test(value);
             },
             message: 'Payment method must be either "online" or "cod"'
         }

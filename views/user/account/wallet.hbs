@@ -19,14 +19,21 @@
                     </tr>
                 </thead>
                 <tbody>
+                    {{#if wallet.transactions}}
                     {{#each wallet.transactions}}
                     <tr>
                         <td>{{formatDate transactionDate 'MMMM D, YYYY'}}</td>
                         <td>{{description}}</td>
-                        <td class="{{isEqualElse transactionType 'credit' 'text-success' 'text-danger'}} fw-bold">₹{{formatNumber amount}}</td>
+                        <td class="{{isEqualElse transactionType 'credit' 'text-success' 'text-danger'}} fw-bold">
+                            ₹{{formatNumber amount}}</td>
                         <td class="text-primary fw-bold">₹{{formatNumber balance}}</td>
                     </tr>
                     {{/each}}
+                    {{else}}
+                    <tr>
+                        <td colspan="4" class="fs-4 text-primary text-center">No transactions yet</td>
+                    </tr>
+                    {{/if}}
                 </tbody>
             </table>
         </div>

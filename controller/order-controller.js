@@ -92,14 +92,21 @@ const orderController = {
         const cartProducts = await orderController.getCartProducts(userId);
         const address = await userController.getAddressById(userId, addressId);
         const deliveryCharge = orderController.calculateDeliveryCharge(cartProducts);
-        const status = paymentMethod == 'cod' ? orderStatus.confirmed : orderStatus.pending;
+        const status = /^(|cod|wallet)$/.test(paymentMethod) ? orderStatus.confirmed : orderStatus.pending;
         const newOrderIds = [];
+        let totalAmount;
         let razorpayResponse;
 
         if (paymentMethod == 'online') {
             const priceDetails = await orderController.getPriceSummary(userId)
-            const totalAmount = priceDetails.totalPrice + priceDetails.deliveryCharge;
+            totalAmount = priceDetails.totalPrice + priceDetails.deliveryCharge;
             razorpayResponse = await orderController.generateRazorpay(totalAmount);
+        } else if (paymentMethod == 'wallet') {
+            const priceDetails = await orderController.getPriceSummary(userId)
+            totalAmount = priceDetails.totalPrice + priceDetails.deliveryCharge;
+            if (totalAmount > req.session.user.walletBalance) {
+                throw new Error('Insufficient balance on your wallet');
+            }
         }
 
         for (const cartItem of cartProducts) {
@@ -122,6 +129,8 @@ const orderController = {
             });
             await newOrder.save().then(response => newOrderIds.push(response._id));
         };
+        const user = await UserModel.findById(userId);
+        user.wallet.debitAmount(totalAmount, 'Used on order ' + newOrderIds.toString());
         return razorpayResponse
     },
     clearCart: async (userId) => {
@@ -286,7 +295,7 @@ const orderController = {
                     resolve({ message: 'Order status updated' });
                 } else {
                     await order.updateOne({ $push: { status: { status: newStatus } } });
-                    if (newStatus == orderStatus.return || (newStatus == orderStatus.cancelled && order.paymentMethod == 'online')) {
+                    if (newStatus == orderStatus.return || (newStatus == orderStatus.cancelled && /^(online|wallet)$/.test(order.paymentMethod))) {
                         const user = await UserModel.findById(order.userId);
                         refundAmount = refundAmount ?? order.price.totalPrice;
                         user.wallet.creditAmount(refundAmount, `Refund of the order ${orderId}`);
