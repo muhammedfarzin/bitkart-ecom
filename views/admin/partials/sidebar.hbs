@@ -1,22 +1,24 @@
-<div class="sidebar col-md-3">
-  {{#each sideMenus}}
-  <a href="{{this.path}}" class="btn text-start {{#if this.active}}btn-primary{{else}}btn-outline-primary{{/if}}">
-    {{this.title}}
-  </a>
-  {{/each}}
-</div>
+<div class="sidebar-parent col-md-3">
+  <div class="sidebar">
+    {{#each sideMenus}}
+    <a href="{{this.path}}" class="btn text-start {{#if this.active}}btn-primary{{else}}btn-outline-primary{{/if}}">
+      {{this.title}}
+    </a>
+    {{/each}}
+  </div>
 
-<div class="sm-sidebar">
-  <div class="offcanvas offcanvas-start" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1"
-    id="offcanvasScrolling" aria-labelledby="offcanvasScrollingLabel">
-    <div class="offcanvas-header">
-      <a href="/admin"> <img src="/images/bitkart-admin.svg" alt="logo"></a>
-      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-    </div>
+  <div class="sm-sidebar">
+    <div class="offcanvas offcanvas-start" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1"
+      id="offcanvasScrolling" aria-labelledby="offcanvasScrollingLabel">
+      <div class="offcanvas-header">
+        <a href="/admin"> <img src="/images/bitkart-admin.svg" alt="logo"></a>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+      </div>
       {{#each sideMenus}}
       <a href="{{this.path}}" class="btn text-start {{#if this.active}}btn-primary{{else}}btn-outline-primary{{/if}}">
         {{this.title}}
       </a>
       {{/each}}
+    </div>
   </div>
 </div>

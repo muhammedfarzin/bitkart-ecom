@@ -399,6 +399,71 @@ const orderController = {
                 reject(err);
             }
         });
+    },
+    getSalesReport: (duration) => {
+        duration = duration || 'weekly';
+        const durations = {
+            weekly: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
+            monthly: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
+            yearly: new Date(Date.now() - 365 * 24 * 60 * 60 * 1000)
+        }
+        return new Promise(async (resolve, reject) => {
+            try {
+                const orders = await OrderModel.find({
+                    'status.status': { $ne: orderStatus.pending },
+                    orderedAt: {
+                        $gt: durations[duration],
+                        $lt: new Date(),
+                    }
+                });
+
+                // Generate the report
+                const report = orders.map((order) => {
+                    order = order.toObject();
+                    return {
+                        orderId: order._id,
+                        productId: order.productId,
+                        quantity: order.quantity,
+                        paymentMethod: order.paymentMethod,
+                        price: order.price,
+                        status: order.status[order.status.length - 1].status,
+                        orderedAt: order.orderedAt
+                    };
+                });
+
+                // Calculate totals
+                let totalCancelledAmount = 0;
+                let totalReturnAmount = 0;
+                let totalDeliveredAmount = 0;
+                let totalOngoingAmount = 0;
+
+                report.forEach((order) => {
+                    const status = order.status;
+                    const totalPrice = order.price.totalPrice;
+                    if (status == orderStatus.cancelled) totalCancelledAmount += totalPrice;
+                    else if (status == orderStatus.return) totalReturnAmount += totalPrice;
+                    else if (status == orderStatus.delivered) totalDeliveredAmount += totalPrice;
+                    else totalOngoingAmount += totalPrice;
+                });
+
+
+                const totalSalesAmount = totalCancelledAmount + totalReturnAmount + totalDeliveredAmount + totalOngoingAmount;
+                const totalQuantity = report.reduce((acc, order) => acc + order.quantity, 0);
+
+                // Return the report
+                resolve({
+                    report,
+                    totalSalesAmount,
+                    totalCancelledAmount,
+                    totalReturnAmount,
+                    totalDeliveredAmount,
+                    totalOngoingAmount,
+                    totalQuantity,
+                });
+            } catch (err) {
+                reject(err);
+            }
+        });
     }
 }
 

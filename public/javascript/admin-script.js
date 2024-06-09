@@ -37,3 +37,10 @@ function deleteCategory(categoryId) {
         }
     });
 }
+
+const selectDuration = document.getElementById('selectDuration');
+selectDuration.onchange = () => {
+    const url = new URL(location.href);
+    url.searchParams.set('duration', selectDuration.value);
+    location.href = url;
+}

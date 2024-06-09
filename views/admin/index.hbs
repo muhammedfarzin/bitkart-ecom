@@ -3,9 +3,88 @@
 <div class="fluid-container d-flex">
     {{> sidebar}}
 
-    <div class="container">
-        <div class="title">
-            <h1 class="text-primary">Dashboard</h1>
+    <div class="container col-md-9">
+        <div class="top-bar d-flex justify-content-between align-items-center flex-wrap">
+            <div class="title">
+                <h1 class="text-primary">Dashboard</h1>
+            </div>
+            <div class="actions d-flex justify-content-end align-items-center col-12 col-md-9">
+                <div class="col col-md-3">
+                    <select class="btn btn-outline-primary w-100" name="selectDuration" id="selectDuration">
+                        <option value="weekly" {{#if (eq duration 'weekly' )}}selected{{/if}}>Weekly</option>
+                        <option value="monthly" {{#if (eq duration 'monthly' )}}selected{{/if}}>Monthly</option>
+                        <option value="yearly" {{#if (eq duration 'yearly' )}}selected{{/if}}>Yearly</option>
+                    </select>
+                </div>
+                <div class="sm-mt-1 col-md-3">
+                    <button class="btn btn-primary w-100">Download</button>
+                </div>
+            </div>
+        </div>
+        <div class="mt-3 overflow-x-scroll w-100 scrollbar-hidden">
+            {{#with salesReport}}
+            <div class="report-data">
+                <table>
+                    <tbody>
+                        <tr>
+                            <th class="text-primary text-capitalize fw-bold pe-3">Total quantity</th>
+                            <td>: {{totalQuantity}}</td>
+                        </tr>
+                        <tr>
+                            <th class="text-primary text-capitalize fw-bold pe-3">Total sale amount</th>
+                            <td>: ₹{{formatNumber totalSalesAmount}}</td>
+                        </tr>
+                        <tr>
+                            <th class="text-primary text-capitalize fw-bold pe-3">Total amount cancelled</th>
+                            <td>: ₹{{formatNumber totalCancelledAmount}}</td>
+                        </tr>
+                        <tr>
+                            <th class="text-primary text-capitalize fw-bold pe-3">Total amount Returned</th>
+                            <td>: ₹{{formatNumber totalReturnAmount}}</td>
+                        </tr>
+                        <tr>
+                            <th class="text-primary text-capitalize fw-bold pe-3">Total amount delivered</th>
+                            <td>: ₹{{formatNumber totalDeliveredAmount}}</td>
+                        </tr>
+                        <tr>
+                            <th class="text-primary text-capitalize fw-bold pe-3">Total ongoing amount</th>
+                            <td>: ₹{{formatNumber totalOngoingAmount}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            {{/with}}
+            <div class="table-responsive mt-3">
+                <div class="text-primary fw-bold fs-5">Order Details</div>
+                <table class="table table-bordered table-striped table-hover mt-1">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Order ID</th>
+                            <th>Product ID</th>
+                            <th>Quantity</th>
+                            <th>Payment Method</th>
+                            <th>Price</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each salesReport.report}}
+                        <tr>
+                            <td>{{formatDate orderedAt 'MMM D, YYYY'}}</td>
+                            <td>{{orderId}}</td>
+                            <td>{{productId}}</td>
+                            <td>{{quantity}}</td>
+                            <td class="text-uppercase">{{paymentMethod}}</td>
+                            <td>₹{{formatNumber price.totalPrice}}</td>
+                            <td class="text-capitalize">{{status}}</td>
+                        </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>
+
+<script src="/javascript/admin-script.js"></script>
