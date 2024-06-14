@@ -6,6 +6,7 @@ import userController from "./user-controller.js";
 import Razorpay from "razorpay";
 import ReviewModel from "../models/review-model.js";
 import crypto from 'crypto'
+import ProductModel from "../models/product-model.js";
 
 const minForFreeDelivery = 1000;
 const orderStatusList = Object.values(orderStatus);
@@ -94,19 +95,12 @@ const orderController = {
         const deliveryCharge = orderController.calculateDeliveryCharge(cartProducts);
         const status = /^(|cod|wallet)$/.test(paymentMethod) ? orderStatus.confirmed : orderStatus.pending;
         const newOrderIds = [];
-        let totalAmount;
         let razorpayResponse;
 
         if (paymentMethod == 'online') {
             const priceDetails = await orderController.getPriceSummary(userId)
-            totalAmount = priceDetails.totalPrice + priceDetails.deliveryCharge;
+            const totalAmount = priceDetails.totalPrice + priceDetails.deliveryCharge;
             razorpayResponse = await orderController.generateRazorpay(totalAmount);
-        } else if (paymentMethod == 'wallet') {
-            const priceDetails = await orderController.getPriceSummary(userId)
-            totalAmount = priceDetails.totalPrice + priceDetails.deliveryCharge;
-            if (totalAmount > req.session.user.walletBalance) {
-                throw new Error('Insufficient balance on your wallet');
-            }
         }
 
         for (const cartItem of cartProducts) {
@@ -127,10 +121,14 @@ const orderController = {
                 status: { status },
                 razorpayId: razorpayResponse?.id
             });
+            if (paymentMethod == 'wallet') {
+                const user = await UserModel.findById(userId);
+                const product = await ProductModel.findById(productId);
+                const debitAmount = price.price + price.deliveryCharge;
+                user.wallet.debitAmount(debitAmount, `Used on order of '${product.title}'`);
+            }
             await newOrder.save().then(response => newOrderIds.push(response._id));
         };
-        const user = await UserModel.findById(userId);
-        user.wallet.debitAmount(totalAmount, 'Used on order ' + newOrderIds.toString());
         return razorpayResponse
     },
     clearCart: async (userId) => {
@@ -297,8 +295,9 @@ const orderController = {
                     await order.updateOne({ $push: { status: { status: newStatus } } });
                     if (newStatus == orderStatus.return || (newStatus == orderStatus.cancelled && /^(online|wallet)$/.test(order.paymentMethod))) {
                         const user = await UserModel.findById(order.userId);
+                        const product = await ProductModel.findById(order.productId);
                         refundAmount = refundAmount ?? order.price.totalPrice;
-                        user.wallet.creditAmount(refundAmount, `Refund of the order ${orderId}`);
+                        user.wallet.creditAmount(refundAmount, `Refund of the order of '${product.title}'`);
                     }
                     resolve({ message: 'Order status updated' });
                 }
@@ -376,14 +375,17 @@ const orderController = {
                 });
         });
     },
-    verifyPayment: (data) => {
+    verifyPaymentId: (orderId, paymentId, signature) => {
+        let hmac = crypto.createHmac('sha256', razorpaySecret);
+        hmac.update(orderId + '|' + paymentId);
+        hmac = hmac.digest('hex');
+        return hmac == signature;
+    },
+    verifyOrderPayment: (data) => {
         return new Promise(async (resolve, reject) => {
             const { payment, order } = data;
             try {
-                let hmac = crypto.createHmac('sha256', razorpaySecret);
-                hmac.update(payment.razorpay_order_id + '|' + payment.razorpay_payment_id);
-                hmac = hmac.digest('hex');
-                if (hmac == payment.razorpay_signature) {
+                if (orderController.verifyPaymentId(razorpay_order_id, razorpay_payment_id, razorpay_signature)) {
                     const userOrder = await OrderModel.findOne({ razorpayId: order.id });
                     if (!userOrder) reject('Something went wrong. Please try again');
                     await orderController.updateStatus(userOrder._id.toString(), orderStatus.confirmed);

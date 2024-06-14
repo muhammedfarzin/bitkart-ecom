@@ -1,3 +1,4 @@
+import moment from "moment";
 import { Schema } from "mongoose";
 
 const transactionTypes = {
@@ -22,6 +23,9 @@ const transactinSchema = new Schema({
         type: String,
         required: true
     },
+    transactionId: {
+        type: String
+    },
     transactionDate: {
         type: Date,
         default: Date.now
@@ -36,15 +40,19 @@ const walletSchema = new Schema({
     transactions: [transactinSchema]
 });
 
-walletSchema.methods.creditAmount = async function (amount, description) {
+walletSchema.methods.creditAmount = async function (amount, description, transactionId) {
     this.balance += amount;
-    this.transactions.push({
+    const data = {
         amount,
         balance: this.balance,
         description,
-        transactionType: transactionTypes.credit
-    });
+        transactionType: transactionTypes.credit,
+        transactionId
+    };
+    this.transactions.push(data);
     await this.ownerDocument().save();
+    data.date = moment(Date.now()).format('MMMM D, YYYY');
+    return data;
 }
 
 walletSchema.methods.debitAmount = async function (amount, description) {

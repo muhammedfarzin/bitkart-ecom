@@ -3,8 +3,16 @@
 {{> account-sidebar}}
 
 <div class="container col-md-9 sm me-0">
+    <div class="top-bar mt-3">
+        <div class="d-flex justify-content-end">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addMoneyModal">
+                Add Money
+            </button>
+        </div>
+    </div>
     <div class="text-primary fs-2 fw-bold text-center my-3">
-        Balance: ₹{{formatNumber wallet.balance}}
+        Balance:
+        ₹<span id="walletBalance">{{formatNumber wallet.balance}}</span>
     </div>
     <div class="mt-4 w-100">
         <h3 class="text-primary">Transactions</h3>
@@ -39,3 +47,30 @@
         </div>
     </div>
 </div>
+
+<!-- Add money modal -->
+<div class="modal fade" id="addMoneyModal" tabindex="-1" aria-labelledby="addMoneyModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-fullscreen-sm-down">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="addMoneyModalLabel">Add Money</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p class="text-danger" id="err-message"></p>
+                <form method="post" id="addMoneyForm">
+                    <input type="number" name="amount" id="amount" placeholder="Enter Amount"
+                        class="outlined-card placeholder-primary rounded-3 outline-none w-100">
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" id="addMoneyBtn" class="btn btn-primary" data-bs-dismiss="modal">Add</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script src="/javascript/form.js"></script>

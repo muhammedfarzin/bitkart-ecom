@@ -76,6 +76,10 @@ router.post('/updateUser', checkUserLoginStatus, userRouterController.updateUser
 
 router.get('/account/wallet', checkUserLoginStatus, userRouterController.showWalletDatas);
 
+router.post('/account/wallet/addMoney', checkUserLoginStatus, userRouterController.addMoneyToWallet);
+
+router.post('/account/wallet/verifyPayment', checkUserLoginStatus, userRouterController.verifyWalletPayment)
+
 // Mange Address
 router.get('/account/address/add', checkUserLoginStatus, userRouterController.showAddAddressForm);
 

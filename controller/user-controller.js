@@ -1,6 +1,7 @@
 import { Types } from "mongoose";
 import UserModel from "../models/user-model.js";
 import ProductModel from "../models/product-model.js";
+import orderController from "./order-controller.js";
 
 const userStatusList = ['active', 'blocked'];
 
@@ -127,6 +128,24 @@ const userController = {
             return new Date(b.transactionDate) - new Date(a.transactionDate);
         })
         return wallet;
+    },
+    addMoneyToWallet: (userId, data) => {
+        return new Promise(async (resolve, reject) => {
+            const { payment: { razorpay_order_id, razorpay_payment_id, razorpay_signature }, order } = data;
+            try {
+                if (orderController.verifyPaymentId(razorpay_order_id, razorpay_payment_id, razorpay_signature)) {
+                    const user = await UserModel.findById(userId);
+                    order.amount /= 100;
+                    const transaction = await user.wallet.creditAmount(order.amount, 'Transaction was made by you', order.id);
+                    resolve({ message: 'Amount added to your wallet', transaction });
+                } else {
+                    throw new Error('Payment failed');
+                }
+            } catch (err) {
+                console.log(err)
+                reject(err);
+            }
+        });
     },
     addNewAddress: async (req) => {
         const userId = req.session.user.userId;

@@ -138,6 +138,23 @@ const userRouterController = {
         res.render('user/account/wallet', { wallet });
     },
 
+    addMoneyToWallet: async (req, res) => {
+        try {
+            const { amount } = req.body;
+            const response = await orderController.generateRazorpay(amount);
+            res.json(response);
+        } catch (err) {
+            res.status(400).json({ errMessage: err.message });
+        }
+    },
+
+    verifyWalletPayment: (req, res) => {
+        const userId = req.session.user.userId;
+        userController.addMoneyToWallet(userId, req.body)
+            .then(response => res.json(response))
+            .catch(err => res.status(400).json({ errMessage: err.message }));
+    },
+
     // Wishlist
     showWishlist: async (req, res) => {
         const products = await productController.getProductByIds(req.session.user.wishlist);
@@ -265,7 +282,7 @@ const userRouterController = {
         }
     },
     verifyOrderPayment: (req, res) => {
-        orderController.verifyPayment(req.body)
+        orderController.verifyOrderPayment(req.body)
             .then(response => res.json(response))
             .catch(err => res.status(400).json({ errMessage: err.message }));
     },
