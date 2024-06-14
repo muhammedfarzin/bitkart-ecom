@@ -383,7 +383,7 @@ const orderController = {
     },
     verifyOrderPayment: (data) => {
         return new Promise(async (resolve, reject) => {
-            const { payment, order } = data;
+            const { payment: { razorpay_order_id, razorpay_payment_id, razorpay_signature }, order } = data;
             try {
                 if (orderController.verifyPaymentId(razorpay_order_id, razorpay_payment_id, razorpay_signature)) {
                     const userOrder = await OrderModel.findOne({ razorpayId: order.id });

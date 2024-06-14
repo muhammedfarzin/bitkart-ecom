@@ -283,7 +283,10 @@ const userRouterController = {
     },
     verifyOrderPayment: (req, res) => {
         orderController.verifyOrderPayment(req.body)
-            .then(response => res.json(response))
+            .then(async (response) => {
+                await orderController.clearCart(req.session.user.userId);
+                res.json(response);
+            })
             .catch(err => res.status(400).json({ errMessage: err.message }));
     },
     addReview: async (req, res) => {
