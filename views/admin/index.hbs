@@ -61,7 +61,7 @@
                         <tr>
                             <th>Date</th>
                             <th>Order ID</th>
-                            <th>Product ID</th>
+                            <th>Product Name</th>
                             <th>Quantity</th>
                             <th>Payment Method</th>
                             <th>Price</th>
@@ -73,7 +73,7 @@
                         <tr>
                             <td>{{formatDate orderedAt 'MMM D, YYYY'}}</td>
                             <td>{{orderId}}</td>
-                            <td>{{productId}}</td>
+                            <td>{{productName}}</td>
                             <td>{{quantity}}</td>
                             <td class="text-uppercase">{{paymentMethod}}</td>
                             <td>₹{{formatNumber price.totalPrice}}</td>

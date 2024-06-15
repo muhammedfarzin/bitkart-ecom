@@ -13,6 +13,11 @@ export const orderStatus = {
 }
 
 const orderSchema = new Schema({
+    orderId: {
+        type: String,
+        default: 0,
+        unique: true
+    },
     userId: {
         type: Types.ObjectId,
         required: true
@@ -80,7 +85,12 @@ const orderSchema = new Schema({
 orderSchema.pre('save', async function (next) {
     const product = await ProductModel.findById(this.productId);
     if (product.quantity < this.quantity) throw new Error(`Only ${product.quantity} quantity left for this product`);
-    else next();
+
+    const maxOrderId = await OrderModel.countDocuments();
+    this.orderId = Date.now().toString() + maxOrderId;
+    console.log(this.orderId, Date.now().toString() + maxOrderId + 1)
+
+    next();
 });
 
 orderSchema.post('save', async function (data, next) {

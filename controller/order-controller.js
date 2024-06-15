@@ -411,20 +411,32 @@ const orderController = {
         }
         return new Promise(async (resolve, reject) => {
             try {
-                const orders = await OrderModel.find({
-                    'status.status': { $ne: orderStatus.pending },
-                    orderedAt: {
-                        $gt: durations[duration],
-                        $lt: new Date(),
-                    }
-                });
+                const orders = await OrderModel.aggregate([
+                    {
+                        $match: {
+                            'status.status': { $ne: orderStatus.pending },
+                            orderedAt: {
+                                $gt: durations[duration],
+                                $lt: new Date(),
+                            }
+                        }
+                    },
+                    {
+                        $lookup: {
+                            from: 'products',
+                            localField: 'productId',
+                            foreignField: '_id',
+                            as: 'productDetails'
+                        }
+                    },
+                    { $addFields: { productDetails: { $arrayElemAt: ['$productDetails', 0] } } },
+                ]);
 
                 // Generate the report
                 const report = orders.map((order) => {
-                    order = order.toObject();
                     return {
-                        orderId: order._id,
-                        productId: order.productId,
+                        orderId: order.orderId,
+                        productName: order.productDetails.title,
                         quantity: order.quantity,
                         paymentMethod: order.paymentMethod,
                         price: order.price,
