@@ -175,8 +175,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    document.getElementById('addMoneyBtn')
-        .addEventListener('click', () => $('#addMoneyForm').submit());
+    document.getElementById('addMoneyBtn')?.addEventListener('click', () => $('#addMoneyForm').submit());
 
     $('#addMoneyForm').submit(e => {
         e.preventDefault();
@@ -254,6 +253,7 @@ function removeAddress(addressId) {
         url: '/account/address/remove/' + addressId,
         type: 'DELETE',
         success: function (data) {
+            document.getElementById('closeModalBtn')?.click();
             $('#address' + addressId).remove();
         },
         error: function (err) {
@@ -261,6 +261,14 @@ function removeAddress(addressId) {
         }
     })
 }
+
+function showConfirmDeleteModal(addressId) {
+    document.getElementById('removeBtn').onclick = function () {
+        removeAddress(addressId);
+    }
+    document.getElementById('showModalBtn').click();
+}
+
 function razorpayPayment(order, callback) {
     let options = {
         "key": 'rzp_test_yKUJBZ1MBQQioC',
