@@ -402,8 +402,9 @@ const orderController = {
             }
         });
     },
-    getSalesReport: (duration) => {
-        duration = duration || 'weekly';
+    getSalesReport: (data) => {
+        const { dateFrom, dateTo } = data;
+        const duration = data.duration || 'weekly';
         const durations = {
             weekly: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
             monthly: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
@@ -411,14 +412,25 @@ const orderController = {
         }
         return new Promise(async (resolve, reject) => {
             try {
+                let dateRange;
+                if (duration == 'custom') {
+                    if (!dateFrom || !dateTo) throw new Error('Please enter a valid date range');
+                    dateRange = {
+                        $lte: new Date(dateTo),
+                        $gte: new Date(dateFrom),
+                    }
+                } else {
+                    dateRange = {
+                        $gte: durations[duration],
+                        $lte: new Date(),
+                    }
+                }
+
                 const orders = await OrderModel.aggregate([
                     {
                         $match: {
                             'status.status': { $ne: orderStatus.pending },
-                            orderedAt: {
-                                $gt: durations[duration],
-                                $lt: new Date(),
-                            }
+                            orderedAt: dateRange
                         }
                     },
                     {

@@ -14,6 +14,7 @@
                         <option value="weekly" {{#if (eq duration 'weekly' )}}selected{{/if}}>Weekly</option>
                         <option value="monthly" {{#if (eq duration 'monthly' )}}selected{{/if}}>Monthly</option>
                         <option value="yearly" {{#if (eq duration 'yearly' )}}selected{{/if}}>Yearly</option>
+                        <option value="custom" {{#if (eq duration 'custom' )}}selected{{/if}}>Custom</option>
                     </select>
                 </div>
                 <div class="sm-mt-1 col-md-3">
@@ -82,6 +83,36 @@
                         {{/each}}
                     </tbody>
                 </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Button trigger custom date modal -->
+<button id="showCustomDateModalBtn" data-bs-toggle="modal" data-bs-target="#customDateModal" hidden></button>
+
+<!-- Custom date Modal -->
+<div class="modal fade" id="customDateModal" tabindex="-1" aria-labelledby="customDateModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="customDateModalLabel">Enter range</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+            <span class="text-danger fw-normal" id="err-message"></span>
+                <form id="customDateForm" class="d-flex" method="post">
+                    <div class="p-1 col">
+                        <input type="date" name="dateFrom" id="dateFrom" class="outlined-card placeholder-primary outline-none w-100">
+                    </div>
+                    <div class="p-1 col">
+                        <input type="date" name="dateTo" id="dateTo" class="outlined-card placeholder-primary outline-none w-100">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="customDateBtn">Save changes</button>
             </div>
         </div>
     </div>

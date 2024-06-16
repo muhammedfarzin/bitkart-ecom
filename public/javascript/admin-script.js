@@ -1,3 +1,30 @@
+
+document.addEventListener('DOMContentLoaded', function () {
+    const errMessage = $('#err-message');
+    const customDateForm = $('#customDateForm');
+    $('#customDateBtn').on('click', () => customDateForm?.submit());
+    customDateForm?.submit((e) => {
+        e.preventDefault();
+        $('#err-message').text('');
+        let formData = customDateForm.serializeArray();
+        const url = new URL(location.href);
+        url.searchParams.set('duration', 'custom');
+        $.each(formData, function () {
+            if (this.value) {
+                $('#' + this.name).removeClass('err');
+                url.searchParams.set(this.name, this.value);
+            } else {
+                $('#' + this.name).addClass('err');
+                errMessage.text('Please enter a valid date');
+            }
+        });
+
+        if (!errMessage.text()) {
+            location.href = url.toString();
+        }
+    });
+});
+
 function toggleUserStatus(userId) {
     $.ajax({
         url: '/admin/users/toggleStatus/',
@@ -39,8 +66,13 @@ function deleteCategory(categoryId) {
 }
 
 const selectDuration = document.getElementById('selectDuration');
-selectDuration.onchange = () => {
-    const url = new URL(location.href);
-    url.searchParams.set('duration', selectDuration.value);
-    location.href = url;
+selectDuration.onclick = () => {
+    const value = selectDuration.value;
+    if (value == 'custom') {
+        document.getElementById('showCustomDateModalBtn').click();
+    } else {
+        const url = new URL(location.href);
+        url.searchParams.set('duration', value);
+        if (location.href != url.toString()) location.href = url.toString();
+    }
 }

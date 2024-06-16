@@ -46,9 +46,13 @@ const adminRouterController = {
 
     // Dashboard
     showDashboard: async (req, res) => {
-        const salesReport = await orderController.getSalesReport(req.query.duration);
-        const sideMenus = getSideMenus(sideMenuPath.dashboard);
-        res.render('admin/index', { salesReport, sideMenus, duration: req.query.duration });
+        try {
+            const salesReport = await orderController.getSalesReport(req.query);
+            const sideMenus = getSideMenus(sideMenuPath.dashboard);
+            res.render('admin/index', { salesReport, sideMenus, duration: req.query.duration });
+        } catch (err) {
+            res.status(400).render('admin/error', { errMessage: err.message });
+        }
     },
 
     // Users

@@ -88,8 +88,6 @@ orderSchema.pre('save', async function (next) {
 
     const maxOrderId = await OrderModel.countDocuments();
     this.orderId = Date.now().toString() + maxOrderId;
-    console.log(this.orderId, Date.now().toString() + maxOrderId + 1)
-
     next();
 });
 
