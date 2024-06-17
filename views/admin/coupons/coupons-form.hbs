@@ -1,0 +1,102 @@
+{{> admin-navbar}}
+
+<div class="fluid-container d-flex">
+    {{> sidebar}}
+
+    <div class="container">
+        <div class="top-bar d-flex justify-content-between align-items-center flex-wrap">
+            <div class="title col">
+                <h1 class="text-primary">{{#if coupon}} Update {{else}} Create {{/if}} Coupon</h1>
+            </div>
+        </div>
+        <form method="post" id="couponForm">
+            <div class="outlined-card m-2 border-black col-md">
+                <div class="d-flex flex-wrap-reverse w-100">
+                    {{!-- Form --}}
+                    <div class="d-flex flex-column justify-content-between px-3 col-12">
+                        <div>
+                            <div class="text-danger f-uppercase" id="err-message">{{errMessage}}</div>
+                            <div>
+                                <div class="fs-6 fw-bold text-primary my-2">Title</div>
+                                <input type="text" name="title" id="title"
+                                    class="outlined-card placeholder-primary outline-none w-100"
+                                    value="{{coupon.title}}" placeholder="Enter title">
+                            </div>
+                            <div>
+                                <div class="fs-6 fw-bold text-primary my-2">Coupon Code</div>
+                                <input type="text" name="code" id="code"
+                                    class="outlined-card placeholder-primary text-uppercase outline-none w-100" value="{{coupon.code}}"
+                                    placeholder="Enter coupon code">
+                            </div>
+                            <div>
+                                <div class="fs-6 fw-bold text-primary my-2">Description</div>
+                                <textarea maxlength="300" rows="3" type="text" name="description" id="description"
+                                    class="outlined-card placeholder-primary outline-none w-100"
+                                    placeholder="Enter description">{{coupon.description}}</textarea>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <div class="d-flex">
+                                    <div class="col pe-1">
+                                        <div class="fs-6 fw-bold text-primary my-2">Category</div>
+                                        <select name="category" id="category"
+                                            class="outlined-card text-capitalize placeholder-primary outline-none w-100">
+                                            <option value="">All</option>
+                                            {{#each categories}}
+                                            <option value="{{_id}}">{{title}}</option>
+                                            {{/each}}
+                                        </select>
+                                    </div>
+                                    <div class="col ps-1">
+                                        <div class="fs-6 fw-bold text-primary my-2">Coupon</div>
+                                        <input type="date" name="validUpto" id="validUpto"
+                                            class="outlined-card placeholder-primary outline-none w-100"
+                                            value="{{coupon.validUpto}}" placeholder="Enter valid upto date">
+                                    </div>
+                                </div>
+                                <div class="d-flex">
+                                    <div class="col pe-1">
+                                        <div class="fs-6 fw-bold text-primary my-2">Discount</div>
+                                        <input type="text" name="discountValue" id="discountValue"
+                                            class="outlined-card placeholder-primary outline-none w-100"
+                                            value="{{coupon.discountValue}}" placeholder="Enter discount value">
+                                    </div>
+                                    <div class="col ps-1">
+                                        <div class="fs-6 fw-bold text-primary my-2">Discount Type</div>
+                                        <select type="text" name="discountType" id="discountType"
+                                            class="outlined-card placeholder-primary outline-none w-100">
+                                            <option value="flat">Flat</option>
+                                            <option value="percentage">Pecentage</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="d-flex">
+                                    <div class="col pe-1">
+                                        <div class="fs-6 fw-bold text-primary my-2">Min Purchase Amount</div>
+                                        <input type="number" name="minPurchaseAmount" id="minPurchaseAmount"
+                                            class="outlined-card placeholder-primary outline-none w-100"
+                                            value="{{coupon.minPurchaseAmount}}" min="1"
+                                            placeholder="Enter min purchase amount">
+                                    </div>
+                                    <div class="col ps-1">
+                                        <div class="fs-6 fw-bold text-primary my-2">Max Discount Amount</div>
+                                        <input type="number" name="maxDiscountAmount" id="maxDiscountAmount"
+                                            class="outlined-card placeholder-primary outline-none w-100"
+                                            value="{{coupon.maxDiscountAmount}}" min="10"
+                                            placeholder="Enter max discount amount">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-end my-3">
+                            <button class="btn btn-primary px-4 rounded-4" type="submit">
+                                {{#if coupon}} Update {{else}} Create {{/if}}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="/javascript/form.js"></script>

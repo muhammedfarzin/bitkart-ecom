@@ -800,11 +800,11 @@ aside {
     margin: 0;
 }
 
-input#promocode.text-uppercase {
+input.text-uppercase {
     text-transform: uppercase;
 }
 
-input#promocode.text-uppercase::placeholder {
+input.text-uppercase::placeholder {
     text-transform: none;
 }
 

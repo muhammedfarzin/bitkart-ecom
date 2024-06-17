@@ -4,6 +4,7 @@ import userController from "../user-controller.js";
 import categoryController from "../category-controller.js";
 import productController from "../product-controller.js";
 import orderController from "../order-controller.js";
+import couponController from "../coupon-controller.js";
 
 export const sideMenuPath = {
     dashboard: '/',
@@ -205,6 +206,22 @@ const adminRouterController = {
         } catch (err) {
             res.status(400).json({ errMessage: 'Invalid category' });
         }
+    },
+
+    // Coupons
+    showCouponsList: async (req, res) => {
+        const coupons = await couponController.getAllCoupons(20);
+        const sideMenus = getSideMenus(sideMenuPath.coupons);
+        res.render('admin/coupons/coupons-list', { coupons, sideMenus });
+    },
+    showCreateCouponForm: async (req, res) => {
+        const categories = await categoryController.getAllCategoryTitles();
+        const sideMenus = getSideMenus();
+        res.render('admin/coupons/coupons-form', { categories, sideMenus });
+    },
+    createCoupon: async (req, res) => {
+        await couponController.createCoupon(req.body);
+        res.redirect(`/admin${sideMenuPath.coupons}`);
     },
 
     // 404

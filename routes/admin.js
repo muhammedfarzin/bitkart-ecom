@@ -70,6 +70,13 @@ router.post(`${sideMenuPath.categories}/edit/:id`, checkLoginStatus, upload.sing
 
 router.delete(`${sideMenuPath.categories}/delete`, checkLoginStatus, adminRouterController.deleteCategory);
 
+// Coupons
+router.get(`${sideMenuPath.coupons}`, checkLoginStatus, adminRouterController.showCouponsList);
+
+router.get(`${sideMenuPath.coupons}/create`, checkLoginStatus, adminRouterController.showCreateCouponForm);
+
+router.post(`${sideMenuPath.coupons}/create`, checkLoginStatus, adminRouterController.createCoupon);
+
 // Logout
 router.get('/logout', adminRouterController.logout);
 

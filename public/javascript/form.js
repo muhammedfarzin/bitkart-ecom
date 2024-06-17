@@ -175,6 +175,25 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
+    $('#couponForm').submit((e) => {
+        e.preventDefault();
+        errMessage.text('');
+        formData = $('#couponForm').serializeArray();
+        let formObject = {};
+        $.each(formData, function () {
+            const value = this.value.trim();
+            if (!value && this.name != 'category') {
+                $('#' + this.name).addClass('err');
+                const currentMessage = errMessage.text();
+                errMessage.text(currentMessage + (currentMessage ? ', ' : 'Please enter ') + this.name);
+            } else $('#' + this.name).removeClass('err');
+            formObject[this.name] = value;
+        });
+        if (!errMessage.text()) {
+            $('#couponForm')[0].submit();
+        }
+    });
+
     document.getElementById('addMoneyBtn')?.addEventListener('click', () => $('#addMoneyForm').submit());
 
     $('#addMoneyForm').submit(e => {

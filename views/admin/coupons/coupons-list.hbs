@@ -1,0 +1,36 @@
+{{> admin-navbar}}
+
+<div class="fluid-container d-flex">
+    {{> sidebar}}
+
+    <div class="container">
+        <div class="top-bar d-flex justify-content-between align-items-center flex-wrap">
+            <div class="title col-3">
+                <h1 class="text-primary">Coupons</h1>
+            </div>
+            <div class="actions d-flex flex-wrap justify-content-end align-items-center col-12 col-md-9">
+                {{> searchbox method='get' for='Coupons' class='col-8 col-md-9'}}
+
+                <div class="col col-md-3">
+                    <a href="coupons/create" class="btn btn-primary w-100">New Coupon</a>
+                </div>
+            </div>
+        </div>
+        <div class="list">
+            {{#each coupons}}
+            <a class="text-reset" href="/admin/coupons/edit/{{_id}}">
+                <div class="list-item d-flex justify-content-between align-items-start">
+                    <div class="content d-flex pb-1">
+                        <div class="datas">
+                            <h4 class="title text-capitalize max-line-1 mb-1">{{title}}</h4>
+                            <div class="subtitle">Code: {{code}}</div>
+                            <div class="subtitle">Valid upto: {{formatDate validUpto 'MMMM D, YYYY'}}</div>
+                        </div>
+                    </div>
+                    <button onclick="deleteCoupon('{{_id}}'); return false;" class="btn btn-danger">Remove</button>
+                </div>
+            </a>
+            {{/each}}
+        </div>
+    </div>
+</div>
