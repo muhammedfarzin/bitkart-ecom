@@ -33,6 +33,8 @@ router.post('/login', adminRouterController.login);
 
 router.get(sideMenuPath.dashboard, checkLoginStatus, adminRouterController.showDashboard);
 
+router.get('/downloadSalesReport', checkLoginStatus, adminRouterController.downloadSalesReport);
+
 router.get(sideMenuPath.users, checkLoginStatus, adminRouterController.showUsersList);
 
 router.patch(`${sideMenuPath.users}/toggleStatus`, checkLoginStatus, adminRouterController.toggleUserStatus);

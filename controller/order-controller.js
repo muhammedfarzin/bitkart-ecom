@@ -7,6 +7,7 @@ import Razorpay from "razorpay";
 import ReviewModel from "../models/review-model.js";
 import crypto from 'crypto'
 import ProductModel from "../models/product-model.js";
+import PDFDocument from "pdfkit-table";
 
 const minForFreeDelivery = 1000;
 const orderStatusList = Object.values(orderStatus);
@@ -490,7 +491,75 @@ const orderController = {
                 reject(err);
             }
         });
+    },
+    getSalesReportPdf: async (data) => {
+        try {
+            data.duration = data.duration || 'weekly';
+            const salesReport = await orderController.getSalesReport(data);
+            const { report, totalSalesAmount, totalCancelledAmount, totalReturnAmount, totalDeliveredAmount, totalOngoingAmount, totalQuantity } = salesReport;
+            const duration = (data.duration == 'custom') ? `${data.dateFrom} to ${data.dateTo}` : data.duration;
+
+            // Create a new PDF document
+            const doc = new PDFDocument({
+                margin: 30,
+                size: 'A4',
+            });
+
+            // Add a title
+            doc.font('Helvetica-Bold', 18).text(`Sales Report`, { align: 'center' });
+            doc.font('Helvetica', 12).text(`(${duration})`, { align: 'center' }).moveDown();
+
+            // Add the totals
+            doc.fontSize(12).text(`Total Sales Amount: ${totalSalesAmount.toLocaleString('en-IN')}`);
+            doc.text(`Total Cancelled Amount: ${totalCancelledAmount.toLocaleString('en-IN')}`);
+            doc.text(`Total Return Amount: ${totalReturnAmount.toLocaleString('en-IN')}`);
+            doc.text(`Total Delivered Amount: ${totalDeliveredAmount.toLocaleString('en-IN')}`);
+            doc.text(`Total Ongoing Amount: ${totalOngoingAmount.toLocaleString('en-IN')}`);
+            doc.text(`Total Quantity: ${totalQuantity}`);
+            doc.moveDown();
+            doc.moveDown();
+
+            // Add the report data
+            const table = {
+                title: "Order Details",
+                headers: ["Order ID", "Product Name", "Quantity", "Payment Method", "Price", "Status", "Ordered At"],
+                rows: report.map((order) => [
+                    order.orderId,
+                    order.productName,
+                    order.quantity,
+                    order.paymentMethod,
+                    `${order.price.totalPrice.toFixed(2)}`,
+                    order.status,
+                    order.orderedAt.toLocaleString(),
+                ]),
+            };
+
+            doc.table(table, {
+                widths: [100, 150, 50, 100, 50, 50, 100],
+                columnSpacing: 10,
+                margin: 10,
+                headerStyle: { bold: true, fontSize: 12 },
+                bodyStyle: { fontSize: 12 },
+            });
+
+            doc.moveDown();
+
+            // Save the PDF to a file
+            const pdfBuffer = await new Promise((resolve, reject) => {
+                const chunks = [];
+                doc.on('data', (chunk) => chunks.push(chunk));
+                doc.on('end', () => resolve(Buffer.concat(chunks)));
+                doc.on('error', (err) => reject(err));
+                doc.end();
+            });
+
+            // Return the PDF buffer
+            return pdfBuffer;
+        } catch (err) {
+            throw err;
+        }
     }
+
 }
 
 export default orderController;

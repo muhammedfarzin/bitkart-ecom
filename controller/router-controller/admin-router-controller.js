@@ -49,10 +49,19 @@ const adminRouterController = {
         try {
             const salesReport = await orderController.getSalesReport(req.query);
             const sideMenus = getSideMenus(sideMenuPath.dashboard);
-            res.render('admin/index', { salesReport, sideMenus, duration: req.query.duration });
+            let downloadUrl = new URL(req.originalUrl, req.protocol + '://' + req.get('host'));
+            downloadUrl.pathname = '/admin/downloadSalesReport';
+            res.render('admin/index', { salesReport, sideMenus, downloadUrl, duration: req.query.duration });
         } catch (err) {
             res.status(400).render('admin/error', { errMessage: err.message });
         }
+    },
+
+    downloadSalesReport: async (req, res) => {
+        const salesReportPdfBuffer = await orderController.getSalesReportPdf(req.query);
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader('Content-Disposition', 'attachment; filename="sales-report.pdf"');
+        res.send(salesReportPdfBuffer);
     },
 
     // Users

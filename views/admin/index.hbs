@@ -18,7 +18,7 @@
                     </select>
                 </div>
                 <div class="sm-mt-1 col-md-3">
-                    <button class="btn btn-primary w-100">Download</button>
+                    <a href="{{downloadUrl}}" class="btn btn-primary w-100">Download</a>
                 </div>
             </div>
         </div>
@@ -100,13 +100,15 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-            <span class="text-danger fw-normal" id="err-message"></span>
+                <span class="text-danger fw-normal" id="err-message"></span>
                 <form id="customDateForm" class="d-flex" method="post">
                     <div class="p-1 col">
-                        <input type="date" name="dateFrom" id="dateFrom" class="outlined-card placeholder-primary outline-none w-100">
+                        <input type="date" name="dateFrom" id="dateFrom"
+                            class="outlined-card placeholder-primary outline-none w-100">
                     </div>
                     <div class="p-1 col">
-                        <input type="date" name="dateTo" id="dateTo" class="outlined-card placeholder-primary outline-none w-100">
+                        <input type="date" name="dateTo" id="dateTo"
+                            class="outlined-card placeholder-primary outline-none w-100">
                     </div>
                 </form>
             </div>
