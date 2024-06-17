@@ -84,6 +84,9 @@ const hbsConfig = hbs.create({
         },
         includes: function (arr, data) {
             return arr.includes(data);
+        },
+        toStr: function (elem) {
+            return elem.toString();
         }
     }
 });

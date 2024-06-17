@@ -229,6 +229,22 @@ const adminRouterController = {
             res.redirect(url);
         }
     },
+    showEditCouponForm: async (req, res) => {
+        const coupon = await couponController.getCouponById(req.params.id);
+        const categories = await categoryController.getAllCategoryTitles();
+        const sideMenus = getSideMenus();
+        res.render('admin/coupons/coupons-form', { coupon, categories, sideMenus, errMessage: req.query.errMessage });
+    },
+    editCoupon: async (req, res) => {
+        try {
+            await couponController.editCoupon(req.params.id, req.body);
+            res.redirect(`/admin${sideMenuPath.coupons}`);
+        } catch (err) {
+            const url = new URL(req.originalUrl, req.protocol + '://' + req.get('host'));
+            url.searchParams.set('errMessage', err.message);
+            res.redirect(url);
+        }
+    },
     deleteCoupon: async (req, res) => {
         try {
             const response = await couponController.deleteCoupon(req.params.id);

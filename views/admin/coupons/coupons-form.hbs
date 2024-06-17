@@ -25,8 +25,8 @@
                             <div>
                                 <div class="fs-6 fw-bold text-primary my-2">Coupon Code</div>
                                 <input type="text" name="code" id="code"
-                                    class="outlined-card placeholder-primary text-uppercase outline-none w-100" value="{{coupon.code}}"
-                                    placeholder="Enter coupon code">
+                                    class="outlined-card placeholder-primary text-uppercase outline-none w-100"
+                                    value="{{coupon.code}}" placeholder="Enter coupon code">
                             </div>
                             <div>
                                 <div class="fs-6 fw-bold text-primary my-2">Description</div>
@@ -42,21 +42,25 @@
                                             class="outlined-card text-capitalize placeholder-primary outline-none w-100">
                                             <option value="">All</option>
                                             {{#each categories}}
-                                            <option value="{{_id}}">{{title}}</option>
+                                            <option value="{{_id}}" {{#if @root.coupon.categoryId}}{{#if (eq (toStr _id) (toStr
+                                                @root.coupon.categoryId))}}selected{{/if}}{{/if}}>
+                                                {{title}}
+                                            </option>
                                             {{/each}}
                                         </select>
                                     </div>
                                     <div class="col ps-1">
-                                        <div class="fs-6 fw-bold text-primary my-2">Coupon</div>
+                                        <div class="fs-6 fw-bold text-primary my-2">Valid Upto</div>
                                         <input type="date" name="validUpto" id="validUpto"
                                             class="outlined-card placeholder-primary outline-none w-100"
-                                            value="{{coupon.validUpto}}" placeholder="Enter valid upto date">
+                                            value="{{formatDate coupon.validUpto 'yyyy-MM-D'}}"
+                                            placeholder="Enter valid upto date">
                                     </div>
                                 </div>
                                 <div class="d-flex">
                                     <div class="col pe-1">
                                         <div class="fs-6 fw-bold text-primary my-2">Discount</div>
-                                        <input type="text" name="discountValue" id="discountValue"
+                                        <input type="number" name="discountValue" id="discountValue"
                                             class="outlined-card placeholder-primary outline-none w-100"
                                             value="{{coupon.discountValue}}" placeholder="Enter discount value">
                                     </div>

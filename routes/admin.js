@@ -77,6 +77,10 @@ router.get(`${sideMenuPath.coupons}/create`, checkLoginStatus, adminRouterContro
 
 router.post(`${sideMenuPath.coupons}/create`, checkLoginStatus, adminRouterController.createCoupon);
 
+router.get(`${sideMenuPath.coupons}/edit/:id`, checkLoginStatus, adminRouterController.showEditCouponForm);
+
+router.post(`${sideMenuPath.coupons}/edit/:id`, checkLoginStatus, adminRouterController.editCoupon);
+
 router.delete(`${sideMenuPath.coupons}/remove/:id`, checkLoginStatus, adminRouterController.deleteCoupon);
 
 // Logout

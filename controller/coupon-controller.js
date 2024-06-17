@@ -1,6 +1,7 @@
 import { Types } from "mongoose";
 import CategoryModel from "../models/category-model.js";
 import CouponModel from "../models/coupon-model.js";
+import categoryController from "./category-controller.js";
 
 const couponController = {
     createCoupon: async (data) => {
@@ -20,6 +21,7 @@ const couponController = {
                 const categoryData = await CategoryModel.findById(categoryId);
                 if (!categoryData) throw new Error('Selected category not found');
             }
+
             if (validUpto <= Date.now()) throw new Error('Valid upto date cannot be past');
             const coupon = new CouponModel({
                 code: code.replace(/\s/, '').toUpperCase(),
@@ -47,6 +49,65 @@ const couponController = {
     getAllCoupons: async (limit) => {
         const coupons = await CouponModel.find().limit(limit);
         return coupons.map(coupon => coupon.toObject());
+    },
+    getCouponById: async (couponId) => {
+        try {
+            couponId = Types.ObjectId.createFromHexString(couponId);
+            const coupon = await CouponModel.findById(couponId);
+            return coupon.toObject();
+        } catch (err) {
+            if (err.name === 'BSONError') {
+                throw new Error('Coupon not found');
+            } else {
+                throw err;
+            }
+        }
+    },
+    editCoupon: async (couponId, data) => {
+        try {
+            couponId = Types.ObjectId.createFromHexString(couponId);
+            let { code, title, description, validUpto, category, discountValue, discountType, minPurchaseAmount, maxDiscountAmount } = data;
+            let categoryId = null;
+            if (!code || !title || !description, !validUpto, !discountValue, !discountType, !minPurchaseAmount, !maxDiscountAmount) {
+                throw new Error('Please fill complete form');
+            }
+            validUpto = new Date(validUpto);
+            code = code.replace(/\s/, '').toUpperCase();
+
+            if (category) {
+                categoryId = Types.ObjectId.createFromHexString(category);
+                const categoryData = await categoryController.getCategoryById(categoryId);
+                if (!categoryData) throw new Error('Selected category not found');
+            }
+            if (validUpto <= Date.now()) throw new Error('Valid upto date cannot be past');
+
+            const coupon = await CouponModel.findById(couponId);
+            if (coupon.code != code) {
+                const existCouponCode = await CouponModel.find({ code });
+                if (existCouponCode) throw new Error('The coupon code is already exist');
+            }
+
+            await coupon.updateOne({
+                code,
+                title,
+                description,
+                categoryId,
+                validUpto,
+                discountValue,
+                discountType,
+                minPurchaseAmount,
+                maxDiscountAmount
+            });
+
+            const response = { message: 'Coupon succesfully updated' };
+            return response;
+        } catch (err) {
+            if (err.name === 'BSONError') {
+                throw new Error('Coupon not found');
+            } else {
+                throw err;
+            }
+        }
     },
     deleteCoupon: async (couponId) => {
         try {
