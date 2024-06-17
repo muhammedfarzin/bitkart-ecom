@@ -278,7 +278,20 @@ function removeAddress(addressId) {
         error: function (err) {
             alert(err.responseJSON?.errMessage ?? 'Something went wrong');
         }
-    })
+    });
+}
+
+function deleteCoupon(couponId) {
+    $.ajax({
+        url: '/admin/coupons/remove/' + couponId,
+        type: 'DELETE',
+        success: function (data) {
+            $('#coupon' + couponId).remove();
+        },
+        error: function (err) {
+            alert(err.responseJSON?.errMessage ?? 'Something went wrong');
+        }
+    });
 }
 
 function showConfirmDeleteModal(addressId) {

@@ -217,11 +217,25 @@ const adminRouterController = {
     showCreateCouponForm: async (req, res) => {
         const categories = await categoryController.getAllCategoryTitles();
         const sideMenus = getSideMenus();
-        res.render('admin/coupons/coupons-form', { categories, sideMenus });
+        res.render('admin/coupons/coupons-form', { categories, sideMenus, errMessage: req.query.errMessage });
     },
     createCoupon: async (req, res) => {
-        await couponController.createCoupon(req.body);
-        res.redirect(`/admin${sideMenuPath.coupons}`);
+        try {
+            await couponController.createCoupon(req.body);
+            res.redirect(`/admin${sideMenuPath.coupons}`);
+        } catch (err) {
+            const url = new URL(req.originalUrl, req.protocol + '://' + req.get('host'));
+            url.searchParams.set('errMessage', err.message);
+            res.redirect(url);
+        }
+    },
+    deleteCoupon: async (req, res) => {
+        try {
+            const response = await couponController.deleteCoupon(req.params.id);
+            res.json(response);
+        } catch (err) {
+            res.status(400).json({ errMessage: err.message });
+        }
     },
 
     // 404

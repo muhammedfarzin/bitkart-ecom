@@ -12,13 +12,13 @@ const couponController = {
             }
             const validUpto = new Date(validity);
 
-            const existCoupon = await CouponModel.findOne({ code });
+            const existCoupon = await CouponModel.findOne({ code: code.replace(/\s/, '').toUpperCase() });
             if (existCoupon) throw new Error('The coupon code is already exist');
 
             if (category) {
                 categoryId = Types.ObjectId.createFromHexString(category);
-                const category = await CategoryModel.findById(categoryId);
-                if (!category) throw new Error('Selected category not found');
+                const categoryData = await CategoryModel.findById(categoryId);
+                if (!categoryData) throw new Error('Selected category not found');
             }
             if (validUpto <= Date.now()) throw new Error('Valid upto date cannot be past');
             const coupon = new CouponModel({
@@ -47,6 +47,20 @@ const couponController = {
     getAllCoupons: async (limit) => {
         const coupons = await CouponModel.find().limit(limit);
         return coupons.map(coupon => coupon.toObject());
+    },
+    deleteCoupon: async (couponId) => {
+        try {
+            couponId = Types.ObjectId.createFromHexString(couponId);
+            await CouponModel.findByIdAndDelete(couponId);
+            const response = { message: 'Coupon succesfully deleted' };
+            return response;
+        } catch (err) {
+            if (err.name === 'BSONError') {
+                throw new Error('Selected category not found');
+            } else {
+                throw err;
+            }
+        }
     }
 }
 

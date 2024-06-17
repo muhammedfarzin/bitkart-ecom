@@ -18,7 +18,7 @@
         </div>
         <div class="list">
             {{#each coupons}}
-            <a class="text-reset" href="/admin/coupons/edit/{{_id}}">
+            <a class="text-reset" id="coupon{{_id}}" href="/admin/coupons/edit/{{_id}}">
                 <div class="list-item d-flex justify-content-between align-items-start">
                     <div class="content d-flex pb-1">
                         <div class="datas">
@@ -34,3 +34,5 @@
         </div>
     </div>
 </div>
+
+<script src="/javascript/form.js"></script>
