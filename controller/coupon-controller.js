@@ -2,6 +2,7 @@ import { Types } from "mongoose";
 import CategoryModel from "../models/category-model.js";
 import CouponModel from "../models/coupon-model.js";
 import categoryController from "./category-controller.js";
+import orderController from "./order-controller.js";
 
 const couponController = {
     createCoupon: async (data) => {
@@ -62,6 +63,40 @@ const couponController = {
                 throw err;
             }
         }
+    },
+    getCouponByPromocode: async (promocode) => {
+        promocode = promocode.replace(/\s/, '').toUpperCase();
+        const coupon = await CouponModel.findOne({ code: promocode });
+        if (!coupon) throw new Error('Promocode not found');
+        return coupon.toObject();
+    },
+    verifyCoupon: async (userId, promocode) => {
+        const coupon = await couponController.getCouponByPromocode(promocode);
+        let checkoutAmountSummary = await orderController.getPriceSummary(userId);
+        const minPurchaseAmount = coupon.minPurchaseAmount;
+        const maxDiscountAmount = coupon.maxDiscountAmount;
+
+        if (coupon.categoryId) {
+            const cart = await orderController.getCartProducts(userId);
+            for (let cartData of cart) {
+                const product = cartData.productDetails;
+                const amount = product.offerPrice || product.price;
+                if (coupon.categoryId.toString() == product.categoryId) {
+                    if (amount >= minPurchaseAmount) {
+                        checkoutAmountSummary.couponCategoryId = product.categoryId;
+                        checkoutAmountSummary.promocodeDiscount = maxDiscountAmount >= amount ? amount : maxDiscountAmount;
+                        break;
+                    } else throw new Error(`This promocode needs to purchase atleast ₹${minPurchaseAmount}`);
+                } else throw new Error('This promocode is not available for the selected products');
+            }
+        } else {
+            if (checkoutAmountSummary.totalPrice >= minPurchaseAmount) {
+                const amount = checkoutAmountSummary.totalPrice;
+                checkoutAmountSummary.promocodeDiscount = maxDiscountAmount >= amount ? amount : maxDiscountAmount;
+            } else throw new Error(`This promocode needs to purchase atleast ₹${minPurchaseAmount}`);
+        }
+
+        return checkoutAmountSummary;
     },
     editCoupon: async (couponId, data) => {
         try {

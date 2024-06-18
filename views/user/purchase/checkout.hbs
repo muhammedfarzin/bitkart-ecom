@@ -58,8 +58,8 @@
                     {{#with priceDetails}}
                     {{#lte (sum totalPrice deliveryCharge) @root.walletBalance}}
                     <div class="d-flex align-items-start mb-3">
-                        <input class="radio-primary my-1 mx-2" value="wallet" type="radio"
-                            name="paymentMethod" id="paymentWallet">
+                        <input class="radio-primary my-1 mx-2" value="wallet" type="radio" name="paymentMethod"
+                            id="paymentWallet">
                         <label for="paymentWallet" class="cursor-pointer fw-bold ms-2">
                             Wallet
                             <div class="box-primary d-inline py-1 px-2">
@@ -93,9 +93,13 @@
         <div class="outlined-card p-0 mb-3">
             <div class="text-primary fs-4 fw-medium border-bottom border-primary px-2 pt-2">Add Promocode</div>
             <div class="p-2">
-                <input type="text" name="promocode" id="promocode" placeholder="Enter Promo Code"
-                    class="outlined-card placeholder-primary rounded-3 fs-6 text-uppercase py-1 my-1 outline-none w-100">
-                <button href="/checkout" class="btn btn-primary my-2 rounded-3 w-100" disabled>Apply</button>
+                <span class="text-danger fw-normal" id="err-message">{{errMessage}}</span>
+                <form method="post" id="promocodeForm">
+                    <input type="text" name="promocode" id="promocode" placeholder="Enter Promo Code"
+                        class="outlined-card placeholder-primary rounded-3 fs-6 text-uppercase py-1 my-1 outline-none w-100">
+                    <button href="/checkout" type="submit" id="promocodeBtn"
+                        class="btn btn-primary text-capitalize my-2 rounded-3 w-100" disabled>Apply</button>
+                </form>
             </div>
         </div>
 

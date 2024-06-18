@@ -105,6 +105,8 @@ router.post('/cart/update', checkUserLoginStatus, userRouterController.updateCar
 
 router.get('/checkout', checkUserLoginStatus, userRouterController.showCheckout);
 
+router.post('/checkout/verifyPromocode', checkUserLoginStatus, userRouterController.verifyPromocode);
+
 // Orders
 router.post('/placeOrder', checkUserLoginStatus, userRouterController.placeOrder);
 

@@ -4,6 +4,7 @@ import categoryController from "../category-controller.js";
 import otpController from "../otp-controller.js";
 import orderController from "../order-controller.js";
 import { orderStatus } from "../../models/order-model.js";
+import couponController from "../coupon-controller.js";
 
 const userRouterController = {
     // Authentications
@@ -261,6 +262,16 @@ const userRouterController = {
             walletBalance: req.session.user.walletBalance
         };
         res.render('user/purchase/checkout', context);
+    },
+    verifyPromocode: async (req, res) => {
+        try {
+            const userId = req.session.user.userId;
+            const promocode = req.body.promocode;
+            const couponResponse = await couponController.verifyCoupon(userId, promocode);
+            res.json(couponResponse);
+        } catch (err) {
+            res.status(400).json({ errMessage: err.message });
+        }
     },
     placeOrder: async (req, res) => {
         try {
