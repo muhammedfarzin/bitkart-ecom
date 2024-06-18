@@ -12,7 +12,7 @@ const userController = {
             const user = UserModel({ name, email, password, mobile, status: 'active' });
             user.save()
                 .then((data => {
-                    const { _id: userId, name, email, mobile, cart, status } = data;
+                    const { _id: userId, name, email, mobile, wishlist, cart, status } = data;
                     resolve({ userId, name, email, mobile, cart, wishlist, status });
                 }))
                 .catch((err) => {

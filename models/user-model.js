@@ -42,7 +42,10 @@ const userSchema = new Schema({
     wishlist: {
         type: [Types.ObjectId]
     },
-    wallet: walletSchema,
+    wallet: {
+        type: walletSchema,
+        default: { balance: 0 }
+    },
     status: {
         type: String,
         required: true
