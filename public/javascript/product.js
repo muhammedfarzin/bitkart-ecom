@@ -51,6 +51,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         $.each(formData, function () {
             if (this.value) url.searchParams.set(this.name, this.value);
+            else url.searchParams.delete(this.name);
         });
         location.replace(url);
     });

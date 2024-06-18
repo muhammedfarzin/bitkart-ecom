@@ -170,6 +170,71 @@ const productController = {
             return [];
         }
     },
+    searchProductsByCategory: async (categoryId, data) => {
+        const sortMethods = {
+            newArrival: { createdAt: -1 },
+            priceAtoZ: { offerPrice: 1, price: 1 },
+            priceZtoA: { offerPrice: -1, price: -1 }
+        }
+        try {
+            const sort = data.sort || 'newArrival';
+            const minAmount = data.minAmount ? Number(data.minAmount) : 1;
+            const maxAmount = data.maxAmount ? Number(data.maxAmount) : Number.POSITIVE_INFINITY;
+            const products = await ProductModel.aggregate([
+                {
+                    $match: {
+                        categoryId
+                    }
+                },
+                {
+                    $match: {
+                        $or: [
+                            { price: { $lte: maxAmount, $gte: minAmount } },
+                            { offerPrice: { $lte: maxAmount, $gte: minAmount } }
+                        ]
+                    }
+                },
+                { $sort: sortMethods[sort] },
+                {
+                    $lookup: {
+                        from: 'reviews',
+                        let: { productId: '$_id' },
+                        pipeline: [
+                            {
+                                $match: {
+                                    $expr: { $eq: [{ $toString: '$productId' }, { $toString: '$$productId' }] }
+                                },
+                            },
+                            {
+                                $lookup: {
+                                    from: 'users',
+                                    localField: 'userId',
+                                    foreignField: '_id',
+                                    as: 'user'
+                                }
+                            },
+                            {
+                                $addFields: {
+                                    userId: { $toObjectId: '$userId' },
+                                    user: { $arrayElemAt: ['$user', 0] },
+                                }
+                            },
+                        ],
+                        as: 'reviews'
+                    }
+                },
+                {
+                    $addFields: {
+                        rating: { $avg: '$reviews.starRating' },
+                        totalReviews: { $size: '$reviews' }
+                    }
+                }
+            ]);
+            return products;
+        } catch (err) {
+            return [];
+        }
+    },
     getProducts: async () => {
         const products = await ProductModel.find().limit(20);
         return products.map(product => product.toObject());

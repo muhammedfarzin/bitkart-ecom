@@ -26,12 +26,12 @@
         </h3>
         <div class="list-h mt-3">
             {{#each categories}}
-            <div class="product-card">
-                <img src="{{this.imagePath}}" alt="img" class="p-2">
+            <a href="/category/{{_id}}" class="product-card text-reset">
+                <img src="{{this.imagePath}}" alt="img" class="object-fit-contain p-2">
                 <div class="w-11rem p-2">
-                    <div class="title">{{this.title}}</div>
+                    <div class="title text-capitalize">{{this.title}}</div>
                 </div>
-            </div>
+            </a>
             {{/each}}
         </div>
     </div>

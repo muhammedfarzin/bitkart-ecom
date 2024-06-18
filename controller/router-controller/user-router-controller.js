@@ -104,6 +104,26 @@ const userRouterController = {
         }
         res.render('user/search/search-view', context);
     },
+    showProductsByCategory: async (req, res) => {
+        try {
+            const categoryId = req.params.id;
+            const searchResults = await productController.searchProductsByCategory(categoryId, req.query);
+            const categories = await categoryController.getAllCategoryTitles();
+            const category = await categoryController.getCategoryById(categoryId);
+            const context = {
+                searchResults,
+                categories,
+                userWishlist: req.session.user.wishlist,
+                categoryName: category.title,
+                minAmount: req.query.minAmount,
+                maxAmount: req.query.maxAmount,
+                sort: req.query.sort,
+            }
+            res.render('user/search/search-view', context);
+        } catch (err) {
+            res.status(404).render('404');
+        }
+    },
 
     // Accounts
     showPersonalDetailsForm: async (req, res) => {

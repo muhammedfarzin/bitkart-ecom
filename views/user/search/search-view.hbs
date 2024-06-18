@@ -34,7 +34,14 @@
 
 <div class="container col-md-9 sm me-0">
     {{#if searchResults}}
-    <h3 class="text-primary my-1">Showing results of {{searchQuery}}</h3>
+    <h3 class="text-primary text-capitalize my-1">
+        Showing
+        {{#if searchQuery}}
+        results of {{searchQuery}}
+        {{else}}
+           category {{categoryName}}
+        {{/if}}
+    </h3>
 
     <div class="list">
         {{#each searchResults}}
