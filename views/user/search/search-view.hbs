@@ -2,14 +2,19 @@
 
 <aside class="col-md-3 sm-d-none">
     <div class="searchSection">
+        <h4 class="text-primary my-1">Sort</h4>
+        <select name="selectSort" id="selectSort" class="outlined-card placeholder-primary outline-none w-100">
+            <option value="newArrival" {{#if (eq sort 'newArrival' )}}selected{{/if}}>New Arrival</option>
+            <option value="priceAtoZ" {{#if (eq sort 'priceAtoZ' )}}selected{{/if}}>Price: low to high</option>
+            <option value="priceZtoA" {{#if (eq sort 'priceZtoA' )}}selected{{/if}}>Price: high to low</option>
+        </select>
+    </div>
+    <div class="searchSection mt-2">
         <h4 class="text-primary my-1">Categories</h4>
         <div class="ms-4 my-2">
-            <div>- Category name</div>
-            <div>- Category name</div>
-            <div>- Category name</div>
-            <div>- Category name</div>
-            <div>- Category name</div>
-            <div class="text-primary cursor-pointer">more</div>
+            {{#each categories}}
+            <a href="/category/{{_id}}" class="d-block text-reset text-capitalize">- {{title}}</a>
+            {{/each}}
         </div>
     </div>
     <div class="searchSection">

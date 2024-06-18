@@ -92,12 +92,15 @@ const userRouterController = {
     },
     searchProducts: async (req, res) => {
         const searchResults = req.query.search && await productController.searchUserProducts(req.query);
+        const categories = await categoryController.getAllCategoryTitles();
         const context = req.query.search && {
             searchResults,
+            categories,
             userWishlist: req.session.user.wishlist,
             searchQuery: req.query.search,
             minAmount: req.query.minAmount,
-            maxAmount: req.query.maxAmount
+            maxAmount: req.query.maxAmount,
+            sort: req.query.sort,
         }
         res.render('user/search/search-view', context);
     },

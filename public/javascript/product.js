@@ -155,3 +155,11 @@ function removeFromWishlist(productId) {
         }
     });
 }
+
+const selectSort = document.getElementById('selectSort');
+selectSort.onclick = () => {
+    const value = selectSort.value;
+    const url = new URL(location.href);
+    url.searchParams.set('sort', value);
+    if (location.href != url.toString()) location.href = url.toString();
+}

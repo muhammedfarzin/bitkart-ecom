@@ -102,7 +102,13 @@ const productController = {
         }
     },
     searchUserProducts: async (data) => {
+        const sortMethods = {
+            newArrival: { createdAt: -1 },
+            priceAtoZ: { offerPrice: 1, price: 1 },
+            priceZtoA: { offerPrice: -1, price: -1 }
+        }
         try {
+            const sort = data.sort || 'newArrival';
             const searchQuery = data.search;
             const minAmount = data.minAmount ? Number(data.minAmount) : 1;
             const maxAmount = data.maxAmount ? Number(data.maxAmount) : Number.POSITIVE_INFINITY;
@@ -123,6 +129,7 @@ const productController = {
                         ]
                     }
                 },
+                { $sort: sortMethods[sort] },
                 {
                     $lookup: {
                         from: 'reviews',

@@ -50,6 +50,8 @@ const productSchema = new Schema({
         type: String,
         default: 'active'
     }
+}, {
+    timestamps: true
 });
 
 productSchema.pre('save', function (next) {
