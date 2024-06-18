@@ -17,7 +17,9 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!formObject.addressId) return alert('Please select an address');
 
         if (/^(cod|online|wallet)$/.test(formObject.paymentMethod)) {
-            formObject.promocode = promocodeInput.val() || undefined;
+            if (promocodeBtn.text() == 'applied') {
+                formObject.promocode = promocodeInput.val();
+            }
             $.ajax({
                 url: '/placeOrder',
                 type: 'POST',
@@ -123,8 +125,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 dataType: 'json',
                 success: function (data) {
                     const totalAmountElem = $('#totalAmount');
-                    const totalAmount = parseFloat(totalAmountElem.text().replace('₹', '').replace(',', ''));
-
+                    const totalAmount = parseFloat(totalAmountElem.text().replace('₹', '').replace(/,/g, ''));
                     $('#promocodeSummary').removeClass('d-none').addClass('d-flex');
                     $('#promocodeValue').text('-₹' + data.promocodeDiscount);
                     totalAmountElem.text('₹' + (totalAmount - data.promocodeDiscount).toLocaleString('en-IN'))

@@ -227,7 +227,12 @@
             <div
                 class="d-flex justify-content-between py-2 {{#if (eq @key 'totalPrice')}}fs-5 fw-bold text-primary{{else}}fs-6{{/if}}">
                 <div class="text-capitalize">{{formatKey @key}}</div>
-                <div id="totalPrice" {{#if (eq this 0)}}class="text-primary">Free{{else}}>₹{{formatNumber this}}{{/if}}
+                <div id="totalPrice" {{#if (eq this 0)}}class="text-primary">Free
+                    {{else if (eq @key 'promocodeDiscount')}}
+                    class="text-primary">-₹{{formatNumber this}}
+                    {{else}}>
+                    ₹{{formatNumber this}}
+                    {{/if}}
                 </div>
             </div>
             {{/unless}}

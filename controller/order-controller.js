@@ -8,6 +8,7 @@ import ReviewModel from "../models/review-model.js";
 import crypto from 'crypto'
 import ProductModel from "../models/product-model.js";
 import PDFDocument from "pdfkit-table";
+import couponController from "./coupon-controller.js";
 
 const minForFreeDelivery = 1000;
 const orderStatusList = Object.values(orderStatus);
@@ -91,24 +92,33 @@ const orderController = {
     placeOrder: async (req) => {
         const userId = req.session.user.userId;
         const { addressId, paymentMethod } = req.body;
+        const promocode = req.body.promocode?.replace(/\s/, '').toUpperCase();
         const cartProducts = await orderController.getCartProducts(userId);
         const address = await userController.getAddressById(userId, addressId);
         const deliveryCharge = orderController.calculateDeliveryCharge(cartProducts);
         const status = /^(|cod|wallet)$/.test(paymentMethod) ? orderStatus.confirmed : orderStatus.pending;
+        const priceDetails = promocode
+            ? await couponController.verifyCoupon(userId, promocode)
+            : await orderController.getPriceSummary(userId);
         const newOrderIds = [];
         let razorpayResponse;
 
         if (paymentMethod == 'online') {
-            const priceDetails = await orderController.getPriceSummary(userId)
-            const totalAmount = priceDetails.totalPrice + priceDetails.deliveryCharge;
+            const totalAmount = priceDetails.totalPrice + priceDetails.deliveryCharge - priceDetails.promocodeDiscount;
             razorpayResponse = await orderController.generateRazorpay(totalAmount);
         }
 
         for (const cartItem of cartProducts) {
-            const { productId, quantity } = cartItem;
+            const { productId, quantity, productDetails: { categoryId } } = cartItem;
+            let promocodeDiscount;
+            if (priceDetails.couponCategoryId && priceDetails.couponCategoryId == categoryId) {
+                promocodeDiscount = priceDetails.promocodeDiscount;
+            } else promocodeDiscount = priceDetails.promocodeDiscount;
+
             const price = {
                 price: cartItem.quantity * (cartItem.productDetails.offerPrice || cartItem.productDetails.price),
-                deliveryCharge
+                deliveryCharge,
+                promocodeDiscount
             }
             const newOrder = new OrderModel({
                 address,
