@@ -94,8 +94,10 @@ const debouncedUpdateCart = debounce(function (productId, quantityElem, redirect
             }
         },
         error: function (err) {
-            alert(err.responseJSON?.errMessage ?? 'Something went wrong');
-            location.reload();
+            const currentQuantity = err.responseJSON?.currentQuantity;
+            showAlertBox(err.responseJSON?.errMessage ?? 'Something went wrong');
+            if (currentQuantity) $('#quantity' + productId).val(currentQuantity);
+            else setTimeout(() => location.reload(), 2500);
         }
     });
 }, 500);
@@ -103,7 +105,7 @@ const debouncedUpdateCart = debounce(function (productId, quantityElem, redirect
 
 function addToCart(productId, redirect) {
     let quantity = $('#quantity' + productId);
-    if (quantity.val() >= 10) return alert('Sorry, you can only purchase up to 10 units of the same product at a time');
+    if (quantity.val() >= 10) return showAlertBox('Sorry, you can only purchase up to 10 units of the same product at a time');
     quantity.val(parseInt(quantity.val()) + 1);
     debouncedUpdateCart(productId, quantity, redirect);
 }
@@ -158,9 +160,11 @@ function removeFromWishlist(productId) {
 }
 
 const selectSort = document.getElementById('selectSort');
-selectSort.onclick = () => {
-    const value = selectSort.value;
-    const url = new URL(location.href);
-    url.searchParams.set('sort', value);
-    if (location.href != url.toString()) location.href = url.toString();
+if (selectSort) {
+    selectSort.onclick = () => {
+        const value = selectSort.value;
+        const url = new URL(location.href);
+        url.searchParams.set('sort', value);
+        if (location.href != url.toString()) location.href = url.toString();
+    }
 }

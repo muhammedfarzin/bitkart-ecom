@@ -22,11 +22,11 @@ document.addEventListener('DOMContentLoaded', function () {
         imageGallery.innerHTML = null;
         const selectedImages = event.target.files;
         if (selectedImages.length > 5) {
-            return alert('Maximum 5 images are allowed to upload.');
+            return showAlertBox('Maximum 5 images are allowed to upload.');
         }
 
         for (const image of selectedImages) {
-            if (!isImage(image)) return alert('Please select an image');
+            if (!isImage(image)) return showAlertBox('Please select an image');
             const imageUrl = URL.createObjectURL(image);
             let containerDiv = document.createElement('div');
             containerDiv.classList.add('outlined-card', 'm-2', 'center-box-v-24', 'object-fit-contain', 'bg-light', 'rounded-0', 'p-0');
@@ -221,7 +221,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     razorpayPayment(data, verifyWalletPayment)
                 },
                 error: function (err) {
-                    alert(err.responseJSON?.errMessage ?? 'Something went wrong');
+                    showAlertBox(err.responseJSON?.errMessage ?? 'Something went wrong');
                 }
             });
         }
@@ -238,7 +238,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function imageChanged(element) {
         const image = element?.target?.files[0];
-        if (!isImage(image)) return alert('Please select an image');
+        if (!isImage(image)) return showAlertBox('Please select an image');
         const imageUrl = URL.createObjectURL(image);
         let containerDiv = document.createElement('div');
         containerDiv.classList.add('outlined-card', 'm-2', 'center-box-v-24', 'object-fit-contain', 'bg-light', 'rounded-0', 'p-0');
@@ -276,7 +276,7 @@ function removeAddress(addressId) {
             $('#address' + addressId).remove();
         },
         error: function (err) {
-            alert(err.responseJSON?.errMessage ?? 'Something went wrong');
+            showAlertBox(err.responseJSON?.errMessage ?? 'Something went wrong');
         }
     });
 }
@@ -289,7 +289,7 @@ function deleteCoupon(couponId) {
             $('#coupon' + couponId).remove();
         },
         error: function (err) {
-            alert(err.responseJSON?.errMessage ?? 'Something went wrong');
+            showAlertBox(err.responseJSON?.errMessage ?? 'Something went wrong');
         }
     });
 }
@@ -320,7 +320,7 @@ function razorpayPayment(order, callback) {
     let razorpayObject = new Razorpay(options);
     razorpayObject.open();
     razorpayObject.on('payment.failed', function (response) {
-        alert("This step of Payment Failed");
+        showAlertBox("This step of Payment Failed");
     });
 }
 
@@ -355,7 +355,7 @@ function verifyWalletPayment(payment, order) {
             tableBody.insertBefore(newRow, tableBody.firstChild);
         },
         error: function (err) {
-            alert(err.responseJSON?.errMessage ?? 'Something went wrong');
+            showAlertBox(err.responseJSON?.errMessage ?? 'Something went wrong');
         }
     });
 }

@@ -826,3 +826,7 @@ table.table-primary {
     color: #fff;
     border-color: #6F43BFDD;
 }
+
+div.bg-primary {
+    background-color: #6F43BF !important;
+}

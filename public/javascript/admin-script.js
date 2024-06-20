@@ -44,7 +44,7 @@ function toggleUserStatus(userId) {
             }
         },
         error: function (err) {
-            alert(err.responseJSON?.errMessage ?? 'Something went wrong');
+            showAlertBox(err.responseJSON?.errMessage ?? 'Something went wrong');
         }
     })
 }
@@ -56,7 +56,7 @@ function deleteCategory(categoryId) {
         data: { categoryId },
         dataType: 'json',
         success: function (data) {
-            alert('Category deleted successfully');
+            showAlertBox('Category deleted successfully', true);
             location.reload();
         },
         error: function (err) {

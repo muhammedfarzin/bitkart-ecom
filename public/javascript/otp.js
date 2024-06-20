@@ -19,13 +19,13 @@ document.addEventListener('DOMContentLoaded', function () {
             dataType: 'json',
             success: function (data) {
                 startTimer();
-                alert(data.responseJSON?.message ?? 'Resent OTP successfully');
+                showAlertBox(data.responseJSON?.message ?? 'Resent OTP successfully', true);
             },
             error: function (err) {
                 seconds = 0;
                 resendOtpText.addClass('text-primary');
                 resendOtpText.removeClass('text-secondary');
-                alert(err.responseJSON?.errMessage ?? 'Something went wrong');
+                showAlertBox(err.responseJSON?.errMessage ?? 'Something went wrong');
             }
         });
     });

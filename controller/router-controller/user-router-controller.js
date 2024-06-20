@@ -154,7 +154,8 @@ const userRouterController = {
             const priceDetails = await orderController.getPriceSummary(req.session.user.userId);
             res.json({ message: 'Added to cart', cartCount, updatedQuantity: quantity, priceDetails });
         } catch (err) {
-            res.status(400).json({ errMessage: err.message });
+            const currentQuantity = req.session.user.cart.find((cartProduct) => cartProduct.productId == productId).quantity;
+            res.status(400).json({ errMessage: err.message, currentQuantity });
         }
     },
     showWalletDatas: async (req, res) => {

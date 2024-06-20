@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', function () {
         $.each(formData, function () {
             formObject[this.name] = this.value;
         });
-        if (!formObject.addressId) return alert('Please select an address');
+        if (!formObject.addressId) return showAlertBox('Please select an address');
 
         if (/^(cod|online|wallet)$/.test(formObject.paymentMethod)) {
             if (promocodeBtn.text() == 'applied') {
@@ -33,11 +33,11 @@ document.addEventListener('DOMContentLoaded', function () {
                     }
                 },
                 error: function (err) {
-                    alert(err.responseJSON?.errMessage ?? 'Something went wrong');
+                    showAlertBox(err.responseJSON?.errMessage ?? 'Something went wrong');
                 }
             });
         } else {
-            alert('Please select a valid payment method');
+            showAlertBox('Please select a valid payment method');
         }
     });
 
@@ -46,11 +46,11 @@ document.addEventListener('DOMContentLoaded', function () {
             url: location.href,
             type: 'DELETE',
             success: function (data) {
-                alert(data.message ?? 'Order cancelled');
+                showAlertBox(data.message ?? 'Order cancelled', true);
                 location.reload();
             },
             error: function (err) {
-                alert(err.responseJSON?.errMessage ?? 'Something went wrong');
+                showAlertBox(err.responseJSON?.errMessage ?? 'Something went wrong');
             }
         });
     });
@@ -71,7 +71,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 location.reload();
             },
             error: function (err) {
-                alert(err.responseJSON?.errMessage ?? 'Something went wrong');
+                showAlertBox(err.responseJSON?.errMessage ?? 'Something went wrong');
             }
         });
     });
@@ -84,7 +84,7 @@ document.addEventListener('DOMContentLoaded', function () {
             formObject[this.name] = this.value;
         });
         if (formObject.starRating < 1 || formObject.starRating > 5) {
-            alert('Please select valid starRating');
+            showAlertBox('Please select valid starRating');
         } else {
             $.ajax({
                 url: location.href + '/addReview',
@@ -92,10 +92,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 data: formObject,
                 dataType: 'json',
                 success: function (data) {
-                    alert(data.message || 'Review submitted');
+                    showAlertBox(data.message || 'Review submitted', true);
                 },
                 error: function (err) {
-                    alert(err.responseJSON?.errMessage ?? 'Something went wrong');
+                    showAlertBox(err.responseJSON?.errMessage ?? 'Something went wrong');
                 }
             });
         }
@@ -151,11 +151,11 @@ function changeOrderStatus(status, elem) {
         data: { status },
         dataType: 'json',
         success: function (data) {
-            alert(data.message);
+            showAlertBox(data.message, true);
             location.reload();
         },
         error: function (err) {
-            alert(err.responseJSON?.errMessage ?? 'Something went wrong');
+            showAlertBox(err.responseJSON?.errMessage ?? 'Something went wrong');
         }
     });
 }
@@ -192,7 +192,7 @@ function razorpayPayment(order) {
     let razorpayObject = new Razorpay(options);
     razorpayObject.open();
     razorpayObject.on('payment.failed', function (response) {
-        alert("This step of Payment Failed");
+        showAlertBox("This step of Payment Failed");
     });
 }
 
@@ -209,11 +209,11 @@ function verifyPayment(payment, order) {
             if (data.orderPlaced) {
                 location.href = data.redirect ?? '/';
             } else {
-                alert(data.message);
+                showAlertBox(data.message, true);
             }
         },
         error: function (err) {
-            alert(err.responseJSON?.errMessage ?? 'Something went wrong');
+            showAlertBox(err.responseJSON?.errMessage ?? 'Something went wrong');
         }
     });
 }
