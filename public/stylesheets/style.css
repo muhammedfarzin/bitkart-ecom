@@ -672,7 +672,8 @@ textarea#description::-webkit-scrollbar {
 }
 
 input.err,
-textarea.err {
+textarea.err,
+div.err {
     border: 1px solid #dc3545;
     background: #ffdddd;
 }
@@ -810,6 +811,10 @@ input.text-uppercase::placeholder {
 
 .f-uppercase::first-letter {
     text-transform: uppercase;
+}
+
+.f-uppercase {
+    text-transform: lowercase;
 }
 
 thead.table-primary,

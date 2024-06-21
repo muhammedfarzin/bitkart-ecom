@@ -106,7 +106,10 @@
                 {{/if}}
             </div>
 
-            {{#if (eq status 'active')}}
+            {{#or (eq status 'sold out') (eq quantity 0)}}
+            <span class="fs-4 fw-bold text-danger">This product is currently sold out</span>
+
+            {{else if (eq status 'active')}}
             <div class="action-btn d-flex flex-wrap">
                 <button class="btn btn-outline-primary fw-bold me-2 my-1 py-3 col-12 col-md"
                     onclick="addToCart('{{_id}}')">
@@ -121,11 +124,9 @@
             <div class="fs-5 fw-bold text-danger mt-2">Only {{quantity}} left, Hurry up!</div>
             {{/lt}}
 
-            {{else if (eq status 'sold out')}}
-            <span class="fs-4 fw-bold text-danger">This product is currently sold out</span>
             {{else}}
             <span class="fs-4 fw-bold text-danger">This product is currently unvailable</span>
-            {{/if}}
+            {{/or}}
             <div class="my-4">
                 <h3>Description</h3>
                 <p class="fs-5">{{description}}</p>

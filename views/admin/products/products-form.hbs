@@ -9,9 +9,9 @@
                 <h1 class="text-primary">{{#if product}} Edit {{else}} Add {{/if}} Products</h1>
             </div>
         </div>
-        <form method="post" enctype="multipart/form-data">
+        <form method="post" enctype="multipart/form-data" id="productForm">
             <div class="outlined-card m-2 border-black col">
-                {{#if errMessage}}<div class="text-danger">*{{errMessage}}</div> {{/if}}
+                <div class="text-danger f-uppercase" id="err-message">{{errMessage}}</div>
                 {{!-- Images --}}
                 <div class="list-h">
                     <div class="d-flex" id="image-gallery">
@@ -65,9 +65,8 @@
                     <div class="d-flex flex-wrap">
                         <div class="me-3 col-12 col-md">
                             <div class="fs-6 fw-bold text-primary my-2">Category</div>
-                            <select name="category" id="category" class="outlined-card outline-none w-100"
-                                aria-placeholder="Category" required>
-                                <option value="" selected disabled hidden>Category</option>
+                            <select name="category" id="category" class="outlined-card text-capitalize outline-none w-100"
+                                aria-placeholder="Category">
                                 {{#each categories}}
                                 <option value="{{this._id}}" {{#if (eq this._id @root.product.categoryId ) }} selected
                                     {{/if}}>

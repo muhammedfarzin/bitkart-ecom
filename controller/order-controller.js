@@ -104,7 +104,7 @@ const orderController = {
         let razorpayResponse;
 
         if (paymentMethod == 'online') {
-            const totalAmount = priceDetails.totalPrice + priceDetails.deliveryCharge - priceDetails.promocodeDiscount;
+            const totalAmount = priceDetails.totalPrice + priceDetails.deliveryCharge - (priceDetails.promocodeDiscount || 0);
             razorpayResponse = await orderController.generateRazorpay(totalAmount);
         }
 

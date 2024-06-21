@@ -18,6 +18,7 @@
                 </a>
             </div>
         </div>
+        {{#if address}}
         <div class="list">
             {{#each address}}
             <div class="card-primary-light d-flex justify-content-between align-items-start m-3" id="address{{_id}}">
@@ -50,6 +51,11 @@
             </div>
             {{/each}}
         </div>
+        {{else}}
+        <div class="w-100 text-center text-primary fs-5 fw-bold mb-5 mt-3">
+            You didn't added any of your address yet!
+        </div>
+        {{/if}}
     </div>
 </div>
 
@@ -63,7 +69,8 @@
                 <h1 class="modal-title fs-5" id="exampleModalLabel">Do you really want to remove?</h1>
             </div>
             <div class="modal-footer border border-0">
-                <button id="closeModalBtn" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button id="closeModalBtn" type="button" class="btn btn-secondary"
+                    data-bs-dismiss="modal">Close</button>
                 <button id="removeBtn" type="button" class="btn btn-primary"
                     onclick="removeAddress('{{_id}}')">Remove</button>
             </div>
