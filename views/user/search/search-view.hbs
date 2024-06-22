@@ -9,17 +9,22 @@
             <option value="priceZtoA" {{#if (eq sort 'priceZtoA' )}}selected{{/if}}>Price: high to low</option>
         </select>
     </div>
-    <div class="searchSection mt-2">
-        <h4 class="text-primary my-1">Categories</h4>
-        <div class="ms-4 my-2">
-            {{#each categories}}
-            <a href="/category/{{_id}}" class="d-block text-reset text-capitalize">- {{title}}</a>
-            {{/each}}
+
+    <form method="get" id="filterForm">
+        <div class="searchSection mt-2">
+            <h4 class="text-primary my-1">Categories</h4>
+            <div class="ms-1 my-2">
+                {{#each categories}}
+                <div class="d-flex">
+                    <input type="checkbox" value="{{_id}}" name="categories" id="category{{_id}}"
+                        class="form-check-input" {{#if (includes @root.selectedCategories (toStr _id))}}checked{{/if}}>
+                    <label class="ms-2 text-capitalize">{{title}}</label>
+                </div>
+                {{/each}}
+            </div>
         </div>
-    </div>
-    <div class="searchSection">
-        <h4 class="text-primary my-1">Price</h4>
-        <form method="get" id="sortByPriceFrm">
+        <div class="searchSection">
+            <h4 class="text-primary my-1">Price</h4>
             <div class="d-flex flex-wrap align-items-center my-2">
                 <input type="number" name="minAmount" id="minAmount" placeholder="Min" value="{{minAmount}}"
                     class="outlined-card placeholder-primary outline-none text-center w-100 col-12 col-md">
@@ -28,18 +33,19 @@
                     class="outlined-card placeholder-primary outline-none text-center w-100 col-12 col-md">
             </div>
             <button type="submit" class="btn btn-primary w-100">Submit</button>
-        </form>
-    </div>
+        </div>
+    </form>
 </aside>
-
 <div class="container col-md-9 sm me-0">
     {{#if searchResults}}
     <h3 class="text-primary text-capitalize my-1">
         Showing
         {{#if searchQuery}}
         results of {{searchQuery}}
+        {{else if selectedCategories}}
+        results by categories
         {{else}}
-           category {{categoryName}}
+        all products
         {{/if}}
     </h3>
 

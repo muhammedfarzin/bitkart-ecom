@@ -835,3 +835,13 @@ table.table-primary {
 div.bg-primary {
     background-color: #6F43BF !important;
 }
+
+.form-check-input:checked[type=checkbox] {
+    --bs-form-check-bg-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%23fff' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='m6 10 3 3 6-6'/%3e%3c/svg%3e");
+    background-color: #6F43BF;
+}
+
+.form-check-input[type=checkbox] {
+    border: 1px solid #6F43BF !important;
+    box-shadow: none !important;
+}

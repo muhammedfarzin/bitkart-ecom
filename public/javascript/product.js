@@ -44,15 +44,18 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    $('#sortByPriceFrm').submit(e => {
+    $('#filterForm').submit(e => {
         e.preventDefault();
-        let formData = $('#sortByPriceFrm').serializeArray();
         const url = new URL(location.href);
-
+        let formData = $('#filterForm').serializeArray();
+        const categoryDatasArray = [];
         $.each(formData, function () {
-            if (this.value) url.searchParams.set(this.name, this.value);
+            if (this.name == 'categories') categoryDatasArray.push(this.value);
+            else if (this.value) url.searchParams.set(this.name, this.value);
             else url.searchParams.delete(this.name);
         });
+        if (categoryDatasArray.length) url.searchParams.set('categories', encodeURIComponent(JSON.stringify(categoryDatasArray)))
+        else url.searchParams.delete('categories');
         location.replace(url);
     });
 });

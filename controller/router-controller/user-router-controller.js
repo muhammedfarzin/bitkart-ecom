@@ -92,11 +92,20 @@ const userRouterController = {
         }
     },
     searchProducts: async (req, res) => {
-        const searchResults = req.query.search && await productController.searchUserProducts(req.query);
+        if (req.query.categories) {
+            const categoryData = decodeURIComponent(req.query.categories);
+            try {
+                req.query.categories = JSON.parse(categoryData);
+            } catch (err) {
+                req.query.categories = [categoryData];
+            }
+        }
+        const searchResults = await productController.searchUserProducts(req.query);
         const categories = await categoryController.getAllCategoryTitles();
-        const context = req.query.search && {
+        const context = {
             searchResults,
             categories,
+            selectedCategories: req.query.categories || [],
             userWishlist: req.session.user.wishlist,
             searchQuery: req.query.search,
             minAmount: req.query.minAmount,
@@ -104,26 +113,6 @@ const userRouterController = {
             sort: req.query.sort,
         }
         res.render('user/search/search-view', context);
-    },
-    showProductsByCategory: async (req, res) => {
-        try {
-            const categoryId = req.params.id;
-            const searchResults = await productController.searchProductsByCategory(categoryId, req.query);
-            const categories = await categoryController.getAllCategoryTitles();
-            const category = await categoryController.getCategoryById(categoryId);
-            const context = {
-                searchResults,
-                categories,
-                userWishlist: req.session.user.wishlist,
-                categoryName: category.title,
-                minAmount: req.query.minAmount,
-                maxAmount: req.query.maxAmount,
-                sort: req.query.sort,
-            }
-            res.render('user/search/search-view', context);
-        } catch (err) {
-            res.status(404).render('404');
-        }
     },
 
     // Accounts

@@ -65,8 +65,6 @@ router.get('/logout', userRouterController.logout);
 // Search
 router.get('/search', checkUserLoginStatus, userRouterController.searchProducts);
 
-router.get('/category/:id', checkUserLoginStatus, userRouterController.showProductsByCategory);
-
 // Account
 router.get('/account', checkUserLoginStatus, userRouterController.showPersonalDetailsForm);
 

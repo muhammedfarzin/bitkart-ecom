@@ -10,3 +10,13 @@ function showAlertBox(message, isPrimary) {
     const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastAlertBox);
     toastBootstrap.show();
 }
+
+$('#productSearchBox').submit((e) => {
+    const url = new URL(location.href);
+    if (url.pathname == '/search') {
+        e.preventDefault();
+        const searchData = $('#productSearchBox').serializeArray()[0];
+        url.searchParams.set(searchData.name, searchData.value);
+        location.replace(url.toString());
+    }
+});
