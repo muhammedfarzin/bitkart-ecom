@@ -8,6 +8,7 @@ import ReviewModel from "../models/review-model.js";
 import crypto from 'crypto'
 import ProductModel from "../models/product-model.js";
 import PDFDocument from "pdfkit-table";
+import xlsx from 'xlsx';
 import couponController from "./coupon-controller.js";
 
 const minForFreeDelivery = 1000;
@@ -568,8 +569,46 @@ const orderController = {
         } catch (err) {
             throw err;
         }
-    }
+    },
+    getSalesReportExcel: async (data) => {
+        try {
+            data.duration = data.duration || 'weekly';
+            const salesReport = await orderController.getSalesReport(data);
+            const { report, totalSalesAmount, totalCancelledAmount, totalReturnAmount, totalDeliveredAmount, totalOngoingAmount, totalQuantity } = salesReport;
+            const duration = (data.duration == 'custom') ? `${data.dateFrom} to ${data.dateTo}` : data.duration;
 
+            // Create a new workbook
+            const workbook = xlsx.utils.book_new();
+
+            // Create a new worksheet
+            const reportWorksheet = xlsx.utils.json_to_sheet([
+                {
+                    "Total Sales Amount": totalSalesAmount,
+                    "Total Cancelled Amount": totalCancelledAmount,
+                    "Total Return Amount": totalReturnAmount,
+                    "Total Delivered Amount": totalDeliveredAmount,
+                    "Total Ongoing Amount": totalOngoingAmount,
+                    "Total Quantity": totalQuantity
+                }
+            ]);
+            const orderDetailsWorksheet = xlsx.utils.json_to_sheet(report.map(row => {
+                row.orderedAt = row.orderedAt.toString();
+                return row;
+            }));
+
+            // Add the worksheet to the workbook
+            xlsx.utils.book_append_sheet(workbook, reportWorksheet, `Sales Report ${duration}`);
+            xlsx.utils.book_append_sheet(workbook, orderDetailsWorksheet, 'Order Details');
+
+            // Generate the Excel file
+            const excelBuffer = xlsx.write(workbook, { bookType: 'xlsx', type: 'buffer' });
+
+            // Return the Excel file as a Buffer
+            return excelBuffer;
+        } catch (err) {
+            throw err;
+        }
+    },
 }
 
 export default orderController;

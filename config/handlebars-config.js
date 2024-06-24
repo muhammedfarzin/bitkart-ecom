@@ -87,6 +87,11 @@ const hbsConfig = hbs.create({
         },
         toStr: function (elem) {
             return elem.toString();
+        },
+        urlAddQuery: function (urlData, field, data) {
+            const url = new URL(urlData);
+            url.searchParams.set(field, data);
+            return url.toString();
         }
     }
 });

@@ -59,10 +59,17 @@ const adminRouterController = {
     },
 
     downloadSalesReport: async (req, res) => {
-        const salesReportPdfBuffer = await orderController.getSalesReportPdf(req.query);
-        res.setHeader('Content-Type', 'application/pdf');
-        res.setHeader('Content-Disposition', 'attachment; filename="sales-report.pdf"');
-        res.send(salesReportPdfBuffer);
+        if (req.query.fileType == 'excel') {
+            const salesReportExcelBuffer = await orderController.getSalesReportExcel(req.query);
+            res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument');
+            res.setHeader('Content-Disposition', 'attachment; filename="sales-report.xlsx"');
+            res.send(salesReportExcelBuffer);
+        } else {
+            const salesReportPdfBuffer = await orderController.getSalesReportPdf(req.query);
+            res.setHeader('Content-Type', 'application/pdf');
+            res.setHeader('Content-Disposition', 'attachment; filename="sales-report.pdf"');
+            res.send(salesReportPdfBuffer);
+        }
     },
 
     // Users
