@@ -174,15 +174,21 @@ const productController = {
             ]);
 
             const totalCount = await ProductModel.countDocuments({
-                $or: [
-                    { title: { $regex: searchQuery, $options: 'i' } },
-                    { description: { $regex: searchQuery, $options: 'i' } },
+                $and: [
+                    {
+                        $or: [
+                            { title: { $regex: searchQuery, $options: 'i' } },
+                            { description: { $regex: searchQuery, $options: 'i' } },
+                        ]
+                    },
+                    {
+                        $or: [
+                            { price: { $lte: maxAmount, $gte: minAmount } },
+                            { offerPrice: { $lte: maxAmount, $gte: minAmount } }
+                        ]
+                    }
                 ],
                 categoryId: data.categories ? { $in: data.categories } : /.*/,
-                $or: [
-                    { price: { $lte: maxAmount, $gte: minAmount } },
-                    { offerPrice: { $lte: maxAmount, $gte: minAmount } }
-                ]
             });
             const totalPages = Math.ceil(totalCount / limit);
 

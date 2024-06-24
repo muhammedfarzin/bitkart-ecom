@@ -17,6 +17,7 @@ $('#productSearchBox').submit((e) => {
         e.preventDefault();
         const searchData = $('#productSearchBox').serializeArray()[0];
         url.searchParams.set(searchData.name, searchData.value);
+        url.searchParams.delete('page');
         location.replace(url.toString());
     }
 });
