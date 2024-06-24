@@ -1,0 +1,14 @@
+<div class="d-flex justify-content-center my-2">
+    <div class="px-2 col-4 col-md-2">
+        <button onclick="window.location.href='{{urlAddQuery currentUrl 'page' (sum currentPage -1)}}';"
+            class="btn btn-primary w-100" {{#if (eq currentPage 1)}}disabled{{/if}}>
+            Previous
+        </button>
+    </div>
+    <div class="px-2 col-4 col-md-2">
+        <button onclick="window.location.href='{{urlAddQuery currentUrl 'page' (sum currentPage 1)}}';"
+            class="btn btn-primary w-100" {{isEqual currentPage totalPages 'disabled' }}>
+            Next
+        </button>
+    </div>
+</div>

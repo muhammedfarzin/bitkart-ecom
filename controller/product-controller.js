@@ -108,6 +108,10 @@ const productController = {
             priceZtoA: { offerPrice: -1, price: -1 }
         }
         try {
+            const page = parseInt(data.page) || 1;
+            const limit = 20;
+            const skip = (page - 1) * limit;
+
             const sort = data.sort || 'newArrival';
             const searchQuery = data.search || /.*/;
             const minAmount = data.minAmount ? Number(data.minAmount) : 1;
@@ -131,6 +135,8 @@ const productController = {
                     }
                 },
                 { $sort: sortMethods[sort] },
+                { $skip: skip },
+                { $limit: limit },
                 {
                     $lookup: {
                         from: 'reviews',
@@ -166,7 +172,21 @@ const productController = {
                     }
                 }
             ]);
-            return products;
+
+            const totalCount = await ProductModel.countDocuments({
+                $or: [
+                    { title: { $regex: searchQuery, $options: 'i' } },
+                    { description: { $regex: searchQuery, $options: 'i' } },
+                ],
+                categoryId: data.categories ? { $in: data.categories } : /.*/,
+                $or: [
+                    { price: { $lte: maxAmount, $gte: minAmount } },
+                    { offerPrice: { $lte: maxAmount, $gte: minAmount } }
+                ]
+            });
+            const totalPages = Math.ceil(totalCount / limit);
+
+            return { products, totalPages, currentPage: page };
         } catch (err) {
             return [];
         }

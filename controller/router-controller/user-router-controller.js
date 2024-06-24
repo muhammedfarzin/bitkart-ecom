@@ -100,17 +100,21 @@ const userRouterController = {
                 req.query.categories = [categoryData];
             }
         }
-        const searchResults = await productController.searchUserProducts(req.query);
+        const { products: searchResults, totalPages, currentPage } = await productController.searchUserProducts(req.query);
         const categories = await categoryController.getAllCategoryTitles();
+        const currentUrl = new URL(req.originalUrl, req.protocol + '://' + req.get('host'));
         const context = {
             searchResults,
             categories,
+            totalPages,
+            currentPage,
             selectedCategories: req.query.categories || [],
             userWishlist: req.session.user.wishlist,
             searchQuery: req.query.search,
             minAmount: req.query.minAmount,
             maxAmount: req.query.maxAmount,
             sort: req.query.sort,
+            currentUrl,
         }
         res.render('user/search/search-view', context);
     },
