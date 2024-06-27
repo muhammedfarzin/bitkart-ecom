@@ -18,6 +18,12 @@ app.set('view engine', 'hbs');
 app.use(express.static('public'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use((req, res, next) => {
+    res.header('Cache-Control', 'no-cache, no-store, must-revalidate');
+    res.header('Pragma', 'no-cache');
+    res.header('Expires', '0');
+    next();
+});
 
 app.use('/admin', adminRouter);
 app.use('/', userRouter);

@@ -57,7 +57,7 @@
                         <div class="col-12 col-md">
                             <div class="fs-6 fw-bold text-primary my-2">Offer Price</div>
                             <input type="number" name="offerPrice" id="offer-price" min="10"
-                                value="{{#if product.offerPrice}}product.offerPrice{{/if}}"
+                                value="{{#if product.offerPrice}}{{product.offerPrice}}{{/if}}"
                                 class="outlined-card placeholder-primary outline-none w-100"
                                 placeholder="Enter offer price">
                         </div>
@@ -68,9 +68,9 @@
                             <select name="category" id="category" class="outlined-card text-capitalize outline-none w-100"
                                 aria-placeholder="Category">
                                 {{#each categories}}
-                                <option value="{{this._id}}" {{#if (eq this._id @root.product.categoryId ) }} selected
+                                <option value="{{_id}}" {{#if (eq _id @root.product.categoryId ) }} selected
                                     {{/if}}>
-                                    {{this.title}}
+                                    {{title}}
                                 </option>
                                 {{/each}}
                             </select>

@@ -152,9 +152,12 @@ div.border-primary {
     background: #dc3545 !important;
 }
 
-.btn:hover,
-.btn:focus,
-.btn:focus-visible {
+.btn.btn-primary:hover,
+.btn.btn-outline-primary:hover,
+.btn.btn-primary:focus,
+.btn.btn-outline-primary:focus,
+.btn.btn-primary:focus-visible,
+.btn.btn-outline-primary:focus-visible {
     border: 1px solid #6F43BF !important;
     background: #6F43BF !important;
     color: #fff !important;

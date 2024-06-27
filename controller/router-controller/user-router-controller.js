@@ -77,7 +77,7 @@ const userRouterController = {
 
     // Products
     showHome: async (req, res) => {
-        const products = await productController.getProducts();
+        const products = await productController.getProducts({ status: 'active' });
         const categories = await categoryController.getCategories();
         res.render('user/index', { products, categories });
     },

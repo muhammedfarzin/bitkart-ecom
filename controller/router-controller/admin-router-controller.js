@@ -24,8 +24,9 @@ const adminRouterController = {
     showLoginForm: (req, res) => {
         if (checkLogin(req.session)) {
             res.redirect(dashboardRoute);
+        } else {
+            res.render('admin/login', { title: "Admin Login" });
         }
-        res.render('admin/login', { title: "Admin Login" });
     },
     login: (req, res) => {
         if (checkLogin(req.session)) {

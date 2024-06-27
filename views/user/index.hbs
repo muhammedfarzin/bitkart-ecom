@@ -9,9 +9,12 @@
 <div class="mid-container w-95">
     {{!-- Recommended Products --}}
     <div class="section-list-h my-3">
-        <h3 class="subtitle fs-3">
-            Recommended Products
-        </h3>
+        <div class="d-flex justify-content-between">
+            <h3 class="subtitle fs-3">
+                Recommended Products
+            </h3>
+            <a href="/search" class="text-btn">See more</a>
+        </div>
         <div class="list-h mt-3">
             {{#each products}}
             {{> basic-product-card product=this}}
