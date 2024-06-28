@@ -101,13 +101,13 @@ const orderController = {
         const priceDetails = promocode
             ? await couponController.verifyCoupon(userId, promocode)
             : await orderController.getPriceSummary(userId);
+        const totalAmount = priceDetails.totalPrice + priceDetails.deliveryCharge - (priceDetails.promocodeDiscount || 0);
         const newOrderIds = [];
         let razorpayResponse;
 
         if (paymentMethod == 'online') {
-            const totalAmount = priceDetails.totalPrice + priceDetails.deliveryCharge - (priceDetails.promocodeDiscount || 0);
             razorpayResponse = await orderController.generateRazorpay(totalAmount);
-        }
+        } else if (totalAmount > 1000) throw new Error('Cash on delivery is not available for order above ₹1000');
 
         for (const cartItem of cartProducts) {
             const { productId, quantity, productDetails: { categoryId } } = cartItem;

@@ -63,7 +63,7 @@
                         <label for="paymentWallet" class="cursor-pointer fw-bold ms-2">
                             Wallet
                             <div class="box-primary d-inline py-1 px-2">
-                                ₹{{formatNumber (sum totalPrice deliveryCharge)}}
+                                ₹{{formatNumber @root.walletBalance}}
                             </div>
                         </label>
                     </div>
@@ -77,11 +77,22 @@
                         </label>
                     </div>
                     <div class="d-flex align-items-start mb-3">
+                        {{#lte priceDetails.totalPrice 1000}}
                         <input type="radio" class="radio-primary my-1 mx-2" value="cod" name="paymentMethod"
                             id="paymentCOD">
                         <label for="paymentCOD">
                             <div class="cursor-pointer ms-2 fs-6 fw-bold">Cash on Delivery</div>
                         </label>
+                        {{else}}
+                        <input type="radio" class="radio-primary my-1 mx-2" value="cod" name="paymentMethod"
+                            id="paymentCOD" disabled>
+                        <label for="paymentCOD">
+                            <div class="text-secondary cursor-not-allowed ms-2 fs-6 fw-bold">
+                                Cash on Delivery <br>
+                                <span class="text-primary fs-7">(COD is not available for order above ₹1000)</span>
+                            </div>
+                        </label>
+                        {{/lte}}
                     </div>
                 </div>
             </div>
