@@ -203,7 +203,6 @@ const adminRouterController = {
             await categoryController.updateCategory(req.params.id, req);
             res.redirect(dashboardRoute + sideMenuPath.categories);
         } catch (err) {
-            console.log(err)
             res.redirect(`${dashboardRoute}${req.path}?errMessage=${err.message}`);
         }
     },

@@ -109,6 +109,8 @@ router.patch('/orders/:id/return', checkUserLoginStatus, userRouterController.re
 
 router.post('/orders/verifyPayment', checkUserLoginStatus, userRouterController.verifyOrderPayment);
 
+router.post('/orders/:id/completePayment', checkUserLoginStatus, userRouterController.completePendingPayment);
+
 // Reviews
 router.post('/orders/:id/addReview', checkUserLoginStatus, userRouterController.addReview);
 

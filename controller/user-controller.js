@@ -142,7 +142,6 @@ const userController = {
                     throw new Error('Payment failed');
                 }
             } catch (err) {
-                console.log(err)
                 reject(err);
             }
         });

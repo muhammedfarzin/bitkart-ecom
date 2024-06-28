@@ -156,6 +156,7 @@ const userRouterController = {
         res.render('user/account/wallet', { wallet });
     },
 
+    // Wallet
     addMoneyToWallet: async (req, res) => {
         try {
             const { amount } = req.body;
@@ -165,7 +166,6 @@ const userRouterController = {
             res.status(400).json({ errMessage: err.message });
         }
     },
-
     verifyWalletPayment: (req, res) => {
         const userId = req.session.user.userId;
         userController.addMoneyToWallet(userId, req.body)
@@ -316,6 +316,14 @@ const userRouterController = {
                 res.json(response);
             })
             .catch(err => res.status(400).json({ errMessage: err.message }));
+    },
+    completePendingPayment: (req, res) => {
+        orderController.completeOrderPayment(req.params.id)
+            .then((response) => {
+                req.session.orderDone = true;
+                res.json(response)
+            })
+            .catch((err) => res.status(err.statusCode || 400).json({ errMessage: err.message }));
     },
     addReview: async (req, res) => {
         try {

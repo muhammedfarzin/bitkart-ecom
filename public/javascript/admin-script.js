@@ -32,7 +32,6 @@ function toggleUserStatus(userId) {
         data: { userId },
         dataType: 'json',
         success: function (data) {
-            console.log(data)
             document.getElementById('status' + userId).innerText = data.newStatus;
             const blockBtn = document.getElementById('block' + userId);
             if (data.newStatus == 'active') {

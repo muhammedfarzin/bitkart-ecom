@@ -55,6 +55,21 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
+    $('#completePendingPaymentBtn').on('click', (e) => {
+        const url = new URL(location.href);
+        url.pathname += '/completePayment';
+        $.ajax({
+            url: url.toString(),
+            type: 'POST',
+            success: function (data) {
+                razorpayPayment(data);
+            },
+            error: function (err) {
+                showAlertBox(err.responseJSON?.errMessage ?? 'Something went wrong');
+            }
+        });
+    });
+
     $('#returnOrderFrm').submit((e) => {
         e.preventDefault();
         let formData = $('#returnOrderFrm').serializeArray();

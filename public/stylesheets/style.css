@@ -153,20 +153,25 @@ div.border-primary {
 }
 
 .btn.btn-primary:hover,
-.btn.btn-outline-primary:hover,
 .btn.btn-primary:focus,
+.btn.btn-primary:focus-visible {
+    border: 1px solid #6d3399 !important;
+    background: #6d3399 !important;
+    color: #fff !important;
+}
+
+.btn.btn-outline-primary:hover,
 .btn.btn-outline-primary:focus,
-.btn.btn-primary:focus-visible,
 .btn.btn-outline-primary:focus-visible {
     border: 1px solid #6F43BF !important;
     background: #6F43BF !important;
     color: #fff !important;
 }
 
-.btn.btn-light:hover,
-.btn.btn-light:focus,
-.btn.btn-light:active,
-.btn.btn-light:focus-visible {
+.btn.h-primary:hover,
+.btn.h-primary:focus,
+.btn.h-primary:active,
+.btn.h-primary:focus-visible {
     border: 1px solid #6F43BF !important;
     background: #6F43BF !important;
     color: #fff !important;

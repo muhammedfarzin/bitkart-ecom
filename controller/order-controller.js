@@ -143,6 +143,30 @@ const orderController = {
         };
         return razorpayResponse
     },
+    completeOrderPayment: (orderId) => {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const order = await OrderModel.findById(orderId);
+                if (!order) reject(new Error('Invalid order'));
+                if (order.paymentMethod != 'online') reject(new Error('This is not a prepaid order'));
+                let razorpayResponse = await razorpayInstance.orders.fetch(order.razorpayId);
+                if (razorpayResponse.status == 'paid') reject(new Error('Payment already completed'));
+
+                if (razorpayResponse.amount != (order.price.totalPrice * 100)) {
+                    razorpayResponse = await orderController.generateRazorpay(order.price.totalPrice);
+                    order.razorpayId = razorpayResponse.id;
+                    await order.save();
+                }
+                resolve(razorpayResponse);
+            } catch (err) {
+                if (err.name == 'CastError' && err.kind == 'ObjectId') {
+                    reject(new Error(`You entered ${err.model.modelName} is not exist`));
+                } else {
+                    reject(err);
+                }
+            }
+        });
+    },
     clearCart: async (userId) => {
         await UserModel.findByIdAndUpdate(userId, { $set: { cart: [] } });
     },
@@ -208,7 +232,7 @@ const orderController = {
     },
     getUserOrders: async (userId) => {
         const orders = await OrderModel.aggregate([
-            { $match: { userId, "status.status": { $ne: orderStatus.pending } } },
+            { $match: { userId } },
             {
                 $lookup: {
                     from: 'products',

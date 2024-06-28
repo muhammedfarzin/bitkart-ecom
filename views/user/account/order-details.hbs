@@ -1,18 +1,18 @@
 {{> navbar}}
 
 <aside class="col-md-3 sm-d-none">
-    <a href="#" class="btn text-start text-primary bg-light fw-bold my-1 w-100">Order Details</a>
-    <a href="#Status" class="btn text-start text-primary bg-light fw-bold my-1 w-100">Status</a>
+    <a href="#" class="btn h-primary text-start text-primary bg-light fw-bold my-1 w-100">Order Details</a>
+    <a href="#Status" class="btn h-primary text-start text-primary bg-light fw-bold my-1 w-100">Status</a>
 
     {{#with (last orderDetails.status)}}
     {{#or (eq status 'delivered') (eq status 'return')}}
-    <a href="#Review" class="btn text-start text-primary bg-light fw-bold my-1 w-100">Review</a>
-    <a href="#Return" class="btn text-start text-primary bg-light fw-bold my-1 w-100">Return</a>
+    <a href="#Review" class="btn h-primary text-start text-primary bg-light fw-bold my-1 w-100">Review</a>
+    <a href="#Return" class="btn h-primary text-start text-primary bg-light fw-bold my-1 w-100">Return</a>
     {{/or}}
     {{/with}}
 
-    <a href="#ShippingAddress" class="btn text-start text-primary bg-light fw-bold my-1 w-100">Shipping Address</a>
-    <a href="#PriceDetails" class="btn text-start text-primary bg-light fw-bold my-1 w-100">Price Details</a>
+    <a href="#ShippingAddress" class="btn h-primary text-start text-primary bg-light fw-bold my-1 w-100">Shipping Address</a>
+    <a href="#PriceDetails" class="btn h-primary text-start text-primary bg-light fw-bold my-1 w-100">Price Details</a>
 </aside>
 
 {{#with orderDetails}}
@@ -24,6 +24,8 @@
             {{#with (last status)}}
             {{#if (eq status 'confirmed')}}
             <button class="btn btn-danger" id="cancelOrderBtn">Cancel order</button>
+            {{else if (eq status 'pending')}}
+            <button class="btn btn-primary" id="completePendingPaymentBtn">Complete Payment</button>
             {{/if}}
             {{/with}}
         </div>
@@ -242,4 +244,5 @@
 </div>
 {{/with}}
 
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script src="/javascript/handle-orders.js"></script>
