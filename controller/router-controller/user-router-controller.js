@@ -342,6 +342,16 @@ const userRouterController = {
         } else {
             res.redirect('/');
         }
+    },
+    getOrderInvoicePDF: (req, res) => {
+        const { userId } = req.session.user;
+        const orderId = req.params.id;
+        orderController.generateOrderInvoicePDF(userId, orderId)
+            .then(invoicePdfBuffer => {
+                res.setHeader('Content-Type', 'application/pdf');
+                res.setHeader('Content-Disposition', `attachment; filename="invoice-${orderId}.pdf"`);
+                res.send(invoicePdfBuffer);
+            });
     }
 }
 

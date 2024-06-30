@@ -10,6 +10,7 @@ import ProductModel from "../models/product-model.js";
 import PDFDocument from "pdfkit-table";
 import xlsx from 'xlsx';
 import couponController from "./coupon-controller.js";
+import moment from "moment";
 
 const minForFreeDelivery = 1000;
 const orderStatusList = Object.values(orderStatus);
@@ -633,6 +634,80 @@ const orderController = {
             throw err;
         }
     },
+    generateOrderInvoicePDF: async (userId, orderId) => {
+        const orderDetails = await orderController.getUserOrderDetails(userId, orderId);
+        const { productDetails, quantity, price, address } = orderDetails;
+
+        // Create a new PDF document
+        const doc = new PDFDocument({
+            margin: 30,
+            size: 'A4'
+        });
+
+        // Add a Title
+        doc.font('Helvetica-Bold', 18).text('Invoice', { align: 'center' }).moveDown();
+
+        doc.font('Helvetica-Bold', 10).text(`Payment Method: ${orderDetails.paymentMethod.toUpperCase()}`, { align: 'right' });
+
+        doc
+            .font('Helvetica', 10)
+            .text(`Order ID: ${orderDetails.orderId}`)
+            .text(`Ordered at: ${moment(orderDetails.orderedAt).format('MMMM D, YYYY')}`)
+            .moveDown();
+
+        // Add customer information
+        doc
+            .font('Helvetica-Bold', 10)
+            .text('Shipping Address:')
+            .font('Helvetica', 10)
+            .text(`${address.name}`)
+            .text(`${address.address}, ${address.locality}`)
+            .text(`${address.pincode}, ${address.state}`)
+            .text(`Mobile: ${address.mobile}`)
+            .moveDown();
+
+        // Add order details table
+        const orderDetailsTable = {
+            title: 'Order Details',
+            headers: ['Item', 'Quantity', 'Price', 'Delivery Charge', 'Discount', 'Total'],
+            rows: [
+                [
+                    productDetails.title,
+                    quantity,
+                    price.price.toFixed(2),
+                    price.deliveryCharge.toFixed(2),
+                    price.promocodeDiscount ? '-' + price.promocodeDiscount.toFixed(2) : '',
+                    price.totalPrice.toFixed(2)
+                ],
+                ['Total', '', '', '', '', price.totalPrice.toFixed(2)]
+            ],
+        };
+
+        await doc.table(orderDetailsTable, {
+            width: 500,
+            x: 50,
+            y: 215,
+            padding: { top: 10, bottom: 10, left: 10, right: 10 },
+            styles: {
+                total: {
+                    font: 'Helvetica-Bold',
+                    fontSize: 12
+                }
+            }
+        });
+
+        // Save the PDF to a file
+        const pdfBuffer = await new Promise((resolve, reject) => {
+            const chunks = [];
+            doc.on('data', (chunk) => chunks.push(chunk));
+            doc.on('end', () => resolve(Buffer.concat(chunks)));
+            doc.on('error', (err) => reject(err));
+            doc.end();
+        });
+
+        // Return the PDF buffer
+        return pdfBuffer;
+    }
 }
 
 export default orderController;

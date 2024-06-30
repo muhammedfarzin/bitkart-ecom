@@ -111,6 +111,8 @@ router.post('/orders/verifyPayment', checkUserLoginStatus, userRouterController.
 
 router.post('/orders/:id/completePayment', checkUserLoginStatus, userRouterController.completePendingPayment);
 
+router.get('/orders/:id/downloadInvoice', checkUserLoginStatus, userRouterController.getOrderInvoicePDF);
+
 // Reviews
 router.post('/orders/:id/addReview', checkUserLoginStatus, userRouterController.addReview);
 

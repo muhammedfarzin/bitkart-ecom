@@ -11,7 +11,9 @@
     {{/or}}
     {{/with}}
 
-    <a href="#ShippingAddress" class="btn h-primary text-start text-primary bg-light fw-bold my-1 w-100">Shipping Address</a>
+    <a href="#ShippingAddress" class="btn h-primary text-start text-primary bg-light fw-bold my-1 w-100">
+        Shipping Address
+    </a>
     <a href="#PriceDetails" class="btn h-primary text-start text-primary bg-light fw-bold my-1 w-100">Price Details</a>
 </aside>
 
@@ -222,7 +224,10 @@
 
 
     <div class="mt-4" id="PriceDetails">
-        <h3 class="text-primary my-1">Price Details</h3>
+        <div class="d-flex justify-content-between">
+            <h3 class="text-primary my-1">Price Details</h3>
+            <a href="{{@root.currentPath}}/downloadInvoice" class="btn btn-primary">Download Invoice</a>
+        </div>
         <div class="outlined-card p-2 my-3 col-12 col-md-6">
             {{#each price}}
             {{#unless (eq @key '_id')}}
