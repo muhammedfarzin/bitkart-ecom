@@ -849,7 +849,8 @@ table.table-primary {
     border-color: #6F43BFDD;
 }
 
-div.bg-primary {
+div.bg-primary,
+footer.bg-primary {
     background-color: #6F43BF !important;
 }
 

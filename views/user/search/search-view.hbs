@@ -76,6 +76,12 @@
                             <div class="fs-2 fw-bold mx-3">₹{{formatNumber price}}</div>
                         </div>
                         {{/if}}
+
+                        {{#if (eq status 'sold out')}}
+                        <span class="text-danger fs-6 fw-bold">This product is currently sold out</span>
+                        {{else if (eq status 'inactive')}}
+                        <span class="text-danger fs-6 fw-bold">This product is currently unvailable</span>
+                        {{/if}}
                     </div>
                     <div class="icon-btn position-absolute tr-1" id="wishlistBtn{{_id}}"
                         onclick="{{#if (includes @root.userWishlist _id)}}removeFromWishlist{{else}}addToWishlist{{/if}}('{{_id}}'); return false">
