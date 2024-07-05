@@ -226,7 +226,11 @@
     <div class="mt-4" id="PriceDetails">
         <div class="d-flex justify-content-between">
             <h3 class="text-primary my-1">Price Details</h3>
+            {{#with (last status)}}
+            {{#unless (eq status 'pending')}}
             <a href="{{@root.currentPath}}/downloadInvoice" class="btn btn-primary">Download Invoice</a>
+            {{/unless}}
+            {{/with}}
         </div>
         <div class="outlined-card p-2 my-3 col-12 col-md-6">
             {{#each price}}

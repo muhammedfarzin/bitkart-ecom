@@ -105,8 +105,8 @@ const productController = {
     searchUserProducts: async (data) => {
         const sortMethods = {
             newArrival: { createdAt: -1 },
-            priceAtoZ: { offerPrice: 1, price: 1 },
-            priceZtoA: { offerPrice: -1, price: -1 }
+            priceAtoZ: { sortField: 1 },
+            priceZtoA: { sortField: -1 }
         }
         try {
             const page = parseInt(data.page) || 1;
@@ -135,7 +135,19 @@ const productController = {
                         ]
                     }
                 },
+                {
+                    $addFields: {
+                        sortField: {
+                            $cond: {
+                                if: { $or: [{ $eq: ["$offerPrice", null] }, { $eq: ["$offerPrice", 0] }] },
+                                then: "$price",
+                                else: "$offerPrice"
+                            }
+                        }
+                    }
+                },
                 { $sort: sortMethods[sort] },
+                { $project: { sortField: 0 } },
                 { $skip: skip },
                 { $limit: limit },
                 {

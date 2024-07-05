@@ -11,13 +11,15 @@ import PDFDocument from "pdfkit-table";
 import xlsx from 'xlsx';
 import couponController from "./coupon-controller.js";
 import moment from "moment";
+import dotenv from "dotenv";
+
+dotenv.config()
 
 const minForFreeDelivery = 1000;
 const orderStatusList = Object.values(orderStatus);
-const razorpaySecret = 'BtKsp1TjsaxRftECkAfj99pG';
-
+const razorpaySecret = process.env.RAZORPAY_SECRET;
 const razorpayInstance = new Razorpay({
-    key_id: 'rzp_test_yKUJBZ1MBQQioC',
+    key_id: process.env.RAZORPAY_ID,
     key_secret: razorpaySecret
 });
 
@@ -111,12 +113,11 @@ const orderController = {
         } else if (totalAmount > 1000) throw new Error('Cash on delivery is not available for order above ₹1000');
 
         for (const cartItem of cartProducts) {
-            const { productId, quantity, productDetails: { categoryId } } = cartItem;
+            const { productId, quantity } = cartItem;
             let promocodeDiscount;
-            if (priceDetails.couponCategoryId && priceDetails.couponCategoryId == categoryId) {
+            if (priceDetails.couponProductId?.toString() == productId.toString()) {
                 promocodeDiscount = priceDetails.promocodeDiscount;
-            } else promocodeDiscount = priceDetails.promocodeDiscount;
-
+            }
             const price = {
                 price: cartItem.quantity * (cartItem.productDetails.offerPrice || cartItem.productDetails.price),
                 deliveryCharge,
@@ -423,9 +424,12 @@ const orderController = {
             const { payment: { razorpay_order_id, razorpay_payment_id, razorpay_signature }, order } = data;
             try {
                 if (orderController.verifyPaymentId(razorpay_order_id, razorpay_payment_id, razorpay_signature)) {
-                    const userOrder = await OrderModel.findOne({ razorpayId: order.id });
+                    const userOrder = await OrderModel.find({ razorpayId: order.id });
                     if (!userOrder) reject('Something went wrong. Please try again');
-                    await orderController.updateStatus(userOrder._id.toString(), orderStatus.confirmed);
+                    for (const orderData of userOrder) {
+                        await orderController.updateStatus(orderData._id.toString(), orderStatus.confirmed);
+                    }
+
                     resolve({
                         message: 'Your order placed succesfully',
                         orderPlaced: true,

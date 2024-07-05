@@ -63,7 +63,15 @@ const hbsConfig = hbs.create({
             return accum;
         },
         formatDate: function (date, format) {
+            date = date || new Date();
+            format = format || 'YYYY-MM-DD';
             return moment(date).format(format);
+        },
+        sumDate: function (date, value, format) {
+            date = new Date(date);
+            date = new Date(date.getTime() + (value * 24 * 60 * 60 * 1000));
+            format = typeof format == 'string' ? format : 'YYYY-MM-DD';
+            return moment(date).format('YYYY-MM-DD');
         },
         formatNumber: function (num) {
             return num.toLocaleString('en-IN');

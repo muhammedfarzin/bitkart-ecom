@@ -115,11 +115,14 @@
                 <span class="text-danger fw-normal" id="err-message"></span>
                 <form id="customDateForm" class="d-flex" method="post">
                     <div class="p-1 col">
-                        <input type="date" name="dateFrom" id="dateFrom"
+                        <label for="dateFrom" class="text-primary fs-6 fw-bold">Date From</label>
+                        <input type="date" name="dateFrom" id="dateFrom" max="{{formatDate}}"
+                            value="{{sumDate (formatDate) -7}}"
                             class="outlined-card placeholder-primary outline-none w-100">
                     </div>
                     <div class="p-1 col">
-                        <input type="date" name="dateTo" id="dateTo"
+                        <label for="dateTo" class="text-primary fs-6 fw-bold">Date To</label>
+                        <input type="date" name="dateTo" id="dateTo" max="{{formatDate}}" value="{{formatDate}}"
                             class="outlined-card placeholder-primary outline-none w-100">
                     </div>
                 </form>

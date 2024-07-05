@@ -75,28 +75,31 @@ const couponController = {
         let checkoutAmountSummary = await orderController.getPriceSummary(userId);
         const minPurchaseAmount = coupon.minPurchaseAmount;
         const maxDiscountAmount = coupon.maxDiscountAmount;
+        const cart = await orderController.getCartProducts(userId);
+        let errMessage;
 
         if (coupon.categoryId) {
-            const cart = await orderController.getCartProducts(userId);
             for (let cartData of cart) {
                 const product = cartData.productDetails;
                 const amount = product.offerPrice || product.price;
                 if (coupon.categoryId.toString() == product.categoryId) {
                     if (amount >= minPurchaseAmount) {
-                        checkoutAmountSummary.couponCategoryId = product.categoryId;
-                        checkoutAmountSummary.promocodeDiscount = maxDiscountAmount >= amount ? amount : maxDiscountAmount;
+                        checkoutAmountSummary.couponProductId = cartData.productId;
+                        checkoutAmountSummary.promocodeDiscount = getDiscountAmount(amount, coupon, maxDiscountAmount);
                         break;
-                    } else throw new Error(`This promocode needs to purchase atleast ₹${minPurchaseAmount}`);
-                } else throw new Error('This promocode is not available for the selected products');
+                    } else errMessage = `This promocode needs to purchase atleast ₹${minPurchaseAmount}`;
+                } else errMessage = 'This promocode is not available for the selected products';
             }
         } else {
             if (checkoutAmountSummary.totalPrice >= minPurchaseAmount) {
                 const amount = checkoutAmountSummary.totalPrice;
-                checkoutAmountSummary.promocodeDiscount = maxDiscountAmount >= amount ? amount : maxDiscountAmount;
-            } else throw new Error(`This promocode needs to purchase atleast ₹${minPurchaseAmount}`);
+                checkoutAmountSummary.couponProductId = cart[0].productId;
+                checkoutAmountSummary.promocodeDiscount = getDiscountAmount(amount, coupon, maxDiscountAmount);
+            } else errMessage = `This promocode needs to purchase atleast ₹${minPurchaseAmount}`;
         }
 
-        return checkoutAmountSummary;
+        if (checkoutAmountSummary.couponProductId) return checkoutAmountSummary;
+        else throw new Error(errMessage);
     },
     editCoupon: async (couponId, data) => {
         try {
@@ -158,6 +161,14 @@ const couponController = {
             }
         }
     }
+}
+
+function getDiscountAmount(amount, coupon, maxDiscountAmount) {
+    let promocodeDiscount;
+    if (coupon.discountType == 'flat') promocodeDiscount = coupon.discountValue;
+    else if (coupon.discountType == 'percentage') promocodeDiscount = Math.round(amount * coupon.discountValue * 0.01);
+
+    return maxDiscountAmount >= promocodeDiscount ? promocodeDiscount : maxDiscountAmount;
 }
 
 export default couponController;
