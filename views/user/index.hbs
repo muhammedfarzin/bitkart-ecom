@@ -29,7 +29,7 @@
         </h3>
         <div class="list-h mt-3">
             {{#each categories}}
-            <a href="/category/{{_id}}" class="product-card text-reset">
+            <a href="/search?categories={{_id}}" class="product-card text-reset">
                 <img src="{{this.imagePath}}" alt="img" class="object-fit-contain p-2">
                 <div class="w-11rem p-2">
                     <div class="title text-capitalize">{{this.title}}</div>

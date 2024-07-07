@@ -5,6 +5,12 @@ import otpController from "../otp-controller.js";
 import orderController from "../order-controller.js";
 import { orderStatus } from "../../models/order-model.js";
 import couponController from "../coupon-controller.js";
+import dotenv from "dotenv"
+import { OAuth2Client } from "google-auth-library";
+import UserModel from "../../models/user-model.js";
+
+dotenv.config();
+const googleAuthClient = new OAuth2Client();
 
 const userRouterController = {
     // Authentications
@@ -19,6 +25,32 @@ const userRouterController = {
             .catch(err => {
                 res.redirect('/login?errMessage=' + err.message);
             });
+    },
+    signInUsingGoogle: async (req, res) => {
+        try {
+            const ticket = await googleAuthClient.verifyIdToken({
+                idToken: req.body.credential,
+                audience: process.env.GOOGLE_AUTH_CLIENT_ID
+            });
+            const payload = ticket.getPayload();
+            const userExist = await UserModel.findOne({ email: payload.email });
+            if (userExist) {
+                req.session.user = { userId: userExist._id };
+            } else {
+                const user = {
+                    name: payload.name,
+                    email: payload.email,
+                    password: payload.sub
+                }
+                const response = await userController.createUser(user);
+                req.session.user = response;
+            }
+
+            req.session.save();
+            res.json({ redirectUrl: '/' });
+        } catch (err) {
+            res.status(400).json({ errMessage: err.message });
+        }
     },
     signup: async (req, res) => {
         const { mobile, email, name, password } = req.body;
@@ -44,7 +76,7 @@ const userRouterController = {
             const userData = req.session.tempUserData;
             if (!userData) throw new Error('OTP EXPIRED');
             if (await otpController.verifyOTP(userData.email, req.body.otp)) {
-                const response = await userController.createUser(userData)
+                const response = await userController.createUser(userData);
                 req.session.user = response;
                 delete req.session.tempUserData;
                 req.session.save();
@@ -357,14 +389,19 @@ const userRouterController = {
 
 
 export async function checkUserLoginStatus(req, res, next) {
-    const response = await userController.checkUserStatus(req.session.user);
-    if (response) {
-        req.session.user = response;
-        req.session.save();
-        next();
-    } else {
+    try {
+        const response = await userController.checkUserStatus(req.session.user);
+        if (response) {
+            req.session.user = response;
+            req.session.save();
+            next();
+        } else {
+            req.session.destroy();
+            res.redirect('/login');
+        }
+    } catch (err) {
         req.session.destroy();
-        res.redirect('/login');
+        res.redirect('/login?errMessage=' + err.message);
     }
 }
 

@@ -58,7 +58,7 @@ const userController = {
                 if (!user || !user.comparePassword(enteredPassword)) {
                     return reject(new Error("Invalid email or password"));
                 } else if (user.status == 'blocked') {
-                    reject(new Error('The user was blocked by admin'));
+                    reject(new Error('Your account was blocked by adminp'));
                 }
                 const { _id: userId, name, email, mobile, cart, wishlist, status } = user;
                 resolve({ userId, name, email, mobile, cart, wishlist, status })

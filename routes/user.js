@@ -41,6 +41,8 @@ router.get('/signup', checkForLogin, (req, res) => {
 
 router.post('/signup', checkForLogin, userRouterController.signup);
 
+router.post('/login/google', checkForLogin, userRouterController.signInUsingGoogle)
+
 // OTP Validation
 router.get('/verifyEmail', userRouterController.showVerifyEmailPage);
 
