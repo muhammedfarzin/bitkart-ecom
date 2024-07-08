@@ -443,6 +443,53 @@ const orderController = {
             }
         });
     },
+    getTopSellingProducts: async (limit, data) => {
+        const { dateFrom, dateTo } = data;
+        const duration = data.duration || 'weekly';
+        const durations = {
+            weekly: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
+            monthly: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
+            yearly: new Date(Date.now() - 365 * 24 * 60 * 60 * 1000)
+        }
+
+        let dateRange;
+        if (duration == 'custom') {
+            if (!dateFrom || !dateTo) throw new Error('Please enter a valid date range');
+            dateRange = {
+                $lte: new Date(dateTo),
+                $gte: new Date(dateFrom),
+            }
+        } else {
+            dateRange = {
+                $gte: durations[duration],
+                $lte: new Date(),
+            }
+        }
+
+        const topProducts = await OrderModel.aggregate([
+            { $match: { orderedAt: dateRange, 'status.status': { $ne: orderStatus.cancelled } } },
+            {
+                $group: {
+                    _id: '$productId',
+                    totalQuantity: { $sum: '$quantity' }
+                }
+            },
+            { $sort: { totalQuantity: -1 } },
+            { $limit: limit || 5 },
+            {
+                $lookup: {
+                    from: 'products',
+                    localField: '_id',
+                    foreignField: '_id',
+                    as: 'product'
+                }
+            },
+            { $unwind: '$product' },
+            { $replaceRoot: { newRoot: '$product' } },
+        ]);
+
+        return topProducts;
+    },
     getSalesReport: (data) => {
         const { dateFrom, dateTo } = data;
         const duration = data.duration || 'weekly';

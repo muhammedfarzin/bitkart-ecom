@@ -50,10 +50,11 @@ const adminRouterController = {
     showDashboard: async (req, res) => {
         try {
             const salesReport = await orderController.getSalesReport(req.query);
+            const topProducts = await orderController.getTopSellingProducts(3, req.query);
             const sideMenus = getSideMenus(sideMenuPath.dashboard);
             let downloadUrl = new URL(req.originalUrl, req.protocol + '://' + req.get('host'));
             downloadUrl.pathname = '/admin/downloadSalesReport';
-            res.render('admin/index', { salesReport, sideMenus, downloadUrl, duration: req.query.duration });
+            res.render('admin/index', { salesReport, topProducts, sideMenus, downloadUrl, duration: req.query.duration });
         } catch (err) {
             res.status(400).render('admin/error', { errMessage: err.message });
         }
