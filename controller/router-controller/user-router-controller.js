@@ -76,11 +76,15 @@ const userRouterController = {
             const userData = req.session.tempUserData;
             if (!userData) throw new Error('OTP EXPIRED');
             if (await otpController.verifyOTP(userData.email, req.body.otp)) {
-                const response = await userController.createUser(userData);
-                req.session.user = response;
-                delete req.session.tempUserData;
-                req.session.save();
-                res.json({ path: '/', message: 'Signup successful' });
+                if (req.session.tempUserData.redirectUrl) {
+                    req.session.tempUserData.isOTPVerified = true;
+                    res.json({ path: req.session.tempUserData.redirectUrl, message: 'Email verified' });
+                } else {
+                    const response = await userController.createUser(userData);
+                    req.session.user = response;
+                    delete req.session.tempUserData;
+                    res.json({ path: '/', message: 'Signup successful' });
+                }
             } else {
                 throw new Error('Invalid OTP, please try again');
             }
@@ -100,6 +104,36 @@ const userRouterController = {
             res.json({ message: 'Resent OTP successfully. Kindly check your email' });
         } catch (err) {
             res.status(400).json({ errMessage: 'Something went wrong. Please try again later' });
+        }
+    },
+    forgotPassword: async (req, res) => {
+        try {
+            const { email } = req.body;
+            if (!email) throw new Error('Please enter email address');
+            const user = await UserModel.findOne({ email });
+            if (!user) throw new Error('User not found');
+
+            await otpController.sendOTP(email);
+            req.session.tempUserData = { email, userId: user._id, redirectUrl: '/login/setNewPassword' };
+            req.session.cookie.maxAge = 5 * 60000;
+
+            res.redirect('/verifyEmail');
+        } catch (err) {
+            res.redirect('/login/forgotPassword?errMessage=' + err.message);
+        }
+    },
+    setNewPassword: async (req, res) => {
+        try {
+            if (!req.session.tempUserData) return res.redirect('/');
+            if (!req.session.tempUserData?.isOTPVerified) return res.status(400).redirect('/login?errMessage=Email address is not verified');
+
+            const { userId } = req.session.tempUserData;
+            await userController.updatePassword(userId, req.body.password);
+            req.session.user = { userId };
+            delete req.session.tempUserData;
+            res.redirect('/');
+        } catch (err) {
+            res.redirect('/login/setNewPassword?errMessage=' + err.message);
         }
     },
     logout: (req, res) => {

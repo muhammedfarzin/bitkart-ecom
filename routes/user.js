@@ -50,6 +50,14 @@ router.post('/verifyEmail', userRouterController.verfifyEmail);
 
 router.get('/resendOtp', userRouterController.resendOtp);
 
+router.get('/login/forgotPassword', checkForLogin, (req, res) => res.render('user/forgot-password', { errMessage: req.query.errMessage }));
+
+router.post('/login/forgotPassword', checkForLogin, userRouterController.forgotPassword);
+
+router.get('/login/setNewPassword', checkForLogin, (req, res) => res.render('user/auth/new-password-frm', { errMessage: req.query.errMessage }));
+
+router.post('/login/setNewPassword', checkForLogin, userRouterController.setNewPassword);
+
 router.get('/', checkUserLoginStatus, userRouterController.showHome);
 
 // Product overview

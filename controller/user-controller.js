@@ -45,6 +45,20 @@ const userController = {
             }
         });
     },
+    updatePassword: (userId, password) => {
+        return new Promise(async (resolve, reject) => {
+            try {
+                if (!password) throw new Error('Please enter password');
+                
+                const user = await UserModel.findById(userId);
+                user.password = password;
+                await user.save();
+                resolve({ message: 'Your password updated' });
+            } catch (err) {
+                reject(err);
+            }
+        });
+    },
     checkMobileAndEmail: async (mobile, email) => {
         if (await UserModel.findOne({ mobile })) return { message: 'User with mobile number is already exist' };
         if (await UserModel.findOne({ email })) return { message: 'User with email address is already exist' };
@@ -118,7 +132,7 @@ const userController = {
         if (!user) return false;
         const userData = await UserModel.findById(user.userId);
         if (!userData) return false;
-        if (userData.status != 'active') return false;
+        if (userData.status != 'active') throw new Error('Your account was blocked by admin');
         const { _id: userId, name, email, mobile, cart, wishlist, wallet: { balance: walletBalance }, status } = userData;
         return { userId, name, email, mobile, cart, wishlist, walletBalance, status };
     },
