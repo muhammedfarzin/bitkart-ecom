@@ -1,7 +1,9 @@
 import { Router } from "express";
 import session from "express-session";
 import MongoDBStore from "connect-mongodb-session";
-import adminRouterController, { checkLoginStatus, upload, sideMenuPath } from "../controller/router-controller/admin-router-controller.js";
+import adminRouterController, { sideMenuPath } from "../controller/router-controller/admin-router-controller.js";
+import { checkAdminLoginStatus } from "../middleware/auth-middleware.js";
+import { uploadImage } from "../middleware/file-upload-middleware.js";
 
 const router = Router();
 const MongoStore = MongoDBStore(session);
@@ -31,57 +33,57 @@ router.post('/login', adminRouterController.login);
 
 // Routes needs authorization
 
-router.get(sideMenuPath.dashboard, checkLoginStatus, adminRouterController.showDashboard);
+router.get(sideMenuPath.dashboard, checkAdminLoginStatus, adminRouterController.showDashboard);
 
-router.get('/downloadSalesReport', checkLoginStatus, adminRouterController.downloadSalesReport);
+router.get('/downloadSalesReport', checkAdminLoginStatus, adminRouterController.downloadSalesReport);
 
-router.get(sideMenuPath.users, checkLoginStatus, adminRouterController.showUsersList);
+router.get(sideMenuPath.users, checkAdminLoginStatus, adminRouterController.showUsersList);
 
-router.patch(`${sideMenuPath.users}/toggleStatus`, checkLoginStatus, adminRouterController.toggleUserStatus);
+router.patch(`${sideMenuPath.users}/toggleStatus`, checkAdminLoginStatus, adminRouterController.toggleUserStatus);
 
 // Orders routes
-router.get(sideMenuPath.orders, checkLoginStatus, adminRouterController.showOrdersList);
+router.get(sideMenuPath.orders, checkAdminLoginStatus, adminRouterController.showOrdersList);
 
-router.get(`${sideMenuPath.orders}/:id`, checkLoginStatus, adminRouterController.showOrderDetails);
+router.get(`${sideMenuPath.orders}/:id`, checkAdminLoginStatus, adminRouterController.showOrderDetails);
 
-router.post(`${sideMenuPath.orders}/:id/updateStatus`, checkLoginStatus, adminRouterController.updateOrderStatus);
+router.post(`${sideMenuPath.orders}/:id/updateStatus`, checkAdminLoginStatus, adminRouterController.updateOrderStatus);
 
 // Products routes
-router.get(sideMenuPath.products, checkLoginStatus, adminRouterController.showProductsList);
+router.get(sideMenuPath.products, checkAdminLoginStatus, adminRouterController.showProductsList);
 
-router.get(`${sideMenuPath.products}/add`, checkLoginStatus, adminRouterController.showAddProductForm);
+router.get(`${sideMenuPath.products}/add`, checkAdminLoginStatus, adminRouterController.showAddProductForm);
 
-router.post(`${sideMenuPath.products}/add`, checkLoginStatus, upload.array('images', 5), adminRouterController.addNewProduct);
+router.post(`${sideMenuPath.products}/add`, checkAdminLoginStatus, uploadImage.array('images', 5), adminRouterController.addNewProduct);
 
-router.get(`${sideMenuPath.products}/edit/:id`, checkLoginStatus, adminRouterController.showEditProductForm);
+router.get(`${sideMenuPath.products}/edit/:id`, checkAdminLoginStatus, adminRouterController.showEditProductForm);
 
-router.post(`${sideMenuPath.products}/edit/:id`, checkLoginStatus, upload.array('images', 5), adminRouterController.editProduct);
+router.post(`${sideMenuPath.products}/edit/:id`, checkAdminLoginStatus, uploadImage.array('images', 5), adminRouterController.editProduct);
 
 // Category routes
-router.get(sideMenuPath.categories, checkLoginStatus, adminRouterController.showCategoryList);
+router.get(sideMenuPath.categories, checkAdminLoginStatus, adminRouterController.showCategoryList);
 
-router.get(`${sideMenuPath.categories}/create`, checkLoginStatus, adminRouterController.showNewCategoryForm);
+router.get(`${sideMenuPath.categories}/create`, checkAdminLoginStatus, adminRouterController.showNewCategoryForm);
 
-router.post(`${sideMenuPath.categories}/create`, checkLoginStatus, upload.single('image'), adminRouterController.createCategory);
+router.post(`${sideMenuPath.categories}/create`, checkAdminLoginStatus, uploadImage.single('image'), adminRouterController.createCategory);
 
-router.get(`${sideMenuPath.categories}/edit/:id`, checkLoginStatus, adminRouterController.showEditCategoryForm);
+router.get(`${sideMenuPath.categories}/edit/:id`, checkAdminLoginStatus, adminRouterController.showEditCategoryForm);
 
-router.post(`${sideMenuPath.categories}/edit/:id`, checkLoginStatus, upload.single('image'), adminRouterController.editCategory);
+router.post(`${sideMenuPath.categories}/edit/:id`, checkAdminLoginStatus, uploadImage.single('image'), adminRouterController.editCategory);
 
-router.delete(`${sideMenuPath.categories}/delete`, checkLoginStatus, adminRouterController.deleteCategory);
+router.delete(`${sideMenuPath.categories}/delete`, checkAdminLoginStatus, adminRouterController.deleteCategory);
 
 // Coupons
-router.get(`${sideMenuPath.coupons}`, checkLoginStatus, adminRouterController.showCouponsList);
+router.get(`${sideMenuPath.coupons}`, checkAdminLoginStatus, adminRouterController.showCouponsList);
 
-router.get(`${sideMenuPath.coupons}/create`, checkLoginStatus, adminRouterController.showCreateCouponForm);
+router.get(`${sideMenuPath.coupons}/create`, checkAdminLoginStatus, adminRouterController.showCreateCouponForm);
 
-router.post(`${sideMenuPath.coupons}/create`, checkLoginStatus, adminRouterController.createCoupon);
+router.post(`${sideMenuPath.coupons}/create`, checkAdminLoginStatus, adminRouterController.createCoupon);
 
-router.get(`${sideMenuPath.coupons}/edit/:id`, checkLoginStatus, adminRouterController.showEditCouponForm);
+router.get(`${sideMenuPath.coupons}/edit/:id`, checkAdminLoginStatus, adminRouterController.showEditCouponForm);
 
-router.post(`${sideMenuPath.coupons}/edit/:id`, checkLoginStatus, adminRouterController.editCoupon);
+router.post(`${sideMenuPath.coupons}/edit/:id`, checkAdminLoginStatus, adminRouterController.editCoupon);
 
-router.delete(`${sideMenuPath.coupons}/remove/:id`, checkLoginStatus, adminRouterController.deleteCoupon);
+router.delete(`${sideMenuPath.coupons}/remove/:id`, checkAdminLoginStatus, adminRouterController.deleteCoupon);
 
 // Logout
 router.get('/logout', adminRouterController.logout);

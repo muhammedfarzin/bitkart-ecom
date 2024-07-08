@@ -421,30 +421,4 @@ const userRouterController = {
     }
 }
 
-
-export async function checkUserLoginStatus(req, res, next) {
-    try {
-        const response = await userController.checkUserStatus(req.session.user);
-        if (response) {
-            req.session.user = response;
-            req.session.save();
-            next();
-        } else {
-            req.session.destroy();
-            res.redirect('/login');
-        }
-    } catch (err) {
-        req.session.destroy();
-        res.redirect('/login?errMessage=' + err.message);
-    }
-}
-
-export function checkForLogin(req, res, next) {
-    if (req.session.user) {
-        res.redirect('/');
-    } else {
-        next();
-    }
-}
-
 export default userRouterController;

@@ -1,10 +1,9 @@
-import path from "path";
-import multer from "multer";
 import userController from "../user-controller.js";
 import categoryController from "../category-controller.js";
 import productController from "../product-controller.js";
 import orderController from "../order-controller.js";
 import couponController from "../coupon-controller.js";
+import { checkLogin } from "../../middleware/auth-middleware.js";
 
 export const sideMenuPath = {
     dashboard: '/',
@@ -277,33 +276,5 @@ function getSideMenus(pathName) {
         };
     })
 };
-
-
-function checkLogin(session) {
-    if (session.admin && session.admin == process.env.ADMIN_EMAIL) {
-        return true;
-    } else {
-        return false;
-    }
-};
-
-export function checkLoginStatus(req, res, next) {
-    if (checkLogin(req.session)) {
-        next();
-    } else {
-        req.session.destroy();
-        res.redirect(loginRoute);
-    }
-}
-
-export const upload = multer({
-    storage: multer.diskStorage({
-        destination: './public/images/uploads/',
-        filename: (req, file, cb) => {
-            const randomNumber = Math.floor(Math.random() * 90000) + 10000;
-            cb(null, file.fieldname + Date.now() + randomNumber + path.extname(file.originalname));
-        }
-    })
-})
 
 export default adminRouterController;

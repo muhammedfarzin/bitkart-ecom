@@ -1,7 +1,8 @@
 import { Router } from "express";
 import session from "express-session";
 import MongoDBStore from "connect-mongodb-session";
-import userRouterController, { checkForLogin, checkUserLoginStatus } from "../controller/router-controller/user-router-controller.js";
+import userRouterController from "../controller/router-controller/user-router-controller.js";
+import { checkUserLoginStatus, checkForUserLogin } from "../middleware/auth-middleware.js";
 
 const router = Router();
 const MongoStore = MongoDBStore(session);
@@ -29,19 +30,19 @@ router.use(session({
 
 // Routes
 
-router.get('/login', checkForLogin, (req, res) => {
+router.get('/login', checkForUserLogin, (req, res) => {
     res.render('user/login', { errMessage: req.query.errMessage });
 });
 
-router.post('/login', checkForLogin, userRouterController.login);
+router.post('/login', checkForUserLogin, userRouterController.login);
 
-router.get('/signup', checkForLogin, (req, res) => {
+router.get('/signup', checkForUserLogin, (req, res) => {
     res.render('user/signup', { errMessage: req.query.errMessage });
 });
 
-router.post('/signup', checkForLogin, userRouterController.signup);
+router.post('/signup', checkForUserLogin, userRouterController.signup);
 
-router.post('/login/google', checkForLogin, userRouterController.signInUsingGoogle)
+router.post('/login/google', checkForUserLogin, userRouterController.signInUsingGoogle)
 
 // OTP Validation
 router.get('/verifyEmail', userRouterController.showVerifyEmailPage);
@@ -50,13 +51,13 @@ router.post('/verifyEmail', userRouterController.verfifyEmail);
 
 router.get('/resendOtp', userRouterController.resendOtp);
 
-router.get('/login/forgotPassword', checkForLogin, (req, res) => res.render('user/forgot-password', { errMessage: req.query.errMessage }));
+router.get('/login/forgotPassword', checkForUserLogin, (req, res) => res.render('user/forgot-password', { errMessage: req.query.errMessage }));
 
-router.post('/login/forgotPassword', checkForLogin, userRouterController.forgotPassword);
+router.post('/login/forgotPassword', checkForUserLogin, userRouterController.forgotPassword);
 
-router.get('/login/setNewPassword', checkForLogin, (req, res) => res.render('user/auth/new-password-frm', { errMessage: req.query.errMessage }));
+router.get('/login/setNewPassword', checkForUserLogin, (req, res) => res.render('user/auth/new-password-frm', { errMessage: req.query.errMessage }));
 
-router.post('/login/setNewPassword', checkForLogin, userRouterController.setNewPassword);
+router.post('/login/setNewPassword', checkForUserLogin, userRouterController.setNewPassword);
 
 router.get('/', checkUserLoginStatus, userRouterController.showHome);
 
