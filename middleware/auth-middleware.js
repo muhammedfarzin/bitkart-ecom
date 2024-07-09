@@ -1,3 +1,5 @@
+import userController from "../controller/user-controller.js"
+
 export function checkLogin(session) {
     if (session.admin && session.admin == process.env.ADMIN_EMAIL) {
         return true;

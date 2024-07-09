@@ -57,7 +57,7 @@
                     <div class="leading">
                         <img src="{{first imagePaths}}" alt="img">
                     </div>
-                    <div class="datas w-100 me-5">
+                    <div class="datas w-100 pe-5">
                         <h4 class="title max-line-2">{{title}}</h4>
                         {{#if rating}}
                         <div class="d-flex align-items-center">
@@ -66,7 +66,7 @@
                         </div>
                         {{/if}}
                         {{#if offerPrice}}
-                        <div class="price-details py-1">
+                        <div class="price-details w-100 py-1">
                             <div class="text-black-50 text-decoration-line-through fs-5">₹{{formatNumber price}}</div>
                             <div class="fs-2 fw-bold mx-3">₹{{formatNumber offerPrice}}</div>
                             <div class="outline-box-primary fw-bold"> {{getOfferPecentage price offerPrice}}% OFF </div>
@@ -86,7 +86,7 @@
                     <div class="icon-btn position-absolute tr-1" id="wishlistBtn{{_id}}"
                         onclick="{{#if (includes @root.userWishlist _id)}}removeFromWishlist{{else}}addToWishlist{{/if}}('{{_id}}'); return false">
                         <svg width="30" height="30" viewBox="0 0 30 30" id="wishlistIcon{{_id}}"
-                            fill="{{#if (includes @root.userWishlist _id)}}#6F43BF{{else}}none{{/if}}"
+                            fill="{{#if (includes @root.userWishlist _id)}}#6F43BF{{else}}#ded6ed{{/if}}"
                             xmlns="http://www.w3.org/2000/svg">
                             <path stroke="#6F43BF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"
                                 d="M25.7809 5.34809C25.1424 4.70935 24.3844 4.20265 23.5501 3.85695C22.7157 3.51125 21.8215 3.33331 20.9184 3.33331C20.0153 3.33331 19.121 3.51125 18.2867 3.85695C17.4523 4.20265 16.6943 4.70935 16.0559 5.34809L14.7309 6.67309L13.4059 5.34809C12.1162 4.05848 10.3672 3.33398 8.54336 3.33398C6.71957 3.33398 4.97048 4.05848 3.68086 5.34809C2.39125 6.63771 1.66675 8.3868 1.66675 10.2106C1.66675 12.0344 2.39125 13.7835 3.68086 15.0731L5.00586 16.3981L14.7309 26.1231L24.4559 16.3981L25.7809 15.0731C26.4196 14.4346 26.9263 13.6766 27.272 12.8423C27.6177 12.008 27.7956 11.1137 27.7956 10.2106C27.7956 9.30748 27.6177 8.41322 27.272 7.5789C26.9263 6.74458 26.4196 5.98654 25.7809 5.34809Z" />

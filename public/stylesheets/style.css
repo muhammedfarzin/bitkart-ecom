@@ -55,6 +55,10 @@
         width: 6rem !important;
         height: 6rem !important;
     }
+
+    .m-sm-0 {
+        margin: 0 !important;
+    }
 }
 
 @media (min-width: 768px) {
@@ -575,6 +579,7 @@ button.carousel-control {
 
 .price-details {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     padding: 1.5rem 0;
 }

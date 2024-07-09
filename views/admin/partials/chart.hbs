@@ -1,0 +1,26 @@
+<div class="chart-container {{class}}" style="position: relative; width:80vw; max-width: 400px;">
+  <canvas id="myChart"></canvas>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    var ctx = document.getElementById('myChart').getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['January', 'February', 'March', 'April', 'May', 'June'], // [{{#each labels}} '{{this}}', {{/each}}],
+            datasets: [{
+                label: 'Sales',
+                data: [65, 59, 80, 81, 56, 96], //[{{#each data}} {{this}}, {{/each}}],
+                backgroundColor: '#9f7dba'
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+</script>
