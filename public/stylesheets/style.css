@@ -868,3 +868,7 @@ footer.bg-primary {
     border: 1px solid #6F43BF !important;
     box-shadow: none !important;
 }
+
+.h-15rem {
+    height: 15rem;
+}

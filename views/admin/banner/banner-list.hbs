@@ -1,0 +1,87 @@
+{{> admin-navbar}}
+
+<div class="fluid-container d-flex">
+    {{> sidebar}}
+
+    <div class="container col-md-8">
+        <div class="top-bar d-flex justify-content-between align-items-center flex-wrap">
+            <div class="title col">
+                <h1 class="text-primary">Banner</h1>
+            </div>
+        </div>
+        <form method="post" action="banner/{{#if banners}}update{{else}}create{{/if}}" enctype="multipart/form-data"
+            id="bannerForm">
+            <div class="outlined-card m-2 border-black col">
+                <div class="text-danger f-uppercase ms-2" id="err-message">{{errMessage}}</div>
+                {{!-- Images --}}
+                <div class="list-h">
+                    <div class="outlined-card m-2 center-box-v-17 h-15rem w-100 cursor-pointer"
+                        id="banner-image-picker">
+                        {{#if banners}}
+                        {{#with (first banners)}}
+                        <img src="{{imagePath}}" id="bannerImg" class="w-100 h-100 rounded-3 object-fit-cover"
+                            alt="Banner Image">
+                        {{/with}}
+                        {{else}}
+                        <img id="bannerImg" class="w-100 h-100 rounded-3 object-fit-cover d-none" alt="Banner Image">
+                        <div id="addImageUI" class="text-center">
+                            <img src="/images/icons/add-image.svg" alt="add">
+                            <div class="fs-6 fw-bold text-primary">Add Image</div>
+                        </div>
+                        {{/if}}
+                    </div>
+                    <input type="file" name="bannerImage" id="banner-image-input" accept="image/*" hidden>
+                </div>
+                <div id="popup-image">
+                    <div class="outlined-card bg-light text-start">
+                        <div class="text-primary fs-2 fw-bold">Crop</div>
+                        <div class="d-flex pb-3" id="crop-image-gallery"></div>
+                        <div class="d-flex justify-content-end mt-2">
+                            <button class="btn btn-primary" onclick="return false;" id="bannerCropDone">Done</button>
+                        </div>
+                    </div>
+                </div>
+                {{!-- Form --}}
+                <div class="px-3">
+                    <div>
+                        <div class="fs-6 fw-bold text-primary my-2">Title</div>
+                        <input type="text" name="title" id="title" value="{{#with (first banners)}}{{title}}{{/with}}"
+                            class="outlined-card placeholder-primary outline-none w-100" placeholder="Enter title">
+                    </div>
+                    <div class="me-3 col-12 col-md-4">
+                        <div class="fs-6 fw-bold text-primary my-2">Validity</div>
+                        <input type="date" name="validity" id="validity"
+                            value="{{#with (first banners)}}{{formatDate validity}}{{/with}}"
+                            class="outlined-card placeholder-primary outline-none w-100" placeholder="Enter validity">
+                    </div>
+                    <div class="d-flex justify-content-between align-items-end mb-3">
+                        <div class="me-3 col-5 col-md-3 pe-2">
+                            <div class="fs-6 fw-bold text-primary my-2">Status</div>
+                            <select name="status" id="status"
+                                class="outlined-card outline-none text-center text-primary w-100"
+                                aria-placeholder="status" required>
+                                <option value="active" {{#with (first banners)}}{{#if (eq status 'active' ) }} selected
+                                    {{/if}}{{/with}}>
+                                    Active
+                                </option>
+                                <option value="inactive" {{#with (first banners)}}{{#if (eq status 'inactive' ) }}
+                                    selected {{/if}}{{/with}}>
+                                    Inactive
+                                </option>
+                            </select>
+                        </div>
+                        <button class="btn btn-primary px-4 rounded-4 mt-3" type="submit">
+                            Update
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    let existBannerImage = '{{#with (first banners)}}{{imagePath}}{{/with}}';
+</script>
+<script src="/javascript/cropper/cropper.js"></script>
+<script src="/javascript/form.js"></script>

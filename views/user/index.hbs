@@ -2,7 +2,13 @@
 
 <div class="fluid-container">
     <div class="banner">
+        {{#if banners}}
+        {{#with (first banners)}}
+        <img class="w-100" src="{{imagePath}}" alt="banner" title="{{title}}">
+        {{/with}}
+        {{else}}
         <img class="w-100" src="/images/banner.jpeg" alt="banner">
+        {{/if}}
     </div>
 </div>
 

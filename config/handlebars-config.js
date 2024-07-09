@@ -64,7 +64,7 @@ const hbsConfig = hbs.create({
         },
         formatDate: function (date, format) {
             date = date || new Date();
-            format = format || 'YYYY-MM-DD';
+            format = typeof format == 'string' ? format : 'YYYY-MM-DD';
             return moment(date).format(format);
         },
         sumDate: function (date, value, format) {

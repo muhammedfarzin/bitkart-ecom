@@ -85,6 +85,13 @@ router.post(`${sideMenuPath.coupons}/edit/:id`, checkAdminLoginStatus, adminRout
 
 router.delete(`${sideMenuPath.coupons}/remove/:id`, checkAdminLoginStatus, adminRouterController.deleteCoupon);
 
+// Banner
+router.get(`${sideMenuPath.banner}`, checkAdminLoginStatus, adminRouterController.showBannerList);
+
+router.post(`${sideMenuPath.banner}/create`, uploadImage.single('bannerImage'), checkAdminLoginStatus, adminRouterController.createBanner);
+
+router.post(`${sideMenuPath.banner}/update`, uploadImage.single('bannerImage'), checkAdminLoginStatus, adminRouterController.updateBanner);
+
 // Logout
 router.get('/logout', adminRouterController.logout);
 

@@ -8,6 +8,7 @@ import couponController from "../coupon-controller.js";
 import dotenv from "dotenv"
 import { OAuth2Client } from "google-auth-library";
 import UserModel from "../../models/user-model.js";
+import bannerController from "../banner-controller.js";
 
 dotenv.config();
 const googleAuthClient = new OAuth2Client();
@@ -143,9 +144,10 @@ const userRouterController = {
 
     // Products
     showHome: async (req, res) => {
+        const banners = await bannerController.getBanners({ status: 'active' });
         const products = await productController.getProducts({ status: 'active' });
         const categories = await categoryController.getCategories();
-        res.render('user/index', { products, categories });
+        res.render('user/index', { products, categories, banners });
     },
     productOverview: async (req, res) => {
         try {

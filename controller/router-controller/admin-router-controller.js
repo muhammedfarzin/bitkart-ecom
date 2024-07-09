@@ -4,6 +4,7 @@ import productController from "../product-controller.js";
 import orderController from "../order-controller.js";
 import couponController from "../coupon-controller.js";
 import { checkLogin } from "../../middleware/auth-middleware.js";
+import bannerController from "../banner-controller.js";
 
 export const sideMenuPath = {
     dashboard: '/',
@@ -259,6 +260,22 @@ const adminRouterController = {
         } catch (err) {
             res.status(400).json({ errMessage: err.message });
         }
+    },
+
+    // Banner
+    showBannerList: async (req, res) => {
+        const banners = await bannerController.getBanners();
+        const sideMenus = getSideMenus(sideMenuPath.banner);
+        res.render('admin/banner/banner-list', { banners, sideMenus });
+    },
+    createBanner: async (req, res) => {
+        await bannerController.createBanner(req);
+        res.redirect(dashboardRoute + sideMenuPath.banner);
+    },
+    updateBanner: async (req, res) => {
+        await bannerController.updateBanner(req);
+        res.redirect(dashboardRoute + sideMenuPath.banner);
+
     },
 
     // 404

@@ -219,6 +219,31 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
+    $('#bannerForm').submit((e) => {
+        e.preventDefault();
+        errMessage.text('');
+        const bannerImage = $('#banner-image-input');
+        formData = $('#bannerForm').serializeArray();
+        let formObject = {};
+        $.each(formData, function () {
+            const value = this.value.trim();
+            if (!value) {
+                $('#' + this.name).addClass('err');
+                const currentMessage = errMessage.text();
+                errMessage.text(currentMessage + (currentMessage ? ', ' : 'Please enter ') + this.name.replace(/([a-z])([A-Z])/g, '$1 $2'));
+            } else $('#' + this.name).removeClass('err');
+            formObject[this.name] = value;
+        });
+        $('#banner-image-input').removeClass('err');console.log(!existBannerImage)
+        if (!bannerImage.val() && !existBannerImage) {
+            $('#banner-image-input').addClass('err');
+            const currentMessage = errMessage.text();
+            errMessage.text(currentMessage + (currentMessage ? ', ' : 'Please upload ') + 'banner image');
+        } else if (!errMessage.text()) {
+            $('#bannerForm')[0].submit();
+        }
+    });
+
     $('#productForm').submit((e) => {
         e.preventDefault();
         errMessage.text('');
@@ -365,7 +390,49 @@ document.addEventListener('DOMContentLoaded', function () {
         imagePicker.innerHTML = null;
         imagePicker.appendChild(croppedImage);
         cropper = null;
-    })
+    });
+
+    // banner image
+    const bannerImageInput = document.getElementById('banner-image-input');
+    const bannerImagePicker = document.getElementById('banner-image-picker');
+    let bannerCropper;
+    bannerImageInput?.addEventListener('change', bannerImageChanged);
+    bannerImagePicker?.addEventListener('click', () => bannerImageInput.click());
+
+
+    function bannerImageChanged(element) {
+        const image = element?.target?.files[0];
+        if (!isImage(image)) return showAlertBox('Please select an image');
+        const imageUrl = URL.createObjectURL(image);
+        let containerDiv = document.createElement('div');
+        containerDiv.classList.add('outlined-card', 'm-2', 'center-box-v-24', 'object-fit-contain', 'bg-light', 'rounded-0', 'p-0');
+        const newImage = document.createElement('img');
+        newImage.src = imageUrl;
+        containerDiv.append(newImage);
+        cropImageGallery.innerHTML = null;
+        cropImageGallery.append(containerDiv);
+        bannerCropper = new Cropper(newImage, { aspectRatio: 21 / 6, viewMode: 1 });
+        popupWindow.style.visibility = 'visible';
+        popupWindow.style.opacity = 1;
+    }
+
+    $('#bannerCropDone').on('click', (e) => {
+        popupWindow.style.opacity = 0;
+        popupWindow.style.visibility = 'hidden';
+        const imageUrl = bannerCropper.getCroppedCanvas().toDataURL('image/jpg');
+        bannerCropper.getCroppedCanvas().toBlob(function (blob) {
+            const croppedFile = new File([blob], bannerImageInput.files[0].name, { type: bannerImageInput.files[0].type });
+            const dataTransfer = new DataTransfer();
+            dataTransfer.items.add(croppedFile);
+            bannerImageInput.files = dataTransfer.files;
+        });
+
+        console.log(bannerCropper.getCroppedCanvas())
+        bannerCropper = null;
+        $('#bannerImg').attr('src', imageUrl);
+        $('#bannerImg').removeClass('d-none');
+        $('#addImageUI').remove();
+    });
 });
 
 function removeAddress(addressId) {
