@@ -42,16 +42,18 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     $('#cancelOrderBtn').on('click', (e) => {
-        $.ajax({
-            url: location.href,
-            type: 'DELETE',
-            success: function (data) {
-                showAlertBox(data.message ?? 'Order cancelled', true);
-                location.reload();
-            },
-            error: function (err) {
-                showAlertBox(err.responseJSON?.errMessage ?? 'Something went wrong');
-            }
+        showConfirmBox('Do you really want to cancel the order?', () => {
+            $.ajax({
+                url: location.href,
+                type: 'DELETE',
+                success: function (data) {
+                    showAlertBox(data.message ?? 'Order cancelled', true);
+                    location.reload();
+                },
+                error: function (err) {
+                    showAlertBox(err.responseJSON?.errMessage ?? 'Something went wrong');
+                }
+            });
         });
     });
 
@@ -151,8 +153,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     promocodeBtn.removeClass('btn-primary').addClass('btn-success');
                 },
                 error: function (err) {
-                    promocodeBtn.prop('disabled', false);
-                    errMessage.text(err.responseJSON?.errMessage ?? 'Something went wrong');
+                    showAlertBox(err.responseJSON?.errMessage ?? 'Something went wrong');
                 }
             });
         }

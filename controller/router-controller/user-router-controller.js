@@ -152,7 +152,7 @@ const userRouterController = {
     productOverview: async (req, res) => {
         try {
             const product = await productController.getProductOverview(req.params.id);
-            const relatedProducts = await productController.getProductsByCategory(product.categoryId);
+            const relatedProducts = await productController.getRelatedProducts(product);
             if (req.session.user.wishlist.includes(product._id)) product.isWishlisted = true;
             res.render('user/products/products', { product, relatedProducts });
         } catch (err) {

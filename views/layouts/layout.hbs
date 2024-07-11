@@ -14,11 +14,32 @@
 <body>
     {{{body}}}
 
+    {{!-- Alert Box --}}
     <div class="toast-container position-fixed bottom-0 end-0 p-3">
         <div id="alertBox" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
             <div class="toast-header bg-danger text-light rounded">
                 <strong id="alertMessage" class="me-auto">Hello, world! This is a toast message.</strong>
                 <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
+
+    {{!-- Confirm popup --}}
+    <!-- Modal toggle button -->
+    <button id="showConfirmModalBtn" type="button" data-bs-toggle="modal" data-bs-target="#confirmModal" hidden></button>
+    <!-- Modal -->
+    <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header border border-0">
+                    <h1 class="modal-title fs-5" id="confirmModalLabel">Do you really want to remove?</h1>
+                </div>
+                <div class="modal-footer border border-0">
+                    <button id="closeModalBtn" type="button" class="btn btn-secondary"
+                        data-bs-dismiss="modal">Close</button>
+                    <button id="confirmBtn" type="button" class="btn btn-primary"
+                        onclick="removeAddress('{{_id}}')">Yes</button>
+                </div>
             </div>
         </div>
     </div>

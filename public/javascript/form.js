@@ -234,7 +234,7 @@ document.addEventListener('DOMContentLoaded', function () {
             } else $('#' + this.name).removeClass('err');
             formObject[this.name] = value;
         });
-        $('#banner-image-input').removeClass('err');console.log(!existBannerImage)
+        $('#banner-image-input').removeClass('err');
         if (!bannerImage.val() && !existBannerImage) {
             $('#banner-image-input').addClass('err');
             const currentMessage = errMessage.text();
@@ -460,13 +460,6 @@ function deleteCoupon(couponId) {
             showAlertBox(err.responseJSON?.errMessage ?? 'Something went wrong');
         }
     });
-}
-
-function showConfirmDeleteModal(addressId) {
-    document.getElementById('removeBtn').onclick = function () {
-        removeAddress(addressId);
-    }
-    document.getElementById('showModalBtn').click();
 }
 
 function razorpayPayment(order, callback) {

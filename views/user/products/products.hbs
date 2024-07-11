@@ -98,11 +98,11 @@
 
             <div class="price-details">
                 {{#if offerPrice}}
-                <div class="text-black-50 text-decoration-line-through fs-5">₹{{price}}</div>
-                <div class="fs-2 fw-bold mx-3">₹{{offerPrice}}</div>
+                <div class="text-black-50 text-decoration-line-through fs-5">₹{{formatNumber price}}</div>
+                <div class="fs-2 fw-bold mx-3">₹{{formatNumber offerPrice}}</div>
                 <div class="outline-box-primary fw-bold"> {{getOfferPecentage price offerPrice}}% OFF </div>
                 {{else}}
-                <div class="fs-2 fw-bold mx-3">₹{{price}}</div>
+                <div class="fs-2 fw-bold mx-3">₹{{formatNumber price}}</div>
                 {{/if}}
             </div>
 

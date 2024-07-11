@@ -11,6 +11,12 @@ function showAlertBox(message, isPrimary) {
     toastBootstrap.show();
 }
 
+function showConfirmBox(message, callback) {
+    document.getElementById('confirmModalLabel').innerText = message;
+    document.getElementById('confirmBtn').onclick = callback;
+    document.getElementById('showConfirmModalBtn').click();
+}
+
 $('#productSearchBox').submit((e) => {
     const url = new URL(location.href);
     if (url.pathname == '/search') {

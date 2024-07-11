@@ -110,7 +110,7 @@ const orderController = {
 
         if (paymentMethod == 'online') {
             razorpayResponse = await orderController.generateRazorpay(totalAmount);
-        } else if (totalAmount > 1000) throw new Error('Cash on delivery is not available for order above ₹1000');
+        } else if (totalAmount > 1000 && paymentMethod == 'cod') throw new Error('Cash on delivery is not available for order above ₹1000');
 
         for (const cartItem of cartProducts) {
             const { productId, quantity } = cartItem;

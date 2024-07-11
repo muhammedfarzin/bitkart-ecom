@@ -5,10 +5,10 @@
         <div class="fs-6 max-line-1">{{title}}</div>
         <div class="d-flex align-items-center sec-ml-1">
             {{#if offerPrice}}
-            <div class="strike-price">₹{{price}}</div>
-            <div class="title">₹{{offerPrice}}</div>
+            <div class="strike-price">₹{{formatNumber price}}</div>
+            <div class="title">₹{{formatNumber offerPrice}}</div>
             {{else}}
-            <div class="title">₹{{price}}</div>
+            <div class="title">₹{{formatNumber price}}</div>
             {{/if}}
         </div>
     </div>
