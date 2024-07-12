@@ -16,7 +16,8 @@ const couponSchema = new Schema({
     },
     discountValue: {
         type: Number,
-        required: true
+        required: true,
+        min: 1
     },
     discountType: {
         type: String,
@@ -35,11 +36,13 @@ const couponSchema = new Schema({
     },
     minPurchaseAmount: {
         type: Number,
-        required: true
+        required: true,
+        min: 10
     },
     maxDiscountAmount: {
         type: Number,
-        required: true
+        required: true,
+        min: 1
     }
 }, {
     timestamps: true,

@@ -7,23 +7,9 @@ import orderController from "./order-controller.js";
 const couponController = {
     createCoupon: async (data) => {
         try {
-            const { code, title, description, validUpto: validity, category, discountValue, discountType, minPurchaseAmount, maxDiscountAmount } = data;
-            let categoryId;
-            if (!code || !title || !description, !validity, !discountValue, !discountType, !minPurchaseAmount, !maxDiscountAmount) {
-                throw new Error('Please fill complete form');
-            }
-            const validUpto = new Date(validity);
+            data = await validateCouponData(data);
+            const { code, title, description, validUpto, categoryId, discountValue, discountType, minPurchaseAmount, maxDiscountAmount } = data;
 
-            const existCoupon = await CouponModel.findOne({ code: code.replace(/\s/, '').toUpperCase() });
-            if (existCoupon) throw new Error('The coupon code is already exist');
-
-            if (category) {
-                categoryId = Types.ObjectId.createFromHexString(category);
-                const categoryData = await CategoryModel.findById(categoryId);
-                if (!categoryData) throw new Error('Selected category not found');
-            }
-
-            if (validUpto <= Date.now()) throw new Error('Valid upto date cannot be past');
             const coupon = new CouponModel({
                 code: code.replace(/\s/, '').toUpperCase(),
                 title,
@@ -104,26 +90,9 @@ const couponController = {
     editCoupon: async (couponId, data) => {
         try {
             couponId = Types.ObjectId.createFromHexString(couponId);
-            let { code, title, description, validUpto, category, discountValue, discountType, minPurchaseAmount, maxDiscountAmount } = data;
-            let categoryId = null;
-            if (!code || !title || !description, !validUpto, !discountValue, !discountType, !minPurchaseAmount, !maxDiscountAmount) {
-                throw new Error('Please fill complete form');
-            }
-            validUpto = new Date(validUpto);
-            code = code.replace(/\s/, '').toUpperCase();
-
-            if (category) {
-                categoryId = Types.ObjectId.createFromHexString(category);
-                const categoryData = await categoryController.getCategoryById(categoryId);
-                if (!categoryData) throw new Error('Selected category not found');
-            }
-            if (validUpto <= Date.now()) throw new Error('Valid upto date cannot be past');
-
             const coupon = await CouponModel.findById(couponId);
-            if (coupon.code != code) {
-                const existCouponCode = await CouponModel.find({ code });
-                if (existCouponCode) throw new Error('The coupon code is already exist');
-            }
+            data = await validateCouponData(data, coupon.code);
+            let { code, title, description, validUpto, categoryId, discountValue, discountType, minPurchaseAmount, maxDiscountAmount } = data;
 
             await coupon.updateOne({
                 code,
@@ -169,6 +138,37 @@ function getDiscountAmount(amount, coupon, maxDiscountAmount) {
     else if (coupon.discountType == 'percentage') promocodeDiscount = Math.round(amount * coupon.discountValue * 0.01);
 
     return maxDiscountAmount >= promocodeDiscount ? promocodeDiscount : maxDiscountAmount;
+}
+
+async function validateCouponData(data, currentCouponCode) {
+    let { code, title, description, validUpto, category, discountValue, discountType, minPurchaseAmount, maxDiscountAmount } = data;
+    let categoryId;
+
+    if (!code || !title || !description, !validUpto, !discountValue, !discountType, !minPurchaseAmount, !maxDiscountAmount) {
+        throw new Error('Please fill complete form');
+    }
+
+    if (category) {
+        categoryId = Types.ObjectId.createFromHexString(category);
+        const categoryData = await CategoryModel.findById(categoryId);
+        if (!categoryData) throw new Error('Selected category not found');
+    }
+
+    code = code.replace(/\s/, '').toUpperCase();
+    if (currentCouponCode != code) {
+        const existCoupon = await CouponModel.findOne({ code });
+        if (existCoupon) throw new Error('The coupon code is already exist');
+    }
+
+    validUpto = new Date(validUpto);
+    if (validUpto <= Date.now()) throw new Error('Valid upto date cannot be past');
+
+    if (discountValue < 1) throw new Error('Discount value cannot be less than 1');
+    else if (minPurchaseAmount < 1) throw new Error('Minimum purchase amount cannot be less than 1');
+    else if (maxDiscountAmount < 1) throw new Error('Maximum purchase amount cannot be less than 1');
+
+    const response = { code, title, description, validUpto, categoryId, discountValue, discountType, minPurchaseAmount, maxDiscountAmount };
+    return response;
 }
 
 export default couponController;

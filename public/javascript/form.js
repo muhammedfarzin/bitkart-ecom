@@ -189,7 +189,20 @@ document.addEventListener('DOMContentLoaded', function () {
             } else $('#' + this.name).removeClass('err');
             formObject[this.name] = value;
         });
-        if (!errMessage.text()) {
+
+        if (formObject.discountValue < 1) {
+            $('#discountValue').addClass('err');
+            showAlertBox('Discount value cannot be less than 1');
+        }
+        else if (formObject.minPurchaseAmount < 1) {
+            $('#minPurchaseAmount').addClass('err');
+            showAlertBox('Minimum purchase amount cannot be less than 1');
+        }
+        else if (formObject.maxDiscountAmount < 1) {
+            $('#maxDiscountAmount').addClass('err');
+            showAlertBox('Maximum purchase amount cannot be less than 1');
+        }
+        else if (!errMessage.text()) {
             $('#couponForm')[0].submit();
         }
     });
