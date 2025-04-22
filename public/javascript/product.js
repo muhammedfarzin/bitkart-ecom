@@ -96,6 +96,9 @@ const debouncedUpdateCart = debounce(function (productId, quantityElem, redirect
                 deliveryCharge?.text('Free');
                 deliveryCharge?.addClass('text-primary');
             }
+
+            if (!location.pathname.startsWith('/cart'))
+                showAlertBox('Cart updated successfully', true);
         },
         error: function (err) {
             const currentQuantity = err.responseJSON?.currentQuantity;
@@ -115,7 +118,7 @@ function addToCart(productId, redirect) {
 }
 
 function removeFromCart(productId) {
-    let quantity = $('#quantity' + productId); 
+    let quantity = $('#quantity' + productId);
     if (quantity.val() <= 1) {
         showConfirmBox("Do you really want remove this product from your cart?", removeFromCartConfirmed)
     } else removeFromCartConfirmed();
