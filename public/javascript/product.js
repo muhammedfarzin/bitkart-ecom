@@ -115,10 +115,15 @@ function addToCart(productId, redirect) {
 }
 
 function removeFromCart(productId) {
-    let quantity = $('#quantity' + productId);
-    if (quantity.val() <= 1 && !confirm('Are really want remove this product from your cart?')) return;;
-    quantity.val(parseInt(quantity.val()) - 1);
-    debouncedUpdateCart(productId, quantity);
+    let quantity = $('#quantity' + productId); 
+    if (quantity.val() <= 1) {
+        showConfirmBox("Do you really want remove this product from your cart?", removeFromCartConfirmed)
+    } else removeFromCartConfirmed();
+
+    function removeFromCartConfirmed() {
+        quantity.val(parseInt(quantity.val()) - 1);
+        debouncedUpdateCart(productId, quantity);
+    }
 }
 
 function buyNow(productId) {

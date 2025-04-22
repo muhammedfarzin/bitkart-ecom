@@ -440,7 +440,6 @@ document.addEventListener('DOMContentLoaded', function () {
             bannerImageInput.files = dataTransfer.files;
         });
 
-        console.log(bannerCropper.getCroppedCanvas())
         bannerCropper = null;
         $('#bannerImg').attr('src', imageUrl);
         $('#bannerImg').removeClass('d-none');

@@ -219,7 +219,7 @@ const productController = {
         return products.map(product => product.toObject());
     },
     getRelatedProducts: async (product) => {
-        const { _id, categoryId } = product; console.log(product)
+        const { _id, categoryId } = product;
         const products = await ProductModel.find({ _id: { $ne: _id }, categoryId }).limit(20);
         return products.map(product => product.toObject());
     },

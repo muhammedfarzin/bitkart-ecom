@@ -13,7 +13,10 @@ function showAlertBox(message, isPrimary) {
 
 function showConfirmBox(message, callback) {
     document.getElementById('confirmModalLabel').innerText = message;
-    document.getElementById('confirmBtn').onclick = callback;
+    document.getElementById('confirmBtn').onclick = () => {
+        callback();
+        document.getElementById('closeModalBtn').click();
+    };
     document.getElementById('showConfirmModalBtn').click();
 }
 

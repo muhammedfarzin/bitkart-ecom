@@ -11,7 +11,14 @@
         <a href="/cart" class="icon-btn"><img src="/images/icons/shopping-cart.svg" alt="cart"></a>
         <a href="/account" class="icon-btn"><img src="/images/icons/user.svg" alt="account"></a>
         <a href="/wishlist" class="icon-btn"><img src="/images/icons/heart.svg" alt="wishlist"></a>
-        <a href="/logout" class="btn btn-outline-primary"> Logout </a>
+        {{#if isLoggedIn}}
+        <a href="/logout" class="btn btn-outline-danger">
+            Logout
+        {{else}}
+        <a href="/login" class="btn btn-outline-primary">
+            Login
+        {{/if}}
+        </a>
     </div>
 
     <div class="actions justify-content-end col-2 md-d-none sm-d-unset">
@@ -42,7 +49,14 @@
                     <div class="d-inline-flex align-items-center"><img class="mx-2" src="/images/icons/heart.svg"
                             alt="wishlist"><span class="w-30px text-start">Wishlist</span></div>
                 </a>
-                <a href="/logout" class="btn btn-outline-danger"> Logout </a>
+                    {{#if isLoggedIn}}
+                    <a href="/logout" class="btn btn-outline-danger">
+                    Logout
+                    {{else}}
+                    <a href="/login" class="btn btn-outline-primary">
+                    Login
+                    {{/if}}
+                 </a>
             </div>
         </div>
     </div>

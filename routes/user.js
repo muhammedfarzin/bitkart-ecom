@@ -59,10 +59,10 @@ router.get('/login/setNewPassword', checkForUserLogin, (req, res) => res.render(
 
 router.post('/login/setNewPassword', checkForUserLogin, userRouterController.setNewPassword);
 
-router.get('/', checkUserLoginStatus, userRouterController.showHome);
+router.get('/', userRouterController.showHome);
 
 // Product overview
-router.get('/view/:id', checkUserLoginStatus, userRouterController.productOverview);
+router.get('/view/:id', userRouterController.productOverview);
 
 router.get('/logout', userRouterController.logout);
 

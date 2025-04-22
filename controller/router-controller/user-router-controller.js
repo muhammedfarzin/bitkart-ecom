@@ -144,18 +144,19 @@ const userRouterController = {
 
     // Products
     showHome: async (req, res) => {
+        const isLoggedIn = !!req.session.user;
         const banners = await bannerController.getBanners({ status: 'active' });
         const products = await productController.getProducts({ status: 'active' });
         const categories = await categoryController.getCategories();
-        res.render('user/index', { products, categories, banners });
+        res.render('user/index', { products, categories, banners, isLoggedIn });
     },
     productOverview: async (req, res) => {
         try {
             const product = await productController.getProductOverview(req.params.id);
             const relatedProducts = await productController.getRelatedProducts(product);
-            if (req.session.user.wishlist.includes(product._id)) product.isWishlisted = true;
+            if (req.session.user?.wishlist.includes(product._id)) product.isWishlisted = true;
             res.render('user/products/products', { product, relatedProducts });
-        } catch (err) {
+        } catch (err) {console.log(err)
             res.render('error', { errMessage: err.message });
         }
     },
