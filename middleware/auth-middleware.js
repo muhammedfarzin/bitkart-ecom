@@ -17,7 +17,7 @@ export async function checkUserLoginStatus(req, res, next) {
             next();
         } else {
             req.session.destroy();
-            res.redirect('/login');
+            res.status(302).set('Location', '/login').send();
         }
     } catch (err) {
         req.session.destroy();

@@ -100,6 +100,18 @@ const debouncedUpdateCart = debounce(function (productId, quantityElem, redirect
             if (!location.pathname.startsWith('/cart'))
                 showAlertBox('Cart updated successfully', true);
         },
+        xhr: function () {
+            var xhr = new window.XMLHttpRequest();
+
+            xhr.open('POST', '/cart/update', true);
+            xhr.onreadystatechange = function () {
+                const redirectUrl = xhr.responseURL;
+                if (redirectUrl && location.toString() != redirectUrl) {
+                    window.location.href = redirectUrl;
+                }
+            };
+            return xhr;
+        },
         error: function (err) {
             const currentQuantity = err.responseJSON?.currentQuantity;
             showAlertBox(err.responseJSON?.errMessage ?? 'Something went wrong');
@@ -145,6 +157,18 @@ function addToWishlist(productId) {
         success: function (data) {
             wishlistIcon.css('fill', primaryColor);
             wishlistBtn.attr('onclick', `removeFromWishlist('${productId}'); return false`);
+        },
+        xhr: function () {
+            var xhr = new window.XMLHttpRequest();
+
+            xhr.open('POST', '/wishlist/add', true);
+            xhr.onreadystatechange = function () {
+                const redirectUrl = xhr.responseURL;
+                if (redirectUrl && location.toString() != redirectUrl) {
+                    window.location.href = redirectUrl;
+                }
+            };
+            return xhr;
         },
         error: function (err) {
             wishlistIcon.css('fill', 'none');

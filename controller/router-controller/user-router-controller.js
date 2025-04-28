@@ -156,7 +156,7 @@ const userRouterController = {
             const relatedProducts = await productController.getRelatedProducts(product);
             if (req.session.user?.wishlist.includes(product._id)) product.isWishlisted = true;
             res.render('user/products/products', { product, relatedProducts });
-        } catch (err) {console.log(err)
+        } catch (err) {
             res.render('error', { errMessage: err.message });
         }
     },
@@ -178,7 +178,7 @@ const userRouterController = {
             totalPages,
             currentPage,
             selectedCategories: req.query.categories || [],
-            userWishlist: req.session.user.wishlist,
+            userWishlist: req.session.user?.wishlist || [],
             searchQuery: req.query.search,
             minAmount: req.query.minAmount,
             maxAmount: req.query.maxAmount,

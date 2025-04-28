@@ -18,7 +18,7 @@
                 <div class="d-flex">
                     <input type="checkbox" value="{{_id}}" name="categories" id="category{{_id}}"
                         class="form-check-input" {{#if (includes @root.selectedCategories (toStr _id))}}checked{{/if}}>
-                    <label class="ms-2 text-capitalize">{{title}}</label>
+                    <label class="ms-2 text-capitalize cursor-pointer" for="category{{_id}}">{{title}}</label>
                 </div>
                 {{/each}}
             </div>
