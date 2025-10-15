@@ -144,11 +144,10 @@ const userRouterController = {
 
     // Products
     showHome: async (req, res) => {
-        const isLoggedIn = !!req.session.user;
         const banners = await bannerController.getBanners({ status: 'active' });
         const products = await productController.getProducts({ status: 'active' });
         const categories = await categoryController.getCategories();
-        res.render('user/index', { products, categories, banners, isLoggedIn });
+        res.render('user/index', { products, categories, banners });
     },
     productOverview: async (req, res) => {
         try {
