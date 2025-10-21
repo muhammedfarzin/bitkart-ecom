@@ -74,8 +74,9 @@ const debounce = (mainFunction, delay) => {
 
 const debouncedUpdateCart = debounce(function (productId, quantityElem, redirect) {
     let quantity = quantityElem.val();
+    const targetPath = '/cart/update';
     $.ajax({
-        url: '/cart/update',
+        url: targetPath,
         type: 'POST',
         data: { productId, quantity },
         dataType: 'json',
@@ -103,11 +104,11 @@ const debouncedUpdateCart = debounce(function (productId, quantityElem, redirect
         xhr: function () {
             var xhr = new window.XMLHttpRequest();
 
-            xhr.open('POST', '/cart/update', true);
+            xhr.open('POST', targetPath, true);
             xhr.onreadystatechange = function () {
-                const redirectUrl = xhr.responseURL;
-                if (redirectUrl && location.toString() != redirectUrl) {
-                    window.location.href = redirectUrl;
+                const redirectPath = new URL(xhr.responseURL).pathname; 
+                if (redirectPath !== targetPath && location.toString() !== redirectPath) {
+                    window.location.href = redirectPath;
                 }
             };
             return xhr;
@@ -146,11 +147,12 @@ function buyNow(productId) {
 }
 
 function addToWishlist(productId) {
+    const targetPath = '/wishlist/add';
     const wishlistIcon = $('#wishlistIcon' + productId);
     const wishlistBtn = $('#wishlistBtn' + productId);
     wishlistIcon.css('fill', primaryColor + 80);
     $.ajax({
-        url: '/wishlist/add',
+        url: targetPath,
         type: 'POST',
         data: { productId },
         dataType: 'json',
@@ -161,10 +163,10 @@ function addToWishlist(productId) {
         xhr: function () {
             var xhr = new window.XMLHttpRequest();
 
-            xhr.open('POST', '/wishlist/add', true);
+            xhr.open('POST', targetPath, true);
             xhr.onreadystatechange = function () {
-                const redirectUrl = xhr.responseURL;
-                if (redirectUrl && location.toString() != redirectUrl) {
+                const redirectPath = new URL(xhr.responseURL).pathname; 
+                if (redirectPath !== targetPath && location.toString() !== redirectPath) {
                     window.location.href = redirectUrl;
                 }
             };
