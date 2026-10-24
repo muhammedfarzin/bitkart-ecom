@@ -25,11 +25,20 @@
         </div>
         <div class="searchSection">
             <h4 class="text-primary my-1">Price</h4>
+            <div id="priceRangeFilter" data-maximum="50000">
+                <div class="price-range-slider form-control">
+                    <div class="price-range-track"></div>
+                    <input type="range" id="minPriceRange" min="0" max="50000" step="500" value="0"
+                        aria-label="Minimum price in rupees" class="shadow-none">
+                    <input type="range" id="maxPriceRange" min="0" max="50000" step="500" value="50000"
+                        aria-label="Maximum price in rupees" aria-describedby="priceRangeHint" class="shadow-none">
+                </div>
+            </div>
             <div class="d-flex flex-wrap align-items-center my-2">
-                <input type="number" name="minAmount" id="minAmount" placeholder="Min" value="{{minAmount}}"
+                <input type="number" name="minAmount" id="minAmount" placeholder="Min" value="{{minAmount}}" min="0" step="1" aria-label="Minimum price in rupees"
                     class="outlined-card placeholder-primary outline-none text-center w-100 col-12 col-md">
                 <div class="mx-3">to</div>
-                <input type="number" name="maxAmount" id="maxAmount" placeholder="Max" value="{{maxAmount}}"
+                <input type="number" name="maxAmount" id="maxAmount" placeholder="50,000+" value="{{maxAmount}}" min="0" step="1" aria-label="Maximum price in rupees"
                     class="outlined-card placeholder-primary outline-none text-center w-100 col-12 col-md">
             </div>
             <button type="submit" class="btn btn-primary w-100">Submit</button>
@@ -107,3 +116,4 @@
 </div>
 
 <script src="/javascript/product.js"></script>
+<script src="/javascript/price-range.js"></script>
