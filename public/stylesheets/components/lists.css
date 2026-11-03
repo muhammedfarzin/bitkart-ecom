@@ -1,0 +1,17 @@
+.list .list-item {
+  background-color: #6f43bf33;
+  padding: 1rem;
+  border: 1px solid #000;
+  border-radius: 1rem;
+  margin: 0.5rem 0;
+}
+
+.list-item img {
+  width: 7.5rem;
+  height: 7.5rem;
+  border-radius: 0.5rem;
+  margin-right: 0.5rem;
+  object-fit: contain;
+  background: #fff;
+  padding: 0.5rem;
+}

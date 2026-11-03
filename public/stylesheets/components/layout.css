@@ -1,0 +1,34 @@
+body {
+  margin: 0;
+}
+
+.fluid-container > .container {
+  padding-right: 4.5vw;
+}
+
+.mid-container {
+  width: 90%;
+  margin: 0 4.5vw;
+}
+
+nav.navbar {
+  position: sticky;
+  top: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 4.5rem;
+  padding: 1vw 5vw;
+  background-color: #fff !important;
+  z-index: 50;
+}
+
+.navbar .actions {
+  display: flex;
+  justify-content: end;
+  align-items: center;
+}
+
+.navbar .actions > * {
+  margin: 0 0.5rem;
+}

@@ -3,61 +3,67 @@
 {{> account-sidebar}}
 
 <div class="container col-md-9 sm me-0">
-    <div id="addresses">
-        <div class="d-flex justify-content-between">
-            <h3 class="text-primary my-1">Addresses</h3>
-            <div class="actions">
-                {{!-- Add button --}}
-                <a href="/account/address/add?redirect={{currentPath}}" class="icon-btn">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M12 5V19" stroke="#6F43BF" stroke-width="2" stroke-linecap="round"
-                            stroke-linejoin="round" />
-                        <path d="M5 12H19" stroke="#6F43BF" stroke-width="2" stroke-linecap="round"
-                            stroke-linejoin="round" />
-                    </svg>
-                </a>
-            </div>
-        </div>
-        {{#if address}}
-        <div class="list">
-            {{#each address}}
-            <div class="card-primary-light d-flex justify-content-between align-items-start m-3" id="address{{_id}}">
-                <div class="datas ps-2 pb-4">
-                    <div class="fs-5 fw-bold">{{this.name}}</div>
-                    <div class="fs-6">
-                        {{this.address}}, {{this.locality}}, {{this.landmark}}, {{this.state}},
-                        {{this.pincode}}, {{this.mobile}}
-                    </div>
-                </div>
-                <div class="actions d-flex">
-                    <a href="/account/address/edit/{{this._id}}?redirect={{@root.currentPath}}" class="icon-btn">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path
-                                d="M11 4H4C3.46957 4 2.96086 4.21071 2.58579 4.58579C2.21071 4.96086 2 5.46957 2 6V20C2 20.5304 2.21071 21.0391 2.58579 21.4142C2.96086 21.7893 3.46957 22 4 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V13"
-                                stroke="#6F43BF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                            <path
-                                d="M18.5 2.49998C18.8978 2.10216 19.4374 1.87866 20 1.87866C20.5626 1.87866 21.1022 2.10216 21.5 2.49998C21.8978 2.89781 22.1213 3.43737 22.1213 3.99998C22.1213 4.56259 21.8978 5.10216 21.5 5.49998L12 15L8 16L9 12L18.5 2.49998Z"
-                                stroke="#6F43BF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                        </svg>
-                    </a>
-                    <a class="icon-btn"
-                        onclick="showConfirmBox('Do you really want to remove?', () => removeAddress('{{_id}}'));">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" id="Delete">
-                            <path
-                                d="M24.2,12.193,23.8,24.3a3.988,3.988,0,0,1-4,3.857H12.2a3.988,3.988,0,0,1-4-3.853L7.8,12.193a1,1,0,0,1,2-.066l.4,12.11a2,2,0,0,0,2,1.923h7.6a2,2,0,0,0,2-1.927l.4-12.106a1,1,0,0,1,2,.066Zm1.323-4.029a1,1,0,0,1-1,1H7.478a1,1,0,0,1,0-2h3.1a1.276,1.276,0,0,0,1.273-1.148,2.991,2.991,0,0,1,2.984-2.694h2.33a2.991,2.991,0,0,1,2.984,2.694,1.276,1.276,0,0,0,1.273,1.148h3.1A1,1,0,0,1,25.522,8.164Zm-11.936-1h4.828a3.3,3.3,0,0,1-.255-.944,1,1,0,0,0-.994-.9h-2.33a1,1,0,0,0-.994.9A3.3,3.3,0,0,1,13.586,7.164Zm1.007,15.151V13.8a1,1,0,0,0-2,0v8.519a1,1,0,0,0,2,0Zm4.814,0V13.8a1,1,0,0,0-2,0v8.519a1,1,0,0,0,2,0Z"
-                                fill="#d85b53" class="color000000 svgShape"></path>
-                        </svg>
-                    </a>
-                </div>
-            </div>
-            {{/each}}
-        </div>
-        {{else}}
-        <div class="w-100 text-center text-primary fs-5 fw-bold mb-5 mt-3">
-            You didn't added any of your address yet!
-        </div>
-        {{/if}}
+  <div id="addresses">
+    <div class="d-flex justify-content-between">
+      <h3 class="text-primary my-1">Addresses</h3>
+      <div class="actions">
+        {{!-- Add button --}}
+        <a href="/account/address/add?redirect={{currentPath}}" class="icon-btn">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+            xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 5V19" stroke="#6F43BF" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round" />
+            <path d="M5 12H19" stroke="#6F43BF" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round" />
+          </svg>
+        </a>
+      </div>
     </div>
+    {{#if address}}
+      <div class="list">
+        {{#each address}}
+          <div class="card-primary-light d-flex justify-content-between align-items-start m-3"
+            id="address{{_id}}">
+            <div class="datas ps-2 pb-4">
+              <div class="fs-5 fw-bold">{{this.name}}</div>
+              <div class="fs-6">
+                {{this.address}}, {{this.locality}}, {{this.landmark}}, {{this.state}},
+                {{this.pincode}}, {{this.mobile}}
+              </div>
+            </div>
+            <div class="actions d-flex">
+              <a href="/account/address/edit/{{this._id}}?redirect={{@root.currentPath}}"
+                class="icon-btn">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                  xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    d="M11 4H4C3.46957 4 2.96086 4.21071 2.58579 4.58579C2.21071 4.96086 2 5.46957 2 6V20C2 20.5304 2.21071 21.0391 2.58579 21.4142C2.96086 21.7893 3.46957 22 4 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V13"
+                    stroke="#6F43BF" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round" />
+                  <path
+                    d="M18.5 2.49998C18.8978 2.10216 19.4374 1.87866 20 1.87866C20.5626 1.87866 21.1022 2.10216 21.5 2.49998C21.8978 2.89781 22.1213 3.43737 22.1213 3.99998C22.1213 4.56259 21.8978 5.10216 21.5 5.49998L12 15L8 16L9 12L18.5 2.49998Z"
+                    stroke="#6F43BF" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round" />
+                </svg>
+              </a>
+              <a class="icon-btn"
+                onclick="showConfirmBox('Do you really want to remove?', () => removeAddress('{{_id}}'));">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" id="Delete">
+                  <path
+                    d="M24.2,12.193,23.8,24.3a3.988,3.988,0,0,1-4,3.857H12.2a3.988,3.988,0,0,1-4-3.853L7.8,12.193a1,1,0,0,1,2-.066l.4,12.11a2,2,0,0,0,2,1.923h7.6a2,2,0,0,0,2-1.927l.4-12.106a1,1,0,0,1,2,.066Zm1.323-4.029a1,1,0,0,1-1,1H7.478a1,1,0,0,1,0-2h3.1a1.276,1.276,0,0,0,1.273-1.148,2.991,2.991,0,0,1,2.984-2.694h2.33a2.991,2.991,0,0,1,2.984,2.694,1.276,1.276,0,0,0,1.273,1.148h3.1A1,1,0,0,1,25.522,8.164Zm-11.936-1h4.828a3.3,3.3,0,0,1-.255-.944,1,1,0,0,0-.994-.9h-2.33a1,1,0,0,0-.994.9A3.3,3.3,0,0,1,13.586,7.164Zm1.007,15.151V13.8a1,1,0,0,0-2,0v8.519a1,1,0,0,0,2,0Zm4.814,0V13.8a1,1,0,0,0-2,0v8.519a1,1,0,0,0,2,0Z"
+                    fill="#d85b53" class="color000000 svgShape"></path>
+                </svg>
+              </a>
+            </div>
+          </div>
+        {{/each}}
+      </div>
+    {{else}}
+      <div class="w-100 text-center text-primary fs-5 fw-bold mb-5 mt-3">
+        You didn't added any of your address yet!
+      </div>
+    {{/if}}
+  </div>
 </div>
 
-<script src="/javascript/form.js"></script>
+<script src="/javascript/account/address.js"></script>

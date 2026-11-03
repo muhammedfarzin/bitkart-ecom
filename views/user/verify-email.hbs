@@ -1,24 +1,26 @@
 {{> navbar hideLogout=true}}
 
 <div class="container">
-    <div class="d-flex flex-wrap justify-content-center">
-        <div class="form-title col-md-6">
-            <h1>VERIFY EMAIL</h1>
-        </div>
-
-        <div class="login-box col-md-6">
-            <span class="text-danger fw-normal" id="err-message">{{errMessage}}</span>
-            <form method="post" id="otp-frm">
-                <div class="login-frm col-12">
-                    <div class="form-field">
-                        <input type="number" name="otp" id="otp" placeholder="Enter the OTP">
-                        <span class="text-primary fw-regular fs-7 cursor-pointer" id="resendOtp">Resend OTP</span>
-                    </div>
-                </div>
-                <button class="btn btn-primary rounded-pill fw-bold border col-12" type="submit">SUBMIT</button>
-            </form>
-        </div>
+  <div class="d-flex flex-wrap justify-content-center">
+    <div class="form-title col-md-6">
+      <h1>VERIFY EMAIL</h1>
     </div>
+
+    <div class="login-box col-md-6">
+      <span class="text-danger fw-normal" id="err-message">{{errMessage}}</span>
+      <form method="post" id="otp-frm">
+        <div class="login-frm col-12">
+          <div class="form-field">
+            <input type="number" name="otp" id="otp" placeholder="Enter the OTP">
+            <span class="text-primary fw-regular fs-7 cursor-pointer" id="resendOtp">Resend
+              OTP</span>
+          </div>
+        </div>
+        <button class="btn btn-primary rounded-pill fw-bold border col-12"
+          type="submit">SUBMIT</button>
+      </form>
+    </div>
+  </div>
 </div>
 
 <script src="/javascript/otp.js"></script>

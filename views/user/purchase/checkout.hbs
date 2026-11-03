@@ -1,127 +1,132 @@
 {{> navbar}}
 
-
 <div class="container-lg d-flex flex-wrap">
-    <div class="col-12 col-sm-7 col-md-8 p-2">
-        <form method="post" id="placeOrderFrm">
-            <div class="outlined-card p-0">
-                <div class="d-flex justify-content-between p-2">
-                    <div class="text-primary fs-4 fw-medium p-2">Delivery Address</div>
-                    <div class="actions">
-                        {{!-- Add button --}}
-                        <a href="/account/address/add?redirect={{currentPath}}" class="icon-btn">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <path d="M12 5V19" stroke="#6F43BF" stroke-width="2" stroke-linecap="round"
-                                    stroke-linejoin="round" />
-                                <path d="M5 12H19" stroke="#6F43BF" stroke-width="2" stroke-linecap="round"
-                                    stroke-linejoin="round" />
-                            </svg>
-                        </a>
-                    </div>
-                </div>
-                {{#if addresses}}
-                <div class="list mx-2">
-                    {{#each addresses}}
-                    <div class="d-flex justify-content-between mb-2">
-                        <div class="d-flex align-items-start">
-                            <input type="radio" value="{{this._id}}" class="radio-primary m-2" name="addressId"
-                                id="address{{this._id}}">
-                            <label for="address{{this._id}}">
-                                <div class="cursor-pointer ms-2">
-                                    <div class="fs-6 fw-bold">{{this.name}}</div>
-                                    <div class="fs-6">
-                                        {{this.address}}, {{this.locality}}, {{this.landmark}}, {{this.state}},
-                                        {{this.pincode}}, {{this.mobile}}
-                                    </div>
-                                </div>
-                            </label>
-                        </div>
-                        <div class="actions">
-                            <a href="account/address/edit/{{this._id}}?redirect={{@root.currentPath}}"
-                                class="text-btn">Edit</a>
-                        </div>
-                    </div>
-                    {{/each}}
-                </div>
-                {{else}}
-                <div class="d-flex justify-content-center mb-3">
-                    <a href="/account/address/add?redirect={{currentPath}}" class="btn btn-primary">Add new address</a>
-                </div>
-                {{/if}}
-            </div>
-
-            {{!-- Payment Options --}}
-            <div class="outlined-card p-0 my-3">
-                <div class="text-primary fs-4 fw-medium p-2 m-2">Payment Options</div>
-                <div class="list mx-2">
-                    {{#with priceDetails}}
-                    <div class="d-flex align-items-start mb-3">
-                    {{#lte (sum totalPrice deliveryCharge) @root.walletBalance}}
-                        <input class="radio-primary my-1 mx-2" value="wallet" type="radio" name="paymentMethod"
-                            id="paymentWallet">
-                        <label for="paymentWallet" class="cursor-pointer fw-bold ms-2">
-
-                        {{else}}                               
-                        <input class="radio-primary my-1 mx-2" value="wallet" type="radio" name="paymentMethod"
-                            id="paymentWallet" disabled>
-                        <label for="paymentWallet" class="text-secondary cursor-not-allowed fw-bold ms-2">
-                    {{/lte}}
-                            Wallet
-                            <div class="box-primary d-inline py-1 px-2">
-                                ₹{{formatNumber @root.walletBalance}}
-                            </div>
-                        </label>
-                    </div>
-                    {{/with}}
-                    <div class="d-flex align-items-start mb-3">
-                        <input type="radio" class="radio-primary my-1 mx-2" value="online" name="paymentMethod"
-                            id="paymentOnline">
-                        <label for="paymentOnline">
-                            <div class="cursor-pointer ms-2 fs-6 fw-bold">Online</div>
-                        </label>
-                    </div>
-                    <div class="d-flex align-items-start mb-3">
-                        {{#lte priceDetails.totalPrice 1000}}
-                        <input type="radio" class="radio-primary my-1 mx-2" value="cod" name="paymentMethod"
-                            id="paymentCOD">
-                        <label for="paymentCOD">
-                            <div class="cursor-pointer ms-2 fs-6 fw-bold">Cash on Delivery</div>
-                        </label>
-                        {{else}}
-                        <input type="radio" class="radio-primary my-1 mx-2" value="cod" name="paymentMethod"
-                            id="paymentCOD" disabled>
-                        <label for="paymentCOD">
-                            <div class="text-secondary cursor-not-allowed ms-2 fs-6 fw-bold">
-                                Cash on Delivery <br>
-                                <span class="text-primary fs-7">(COD is not available for order above ₹1000)</span>
-                            </div>
-                        </label>
-                        {{/lte}}
-                    </div>
-                </div>
-            </div>
-        </form>
-    </div>
-
-    <div class="price-data col-12 col-sm-5 col-md-4 my-2 px-2">
-        {{!-- Add Promode --}}
-        <div class="outlined-card p-0 mb-3">
-            <div class="text-primary fs-4 fw-medium border-bottom border-primary px-2 pt-2">Add Promocode</div>
-            <div class="p-2">
-                <form method="post" id="promocodeForm">
-                    <input type="text" name="promocode" id="promocode" placeholder="Enter Promo Code"
-                        class="outlined-card placeholder-primary rounded-3 fs-6 text-uppercase py-1 my-1 outline-none w-100">
-                    <button href="/checkout" type="submit" id="promocodeBtn"
-                        class="btn btn-primary text-capitalize my-2 rounded-3 w-100" disabled>Apply</button>
-                </form>
-            </div>
+  <div class="col-12 col-sm-7 col-md-8 p-2">
+    <form method="post" id="placeOrderFrm">
+      <div class="outlined-card p-0">
+        <div class="d-flex justify-content-between p-2">
+          <div class="text-primary fs-4 fw-medium p-2">Delivery Address</div>
+          <div class="actions">
+            {{!-- Add button --}}
+            <a href="/account/address/add?redirect={{currentPath}}" class="icon-btn">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 5V19" stroke="#6F43BF" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round" />
+                <path d="M5 12H19" stroke="#6F43BF" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round" />
+              </svg>
+            </a>
+          </div>
         </div>
+        {{#if addresses}}
+          <div class="list mx-2">
+            {{#each addresses}}
+              <div class="d-flex justify-content-between mb-2">
+                <div class="d-flex align-items-start">
+                  <input type="radio" value="{{this._id}}" class="radio-primary m-2"
+                    name="addressId" id="address{{this._id}}">
+                  <label for="address{{this._id}}">
+                    <div class="cursor-pointer ms-2">
+                      <div class="fs-6 fw-bold">{{this.name}}</div>
+                      <div class="fs-6">
+                        {{this.address}}, {{this.locality}}, {{this.landmark}}, {{this.state}},
+                        {{this.pincode}}, {{this.mobile}}
+                      </div>
+                    </div>
+                  </label>
+                </div>
+                <div class="actions">
+                  <a href="account/address/edit/{{this._id}}?redirect={{@root.currentPath}}"
+                    class="text-btn">Edit</a>
+                </div>
+              </div>
+            {{/each}}
+          </div>
+        {{else}}
+          <div class="d-flex justify-content-center mb-3">
+            <a href="/account/address/add?redirect={{currentPath}}" class="btn btn-primary">Add new
+              address</a>
+          </div>
+        {{/if}}
+      </div>
 
-        {{> cart-price-details}}
-        <button type="submit" class="btn btn-primary my-2 rounded-3 w-100" id="placeOrderBtn">PLACE ORDER</button>
+      {{!-- Payment Options --}}
+      <div class="outlined-card p-0 my-3">
+        <div class="text-primary fs-4 fw-medium p-2 m-2">Payment Options</div>
+        <div class="list mx-2">
+          {{#with priceDetails}}
+            <div class="d-flex align-items-start mb-3">
+              {{#lte (sum totalPrice deliveryCharge) @root.walletBalance}}
+                <input class="radio-primary my-1 mx-2" value="wallet" type="radio"
+                  name="paymentMethod" id="paymentWallet">
+                <label for="paymentWallet" class="cursor-pointer fw-bold ms-2">
+
+                  {{else}}
+                    <input class="radio-primary my-1 mx-2" value="wallet" type="radio"
+                      name="paymentMethod" id="paymentWallet" disabled>
+                    <label for="paymentWallet"
+                      class="text-secondary cursor-not-allowed fw-bold ms-2">
+              {{/lte}}
+              Wallet
+              <div class="box-primary d-inline py-1 px-2">
+                ₹{{formatNumber @root.walletBalance}}
+              </div>
+              </label>
+            </div>
+          {{/with}}
+          <div class="d-flex align-items-start mb-3">
+            <input type="radio" class="radio-primary my-1 mx-2" value="online" name="paymentMethod"
+              id="paymentOnline">
+            <label for="paymentOnline">
+              <div class="cursor-pointer ms-2 fs-6 fw-bold">Online</div>
+            </label>
+          </div>
+          <div class="d-flex align-items-start mb-3">
+            {{#lte priceDetails.totalPrice 1000}}
+              <input type="radio" class="radio-primary my-1 mx-2" value="cod" name="paymentMethod"
+                id="paymentCOD">
+              <label for="paymentCOD">
+                <div class="cursor-pointer ms-2 fs-6 fw-bold">Cash on Delivery</div>
+              </label>
+              {{else}}
+                <input type="radio" class="radio-primary my-1 mx-2" value="cod" name="paymentMethod"
+                  id="paymentCOD" disabled>
+                <label for="paymentCOD">
+                  <div class="text-secondary cursor-not-allowed ms-2 fs-6 fw-bold">
+                    Cash on Delivery <br>
+                    <span class="text-primary fs-7">(COD is not available for order above
+                      ₹1000)</span>
+                  </div>
+                </label>
+            {{/lte}}
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div class="price-data col-12 col-sm-5 col-md-4 my-2 px-2">
+    {{!-- Add Promode --}}
+    <div class="outlined-card p-0 mb-3">
+      <div class="text-primary fs-4 fw-medium border-bottom border-primary px-2 pt-2">Add Promocode
+      </div>
+      <div class="p-2">
+        <form method="post" id="promocodeForm">
+          <input type="text" name="promocode" id="promocode" placeholder="Enter Promo Code"
+            class="outlined-card placeholder-primary rounded-3 fs-6 text-uppercase py-1 my-1 outline-none w-100">
+          <button href="/checkout" type="submit" id="promocodeBtn"
+            class="btn btn-primary text-capitalize my-2 rounded-3 w-100" disabled>Apply</button>
+        </form>
+      </div>
     </div>
+
+    {{> cart-price-details}}
+    <button type="submit" class="btn btn-primary my-2 rounded-3 w-100" id="placeOrderBtn">PLACE
+      ORDER</button>
+  </div>
 </div>
 
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-<script src="/javascript/handle-orders.js"></script>
+<script src="/javascript/purchase/payment.js"></script>
+<script src="/javascript/purchase/checkout.js"></script>

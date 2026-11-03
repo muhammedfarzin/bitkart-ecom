@@ -1,42 +1,42 @@
 {{> admin-navbar}}
 
 <div class="fluid-container d-flex">
-    {{> sidebar}}
+  {{> sidebar}}
 
-    <div class="container">
-        <div class="top-bar d-flex justify-content-between align-items-center flex-wrap">
-            <div class="title col-3">
-                <h1 class="text-primary">Categories</h1>
-            </div>
-            <div class="actions d-flex flex-wrap justify-content-end align-items-center col-12 col-md-9">
-                {{> searchbox method='get' for='Category' class='col-8 col-md-9'}}
+  <div class="container">
+    <div class="top-bar d-flex justify-content-between align-items-center flex-wrap">
+      <div class="title col-3">
+        <h1 class="text-primary">Categories</h1>
+      </div>
+      <div class="actions d-flex flex-wrap justify-content-end align-items-center col-12 col-md-9">
+        {{> searchbox method='get' for='Category' class='col-8 col-md-9'}}
 
-                <div class="col col-md-3">
-                    <a href="categories/create" class="btn btn-primary w-100">New Category</a>
-                </div>
-            </div>
+        <div class="col col-md-3">
+          <a href="categories/create" class="btn btn-primary w-100">New Category</a>
         </div>
-        <div class="list">
-            {{#each categories}}
-            <a class="text-reset" href="/admin/categories/edit/{{this._id}}">
-                <div class="list-item d-flex justify-content-between align-items-start">
-                    <div class="content d-flex pb-1">
-                        <div class="leading">
-                            <img src="{{this.imagePath}}" alt="img">
-                        </div>
-                        <div class="datas">
-                            <div class="text-primary fs-7">Category id: {{this._id}}</div>
-                            <h4 class="title text-capitalize max-line-1 mb-1">{{this.title}}</h4>
-                            <div class="subtitle f-uppercase">{{this.description}}</div>
-                        </div>
-                    </div>
-                    <button onclick="deleteCategory('{{this._id}}'); return false;"
-                        class="btn btn-danger">Remove</button>
-                </div>
-            </a>
-            {{/each}}
-        </div>
+      </div>
     </div>
+    <div class="list">
+      {{#each categories}}
+        <a class="text-reset" href="/admin/categories/edit/{{this._id}}">
+          <div class="list-item d-flex justify-content-between align-items-start">
+            <div class="content d-flex pb-1">
+              <div class="leading">
+                <img src="{{this.imagePath}}" alt="img">
+              </div>
+              <div class="datas">
+                <div class="text-primary fs-7">Category id: {{this._id}}</div>
+                <h4 class="title text-capitalize max-line-1 mb-1">{{this.title}}</h4>
+                <div class="subtitle f-uppercase">{{this.description}}</div>
+              </div>
+            </div>
+            <button onclick="deleteCategory('{{this._id}}'); return false;"
+              class="btn btn-danger">Remove</button>
+          </div>
+        </a>
+      {{/each}}
+    </div>
+  </div>
 </div>
 
-<script src="/javascript/admin-script.js"></script>
+<script src="/javascript/admin/categories.js"></script>

@@ -1,71 +1,71 @@
 {{> admin-navbar}}
 
 <div class="fluid-container d-flex">
-    {{> sidebar}}
+  {{> sidebar}}
 
-    <div class="container">
-        <div class="top-bar d-flex justify-content-between align-items-center flex-wrap">
-            <div class="title col-3">
-                <h1 class="text-primary">Orders</h1>
-            </div>
-            <div class="actions d-flex justify-content-end align-items-center col-12 col-md-9">
-                {{> searchbox for='orders' class='col-8 col-md-9'}}
+  <div class="container">
+    <div class="top-bar d-flex justify-content-between align-items-center flex-wrap">
+      <div class="title col-3">
+        <h1 class="text-primary">Orders</h1>
+      </div>
+      <div class="actions d-flex justify-content-end align-items-center col-12 col-md-9">
+        {{> searchbox for='orders' class='col-8 col-md-9'}}
 
-                <div class="col col-md-3">
-                    <select class="btn btn-outline-primary w-100" name="status" id="status">
-                        <option value="all">All</option>
-                        <option value="confirmed">Confirmed</option>
-                        <option value="shipped">Shipped</option>
-                        <option value="delivered">Delivered</option>
-                        <option value="cancelled">Cancelled</option>
-                    </select>
-                </div>
-            </div>
+        <div class="col col-md-3">
+          <select class="btn btn-outline-primary w-100" name="status" id="status">
+            <option value="all">All</option>
+            <option value="confirmed">Confirmed</option>
+            <option value="shipped">Shipped</option>
+            <option value="delivered">Delivered</option>
+            <option value="cancelled">Cancelled</option>
+          </select>
         </div>
-        {{#if orders}}
-        <div class="list">
-            {{#each orders}}
-            <a class="text-reset" href="/admin/orders/{{this._id}}">
-                <div class="list-item">
-                    <div class="content d-flex pb-1">
-                        <div class="leading">
-                            {{#with this.products}}
-                            <img src="{{first imagePaths}}" alt="img">
-                        </div>
-                        <div class="datas">
-                            <div class="text-primary fs-7">Product id: {{_id}}</div>
-                            <h4 class="title max-line-1 mb-3">{{title}}</h4>
-                            {{/with}}
-                            <div class="text-primary fs-7">User id: {{this.userId}}</div>
-                            {{#with this.address}}
-                            <div class="subtitle">
-                                {{address}}, {{locality}}, {{landmark}},
-                                {{state}}, {{pincode}}, {{mobile}}
-                            </div>
-                            {{/with}}
-                        </div>
-                    </div>
-
-                    {{!-- Bottom of the list --}}
-                    <div class="bottom d-flex justify-content-end">
-                        <div class="p-1 bg-light rounded-4">
-                            {{#with (last this.status)}}
-                            <div
-                                class="{{#or (eq status 'confirmed') (eq status 'shipped')}}status-view-success{{else or (eq status 'cancelled') (eq status 'return')}}status-view-danger{{else}}status-view-primary{{/or}} text-capitalize">
-                                {{status}}
-                            </div>
-                            {{/with}}
-                        </div>
-                    </div>
-                </div>
-            </a>
-            {{/each}}
-        </div>
-
-        {{else}}
-        <div class="d-flex justify-content-center">
-            <img class="col-12 col-md-6" src="/images/nodata.svg" alt="No data">
-        </div>
-        {{/if}}
+      </div>
     </div>
+    {{#if orders}}
+      <div class="list">
+        {{#each orders}}
+          <a class="text-reset" href="/admin/orders/{{this._id}}">
+            <div class="list-item">
+              <div class="content d-flex pb-1">
+                <div class="leading">
+                  {{#with this.products}}
+                    <img src="{{first imagePaths}}" alt="img">
+                </div>
+                <div class="datas">
+                  <div class="text-primary fs-7">Product id: {{_id}}</div>
+                  <h4 class="title max-line-1 mb-3">{{title}}</h4>
+                  {{/with}}
+                  <div class="text-primary fs-7">User id: {{this.userId}}</div>
+                  {{#with this.address}}
+                    <div class="subtitle">
+                      {{address}}, {{locality}}, {{landmark}},
+                      {{state}}, {{pincode}}, {{mobile}}
+                    </div>
+                  {{/with}}
+                </div>
+              </div>
+
+              {{!-- Bottom of the list --}}
+              <div class="bottom d-flex justify-content-end">
+                <div class="p-1 bg-light rounded-4">
+                  {{#with (last this.status)}}
+                    <div
+                      class="{{#or (eq status 'confirmed') (eq status 'shipped')}}status-view-success{{else or (eq status 'cancelled') (eq status 'return')}}status-view-danger{{else}}status-view-primary{{/or}} text-capitalize">
+                      {{status}}
+                    </div>
+                  {{/with}}
+                </div>
+              </div>
+            </div>
+          </a>
+        {{/each}}
+      </div>
+
+    {{else}}
+      <div class="d-flex justify-content-center">
+        <img class="col-12 col-md-6" src="/images/nodata.svg" alt="No data">
+      </div>
+    {{/if}}
+  </div>
 </div>

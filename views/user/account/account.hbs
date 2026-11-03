@@ -3,49 +3,53 @@
 {{> account-sidebar}}
 
 <div class="container col-md-9 sm me-0">
-    <div id="personalDetails">
-        <h3 class="text-primary my-1">Personal Details</h3>
-        <span class="text-danger fw-normal" id="err-message">{{errMessage}}</span>
-        {{#with user}}
-        <form method="post" action="/updateUser" class="col-12" id="personalDetailsFrm">
-            <div class="d-flex flex-wrap m-3">
-                <div class="col-12 col-md me-3">
-                    <label for="name" class="fs-6 fw-bold my-2">Name</label>
-                    <input type="text" name="name" id="name" value="{{name}}"
-                        class="outlined-card placeholder-primary outline-none w-100" placeholder="Enter name">
-                </div>
-                <div class="col-12 col-md">
-                    <label for="mobile" class="fs-6 fw-bold my-2">Mobile Number</label>
-                    <input type="tel" name="mobile" id="mobile" value="{{mobile}}"
-                        class="outlined-card placeholder-primary outline-none w-100" placeholder="Enter mobile number">
-                </div>
-            </div>
-            <div class="m-3">
-                <div class="w-100">
-                    <label for="email" class="fs-6 fw-bold my-2">Email Address</label>
-                    <input type="email" name="email" id="email" value="{{email}}"
-                        class="outlined-card placeholder-primary outline-none w-100" placeholder="Enter email address">
-                </div>
-            </div>
-            <div class="d-flex flex-wrap m-3">
-                <div class="col-12 col-md me-3">
-                    <label for="password" class="fs-6 fw-bold my-2">Current Password</label>
-                    <input type="password" name="password" id="password"
-                        class="outlined-card placeholder-primary outline-none w-100"
-                        placeholder="Enter current password">
-                </div>
-                <div class="col-12 col-md">
-                    <label for="newPassword" class="fs-6 fw-bold my-2">New Password</label>
-                    <input type="password" name="newPassword" id="newPassword"
-                        class="outlined-card placeholder-primary outline-none w-100" placeholder="Enter new password">
-                </div>
-            </div>
-            <div class="mx-3 my-4">
-                <button type="submit" class="btn btn-primary w-100 rounded-4">UPDATE</button>
-            </div>
-        </form>
-        {{/with}}
-    </div>
+  <div id="personalDetails">
+    <h3 class="text-primary my-1">Personal Details</h3>
+    <span class="text-danger fw-normal" id="err-message">{{errMessage}}</span>
+    {{#with user}}
+      <form method="post" action="/updateUser" class="col-12" id="personalDetailsFrm">
+        <div class="d-flex flex-wrap m-3">
+          <div class="col-12 col-md me-3">
+            <label for="name" class="fs-6 fw-bold my-2">Name</label>
+            <input type="text" name="name" id="name" value="{{name}}"
+              class="outlined-card placeholder-primary outline-none w-100" placeholder="Enter name">
+          </div>
+          <div class="col-12 col-md">
+            <label for="mobile" class="fs-6 fw-bold my-2">Mobile Number</label>
+            <input type="tel" name="mobile" id="mobile" value="{{mobile}}"
+              class="outlined-card placeholder-primary outline-none w-100"
+              placeholder="Enter mobile number">
+          </div>
+        </div>
+        <div class="m-3">
+          <div class="w-100">
+            <label for="email" class="fs-6 fw-bold my-2">Email Address</label>
+            <input type="email" name="email" id="email" value="{{email}}"
+              class="outlined-card placeholder-primary outline-none w-100"
+              placeholder="Enter email address">
+          </div>
+        </div>
+        <div class="d-flex flex-wrap m-3">
+          <div class="col-12 col-md me-3">
+            <label for="password" class="fs-6 fw-bold my-2">Current Password</label>
+            <input type="password" name="password" id="password"
+              class="outlined-card placeholder-primary outline-none w-100"
+              placeholder="Enter current password">
+          </div>
+          <div class="col-12 col-md">
+            <label for="newPassword" class="fs-6 fw-bold my-2">New Password</label>
+            <input type="password" name="newPassword" id="newPassword"
+              class="outlined-card placeholder-primary outline-none w-100"
+              placeholder="Enter new password">
+          </div>
+        </div>
+        <div class="mx-3 my-4">
+          <button type="submit" class="btn btn-primary w-100 rounded-4">UPDATE</button>
+        </div>
+      </form>
+    {{/with}}
+  </div>
 </div>
 
-<script src="/javascript/form.js"></script>
+<script src="/javascript/shared/validation.js"></script>
+<script src="/javascript/account/profile.js"></script>

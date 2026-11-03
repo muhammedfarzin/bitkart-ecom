@@ -1,18 +1,19 @@
 <nav class="navbar bg-body-tertiary fixed-top">
-    <div class="logo">
-        {{#if hideLogout}}
-        {{else}}
-        <button class="navbar-toggler sm-d-unset md-d-none" type="button" data-bs-toggle="offcanvas"
-            data-bs-target="#offcanvasScrolling" aria-controls="offcanvasScrolling" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        {{/if}}
-
-        <a href="/admin"> <img src="/images/bitkart-admin.svg" alt="logo"></a>
-    </div>
-
+  <div class="logo">
     {{#if hideLogout}}
     {{else}}
-    <a href="/admin/logout" class="btn btn-outline-primary"> Logout </a>
+      <button class="navbar-toggler sm-d-unset md-d-none" type="button" data-bs-toggle="offcanvas"
+        data-bs-target="#offcanvasScrolling" aria-controls="offcanvasScrolling"
+        aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
     {{/if}}
+
+    <a href="/admin"> <img src="/images/bitkart-admin.svg" alt="logo"></a>
+  </div>
+
+  {{#if hideLogout}}
+  {{else}}
+    <a href="/admin/logout" class="btn btn-outline-primary"> Logout </a>
+  {{/if}}
 </nav>

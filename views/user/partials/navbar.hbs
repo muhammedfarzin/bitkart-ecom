@@ -1,64 +1,69 @@
 <nav class="navbar bg-body-tertiary fixed-top py-1">
-    <div class="logo">
-        <a href="/"> <img src="/images/bitkart.svg" alt="logo"></a>
-    </div>
+  <div class="logo">
+    <a href="/"> <img src="/images/bitkart.svg" alt="logo"></a>
+  </div>
 
-    {{#if hideLogout}}
-    {{else}}
+  {{#if hideLogout}}
+  {{else}}
     {{> searchbox for='for products' method='get' action='/search' class='sm-d-none col-4 col-lg-6'}}
 
     <div class="actions sm-d-none col-4 col-lg-3">
-        <a href="/cart" class="icon-btn"><img src="/images/icons/shopping-cart.svg" alt="cart"></a>
-        <a href="/account" class="icon-btn"><img src="/images/icons/user.svg" alt="account"></a>
-        <a href="/wishlist" class="icon-btn"><img src="/images/icons/heart.svg" alt="wishlist"></a>
-        {{#if isLoggedIn}}
+      <a href="/cart" class="icon-btn"><img src="/images/icons/shopping-cart.svg" alt="cart"></a>
+      <a href="/account" class="icon-btn"><img src="/images/icons/user.svg" alt="account"></a>
+      <a href="/wishlist" class="icon-btn"><img src="/images/icons/heart.svg" alt="wishlist"></a>
+      {{#if isLoggedIn}}
         <a href="/logout" class="btn btn-outline-danger">
-            Logout
-        {{else}}
+          Logout
+      {{else}}
         <a href="/login" class="btn btn-outline-primary">
-            Login
-        {{/if}}
-        </a>
+          Login
+      {{/if}}
+      </a>
     </div>
 
     <div class="actions justify-content-end col-2 md-d-none sm-d-unset">
-        {{!-- Sidebar btn for sm devices --}}
-        <button class="navbar-toggler m-sm-0 sm-d-unset d-hide" type="button" data-bs-toggle="offcanvas"
-            data-bs-target="#offcanvasScrolling" aria-controls="offcanvasScrolling" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="sm-sidebar">
-            <div class="offcanvas offcanvas-end" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1"
-                id="offcanvasScrolling" aria-labelledby="offcanvasScrollingLabel">
-                <div class="offcanvas-header">
-                    <a href="/"> <img src="/images/bitkart.svg" alt="logo"></a>
-                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-                </div>
-                {{> searchbox for='for products' method='get' action='/search' class='m-2'}}
+      {{!-- Sidebar btn for sm devices --}}
+      <button class="navbar-toggler m-sm-0 sm-d-unset d-hide" type="button"
+        data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling"
+        aria-controls="offcanvasScrolling" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="sm-sidebar">
+        <div class="offcanvas offcanvas-end" data-bs-scroll="true" data-bs-backdrop="false"
+          tabindex="-1" id="offcanvasScrolling" aria-labelledby="offcanvasScrollingLabel">
+          <div class="offcanvas-header">
+            <a href="/"> <img src="/images/bitkart.svg" alt="logo"></a>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas"
+              aria-label="Close"></button>
+          </div>
+          {{> searchbox for='for products' method='get' action='/search' class='m-2'}}
 
-                <a href="/cart" class="btn btn-outline-primary">
-                    <div class="d-inline-flex align-items-center"><img class="mx-2"
-                            src="/images/icons/shopping-cart.svg" alt="cart"> <span
-                            class="w-30px text-start">Cart</span></div>
-                </a>
-                <a href="/account" class="btn btn-outline-primary">
-                    <div class="d-inline-flex align-items-center"><img class="mx-2" src="/images/icons/user.svg"
-                            alt="account"> <span class="w-30px text-start">Account</span></div>
-                </a>
-                <a href="/wishlist" class="btn btn-outline-primary">
-                    <div class="d-inline-flex align-items-center"><img class="mx-2" src="/images/icons/heart.svg"
-                            alt="wishlist"><span class="w-30px text-start">Wishlist</span></div>
-                </a>
-                    {{#if isLoggedIn}}
-                    <a href="/logout" class="btn btn-outline-danger">
-                    Logout
-                    {{else}}
-                    <a href="/login" class="btn btn-outline-primary">
-                    Login
-                    {{/if}}
-                 </a>
-            </div>
+          <a href="/cart" class="btn btn-outline-primary">
+            <div class="d-inline-flex align-items-center"><img class="mx-2"
+                src="/images/icons/shopping-cart.svg" alt="cart"> <span
+                class="w-30px text-start">Cart</span></div>
+          </a>
+          <a href="/account" class="btn btn-outline-primary">
+            <div class="d-inline-flex align-items-center"><img class="mx-2"
+                src="/images/icons/user.svg" alt="account"> <span
+                class="w-30px text-start">Account</span></div>
+          </a>
+          <a href="/wishlist" class="btn btn-outline-primary">
+            <div class="d-inline-flex align-items-center"><img class="mx-2"
+                src="/images/icons/heart.svg" alt="wishlist"><span
+                class="w-30px text-start">Wishlist</span></div>
+          </a>
+          {{#if isLoggedIn}}
+            <a href="/logout" class="btn btn-outline-danger">
+              Logout
+          {{else}}
+            <a href="/login" class="btn btn-outline-primary">
+              Login
+          {{/if}}
+          </a>
         </div>
+      </div>
     </div>
-    {{/if}}
+  {{/if}}
 </nav>
+<script src="/javascript/catalog/search.js"></script>

@@ -1,0 +1,95 @@
+.btn.btn-primary {
+  background: #6f43bf;
+  border: 1px solid #6f43bf;
+}
+
+.btn.btn-primary:disabled {
+  background: #916dd4;
+  border: 1px solid #916dd4;
+}
+
+.btn.btn-outline-primary {
+  border: 1px solid #6f43bf;
+  color: #6f43bf;
+}
+
+.btn.icon-btn-primary-light {
+  background: #d2bbff;
+  padding: 0;
+}
+
+.btn.icon-btn-primary-light svg path {
+  transition: 0.15s;
+}
+
+.btn.icon-btn-primary-light:hover svg path,
+.btn.icon-btn-primary-light:focus svg path {
+  stroke: #fff;
+}
+
+.btn.icon-btn-primary-light > svg {
+  margin: 0.5rem;
+}
+
+div.border-primary {
+  border-color: #6f43bf !important;
+}
+
+.btn.text-primary:hover {
+  color: #fff !important;
+  text-decoration: none !important;
+}
+
+.btn.btn-outline-danger:hover,
+.btn.btn-outline-danger:focus,
+.btn.btn-danger:hover,
+.btn.btn-danger:focus {
+  border: 1px solid #dc3545 !important;
+  background: #dc3545 !important;
+}
+
+.btn.btn-primary:hover,
+.btn.btn-primary:focus,
+.btn.btn-primary:focus-visible {
+  border: 1px solid #6d3399 !important;
+  background: #6d3399 !important;
+  color: #fff !important;
+}
+
+.btn.btn-outline-primary:hover,
+.btn.btn-outline-primary:focus,
+.btn.btn-outline-primary:focus-visible {
+  border: 1px solid #6f43bf !important;
+  background: #6f43bf !important;
+  color: #fff !important;
+}
+
+.btn.h-primary:hover,
+.btn.h-primary:focus,
+.btn.h-primary:active,
+.btn.h-primary:focus-visible {
+  border: 1px solid #6f43bf !important;
+  background: #6f43bf !important;
+  color: #fff !important;
+}
+
+.btn:hover img,
+.btn:focus img {
+  filter: invert(100%) sepia(100%) saturate(0%) hue-rotate(34deg)
+    brightness(108%) contrast(101%);
+}
+
+.btn:focus-visible {
+  border: 1px solid #6f43bf !important;
+  background: #6f43bf !important;
+  box-shadow: none !important;
+}
+
+.btn:focus-visible img {
+  filter: invert(100%) sepia(100%) saturate(0%) hue-rotate(34deg)
+    brightness(108%) contrast(101%);
+}
+
+#menubtn {
+  display: none;
+}

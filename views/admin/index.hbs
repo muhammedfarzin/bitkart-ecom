@@ -1,154 +1,157 @@
 {{> admin-navbar}}
 
 <div class="fluid-container d-flex">
-    {{> sidebar}}
+  {{> sidebar}}
 
-    <div class="container col-md-9">
-        <div class="top-bar d-flex justify-content-between align-items-center flex-wrap">
-            <div class="title">
-                <h1 class="text-primary">Dashboard</h1>
-            </div>
-            <div class="actions d-flex justify-content-end align-items-center col-12 col-md-9">
-                <div class="col col-md-3">
-                    <select class="btn btn-outline-primary w-100" name="selectDuration" id="selectDuration">
-                        <option value="weekly" {{#if (eq duration 'weekly' )}}selected{{/if}}>Weekly</option>
-                        <option value="monthly" {{#if (eq duration 'monthly' )}}selected{{/if}}>Monthly</option>
-                        <option value="yearly" {{#if (eq duration 'yearly' )}}selected{{/if}}>Yearly</option>
-                        <option value="custom" {{#if (eq duration 'custom' )}}selected{{/if}}>Custom</option>
-                    </select>
-                </div>
-                <div class="sm-mt-1 col-md-3">
-                    <div class="btn-group w-100">
-                        <a href="{{downloadUrl}}" type="button" class="btn btn-primary w-100">Download</a>
-                        <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split"
-                            data-bs-toggle="dropdown" aria-expanded="false">
-                            <span class="visually-hidden">Toggle Dropdown</span>
-                        </button>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="{{downloadUrl}}">PDF</a>
-                            </li>
-                            <li><a class="dropdown-item" href="{{urlAddQuery downloadUrl 'fileType' 'excel'}}">Excel</a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
+  <div class="container col-md-9">
+    <div class="top-bar d-flex justify-content-between align-items-center flex-wrap">
+      <div class="title">
+        <h1 class="text-primary">Dashboard</h1>
+      </div>
+      <div class="actions d-flex justify-content-end align-items-center col-12 col-md-9">
+        <div class="col col-md-3">
+          <select class="btn btn-outline-primary w-100" name="selectDuration" id="selectDuration">
+            <option value="weekly" {{#if (eq duration 'weekly' )}}selected{{/if}}>Weekly</option>
+            <option value="monthly" {{#if (eq duration 'monthly' )}}selected{{/if}}>Monthly</option>
+            <option value="yearly" {{#if (eq duration 'yearly' )}}selected{{/if}}>Yearly</option>
+            <option value="custom" {{#if (eq duration 'custom' )}}selected{{/if}}>Custom</option>
+          </select>
         </div>
-        <div class="mt-3 overflow-x-scroll w-100 scrollbar-hidden">
-            <div class="d-flex justify-content-between flex-wrap">
-                {{#with salesReport}}
-                <div class="report-data">
-                    <table>
-                        <tbody>
-                            <tr>
-                                <th class="text-primary text-capitalize fw-bold pe-3">Total quantity</th>
-                                <td>: {{totalQuantity}}</td>
-                            </tr>
-                            <tr>
-                                <th class="text-primary text-capitalize fw-bold pe-3">Total sale amount</th>
-                                <td>: ₹{{formatNumber totalSalesAmount}}</td>
-                            </tr>
-                            <tr>
-                                <th class="text-primary text-capitalize fw-bold pe-3">Total amount cancelled</th>
-                                <td>: ₹{{formatNumber totalCancelledAmount}}</td>
-                            </tr>
-                            <tr>
-                                <th class="text-primary text-capitalize fw-bold pe-3">Total amount Returned</th>
-                                <td>: ₹{{formatNumber totalReturnAmount}}</td>
-                            </tr>
-                            <tr>
-                                <th class="text-primary text-capitalize fw-bold pe-3">Total amount delivered</th>
-                                <td>: ₹{{formatNumber totalDeliveredAmount}}</td>
-                            </tr>
-                            <tr>
-                                <th class="text-primary text-capitalize fw-bold pe-3">Total ongoing amount</th>
-                                <td>: ₹{{formatNumber totalOngoingAmount}}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                {{/with}}
-
-                <div>
-                    {{> chart class="mx-3 col-12 col-md-6" }}
-                </div>
-            </div>
-
-            <div id="topProductsList" class="mt-3">
-                <div class="text-primary fw-bold fs-5">Top Selling Products</div>
-                <div class="list">
-                    {{#each topProducts}}
-                    {{> product-list-item product=this}}
-                    {{/each}}
-                </div>
-            </div>
-
-            <div class="table-responsive mt-3">
-                <div class="text-primary fw-bold fs-5">Order Details</div>
-                <table class="table table-bordered table-striped table-hover mt-1">
-                    <thead>
-                        <tr>
-                            <th>Date</th>
-                            <th>Order ID</th>
-                            <th>Product Name</th>
-                            <th>Quantity</th>
-                            <th>Payment Method</th>
-                            <th>Price</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {{#each salesReport.report}}
-                        <tr>
-                            <td>{{formatDate orderedAt 'MMM D, YYYY'}}</td>
-                            <td>{{orderId}}</td>
-                            <td>{{productName}}</td>
-                            <td>{{quantity}}</td>
-                            <td class="text-uppercase">{{paymentMethod}}</td>
-                            <td>₹{{formatNumber price.totalPrice}}</td>
-                            <td class="text-capitalize">{{status}}</td>
-                        </tr>
-                        {{/each}}
-                    </tbody>
-                </table>
-            </div>
+        <div class="sm-mt-1 col-md-3">
+          <div class="btn-group w-100">
+            <a href="{{downloadUrl}}" type="button" class="btn btn-primary w-100">Download</a>
+            <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split"
+              data-bs-toggle="dropdown" aria-expanded="false">
+              <span class="visually-hidden">Toggle Dropdown</span>
+            </button>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="{{downloadUrl}}">PDF</a>
+              </li>
+              <li><a class="dropdown-item"
+                  href="{{urlAddQuery downloadUrl 'fileType' 'excel'}}">Excel</a>
+              </li>
+            </ul>
+          </div>
         </div>
+      </div>
     </div>
+    <div class="mt-3 overflow-x-scroll w-100 scrollbar-hidden">
+      <div class="d-flex justify-content-between flex-wrap">
+        {{#with salesReport}}
+          <div class="report-data">
+            <table>
+              <tbody>
+                <tr>
+                  <th class="text-primary text-capitalize fw-bold pe-3">Total quantity</th>
+                  <td>: {{totalQuantity}}</td>
+                </tr>
+                <tr>
+                  <th class="text-primary text-capitalize fw-bold pe-3">Total sale amount</th>
+                  <td>: ₹{{formatNumber totalSalesAmount}}</td>
+                </tr>
+                <tr>
+                  <th class="text-primary text-capitalize fw-bold pe-3">Total amount cancelled</th>
+                  <td>: ₹{{formatNumber totalCancelledAmount}}</td>
+                </tr>
+                <tr>
+                  <th class="text-primary text-capitalize fw-bold pe-3">Total amount Returned</th>
+                  <td>: ₹{{formatNumber totalReturnAmount}}</td>
+                </tr>
+                <tr>
+                  <th class="text-primary text-capitalize fw-bold pe-3">Total amount delivered</th>
+                  <td>: ₹{{formatNumber totalDeliveredAmount}}</td>
+                </tr>
+                <tr>
+                  <th class="text-primary text-capitalize fw-bold pe-3">Total ongoing amount</th>
+                  <td>: ₹{{formatNumber totalOngoingAmount}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        {{/with}}
+
+        <div>
+          {{> chart class="mx-3 col-12 col-md-6" }}
+        </div>
+      </div>
+
+      <div id="topProductsList" class="mt-3">
+        <div class="text-primary fw-bold fs-5">Top Selling Products</div>
+        <div class="list">
+          {{#each topProducts}}
+            {{> product-list-item product=this}}
+          {{/each}}
+        </div>
+      </div>
+
+      <div class="table-responsive mt-3">
+        <div class="text-primary fw-bold fs-5">Order Details</div>
+        <table class="table table-bordered table-striped table-hover mt-1">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Order ID</th>
+              <th>Product Name</th>
+              <th>Quantity</th>
+              <th>Payment Method</th>
+              <th>Price</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {{#each salesReport.report}}
+              <tr>
+                <td>{{formatDate orderedAt 'MMM D, YYYY'}}</td>
+                <td>{{orderId}}</td>
+                <td>{{productName}}</td>
+                <td>{{quantity}}</td>
+                <td class="text-uppercase">{{paymentMethod}}</td>
+                <td>₹{{formatNumber price.totalPrice}}</td>
+                <td class="text-capitalize">{{status}}</td>
+              </tr>
+            {{/each}}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- Button trigger custom date modal -->
-<button id="showCustomDateModalBtn" data-bs-toggle="modal" data-bs-target="#customDateModal" hidden></button>
+<button id="showCustomDateModalBtn" data-bs-toggle="modal" data-bs-target="#customDateModal"
+  hidden></button>
 
 <!-- Custom date Modal -->
-<div class="modal fade" id="customDateModal" tabindex="-1" aria-labelledby="customDateModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h1 class="modal-title fs-5" id="customDateModalLabel">Enter range</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <span class="text-danger fw-normal" id="err-message"></span>
-                <form id="customDateForm" class="d-flex" method="post">
-                    <div class="p-1 col">
-                        <label for="dateFrom" class="text-primary fs-6 fw-bold">Date From</label>
-                        <input type="date" name="dateFrom" id="dateFrom" max="{{formatDate}}"
-                            value="{{sumDate (formatDate) -7}}"
-                            class="outlined-card placeholder-primary outline-none w-100">
-                    </div>
-                    <div class="p-1 col">
-                        <label for="dateTo" class="text-primary fs-6 fw-bold">Date To</label>
-                        <input type="date" name="dateTo" id="dateTo" max="{{formatDate}}" value="{{formatDate}}"
-                            class="outlined-card placeholder-primary outline-none w-100">
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" id="customDateBtn">Save changes</button>
-            </div>
-        </div>
+<div class="modal fade" id="customDateModal" tabindex="-1" aria-labelledby="customDateModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="customDateModalLabel">Enter range</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <span class="text-danger fw-normal" id="err-message"></span>
+        <form id="customDateForm" class="d-flex" method="post">
+          <div class="p-1 col">
+            <label for="dateFrom" class="text-primary fs-6 fw-bold">Date From</label>
+            <input type="date" name="dateFrom" id="dateFrom" max="{{formatDate}}"
+              value="{{sumDate (formatDate) -7}}"
+              class="outlined-card placeholder-primary outline-none w-100">
+          </div>
+          <div class="p-1 col">
+            <label for="dateTo" class="text-primary fs-6 fw-bold">Date To</label>
+            <input type="date" name="dateTo" id="dateTo" max="{{formatDate}}" value="{{formatDate}}"
+              class="outlined-card placeholder-primary outline-none w-100">
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="customDateBtn">Save changes</button>
+      </div>
     </div>
+  </div>
 </div>
 
-<script src="/javascript/admin-script.js"></script>
+<script src="/javascript/admin/dashboard.js"></script>

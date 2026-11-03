@@ -1,0 +1,81 @@
+aside {
+  position: fixed;
+  max-width: 320px;
+  height: 100%;
+  border-right: 1px solid #6f43bf;
+  padding: 0 1rem;
+}
+
+.border-radius-1 {
+  border-radius: 1vw;
+}
+
+.counter {
+  display: flex;
+  align-items: center;
+}
+
+.counter > input {
+  cursor: pointer;
+  text-align: center;
+  max-width: 1.8rem;
+  background: #e2d9f2;
+  border: 1px solid #d2bbff;
+  border-radius: 5px;
+}
+
+.counter input::-webkit-outer-spin-button,
+.counter input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input.text-uppercase {
+  text-transform: uppercase;
+}
+
+input.text-uppercase::placeholder {
+  text-transform: none;
+}
+
+.f-uppercase::first-letter {
+  text-transform: uppercase;
+}
+
+.f-uppercase {
+  text-transform: lowercase;
+}
+
+thead.table-primary,
+table.table-primary {
+  --bs-table-color: #fff;
+  --bs-table-bg: #6f43bfdd;
+  --bs-table-border-color: #6f43bfdd;
+  --bs-table-striped-bg: #6f43bfdd;
+  --bs-table-striped-color: #fff;
+  --bs-table-active-bg: #6f43bfdd;
+  --bs-table-active-color: #fff;
+  --bs-table-hover-bg: #6f43bfdd;
+  --bs-table-hover-color: #fff;
+  color: #fff;
+  border-color: #6f43bfdd;
+}
+
+div.bg-primary,
+footer.bg-primary {
+  background-color: #6f43bf !important;
+}
+
+.form-check-input:checked[type="checkbox"] {
+  --bs-form-check-bg-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%23fff' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='m6 10 3 3 6-6'/%3e%3c/svg%3e");
+  background-color: #6f43bf;
+}
+
+.form-check-input[type="checkbox"] {
+  border: 1px solid #6f43bf !important;
+  box-shadow: none !important;
+}
+
+.h-15rem {
+  height: 15rem;
+}
