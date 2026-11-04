@@ -11,7 +11,7 @@
     </div>
     {{#with order}}
       <div class="mt-3">
-        <div class="list" id="ProductData">
+        <div class="list" id="product-data">
           <div class="list-item position-relative">
             <div class="content d-flex pb-1">
               {{#with productData}}
@@ -36,7 +36,7 @@
         </div>
       </div>
 
-      <div class="mt-4" id="ShippingAddress">
+      <div class="mt-4" id="shipping-address">
         <h3 class="text-primary fs-4">Delivery Address</h3>
         <div class="card-primary-light rounded-3 p-2 pb-4 my-3">
           {{#with address}}
@@ -49,7 +49,7 @@
         </div>
       </div>
 
-      <div class="mt-4" id="PaymentMethod">
+      <div class="mt-4" id="payment-method">
         <h3 class="text-primary fs-4">Payment Method</h3>
         <div
           class="card-primary-light text-center rounded-pill p-2 my-3 col-7 col-sm-6 col-md-4 col-lg-3">
@@ -63,7 +63,7 @@
         </div>
       </div>
 
-      <div class="mt-4" id="Status">
+      <div class="mt-4" id="status">
         <h3 class="text-primary fs-4">Status</h3>
         <div class="card-primary-light px-3 py-1 my-3 col-12 col-md-6">
           {{#each status}}
@@ -76,17 +76,17 @@
           {{/each}}
         </div>
         <div class="action-btn d-flex flex-wrap">
-          <button onclick="changeOrderStatus('confirmed', this)" id="statusCofirmed"
+          <button onclick="changeOrderStatus('confirmed', this)" id="status-confirmed"
             class="btn btn{{#lt status.length 1}}-outline{{/lt}}-primary fw-bold me-2 my-1 py-1 col-12 col-md">CONFIRMED</button>
-          <button onclick="changeOrderStatus('shipped', this)" id="statusShipped"
+          <button onclick="changeOrderStatus('shipped', this)" id="status-shipped"
             class="btn btn{{#lt status.length 2}}-outline{{/lt}}-primary fw-bold me-2 my-1 py-1 col-12 col-md">SHIPPED</button>
-          <button onclick="changeOrderStatus('delivered', this)" id="statusDelivered"
+          <button onclick="changeOrderStatus('delivered', this)" id="status-delivered"
             class="btn btn{{#lt status.length 3}}-outline{{/lt}}-primary fw-bold me-2 my-1 py-1 col-12 col-md">DELIVERED</button>
         </div>
       </div>
 
       {{#if returnQuantity}}
-        <div class="mt-4" id="returnDetails">
+        <div class="mt-4" id="return-details">
           <h3 class="text-primary my-1">Return pickup details</h3>
           {{#with pickupAddress}}
             <div class="card-primary-light rounded-3 p-2 my-3">
@@ -106,7 +106,7 @@
         </div>
       {{/if}}
 
-      <div class="mt-4" id="UserData">
+      <div class="mt-4" id="user-data">
         <h3 class="text-primary fs-4">Ordered By</h3>
         <div class="list">
           <div class="list-item position-relative">

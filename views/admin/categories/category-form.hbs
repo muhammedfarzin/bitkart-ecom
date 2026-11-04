@@ -10,7 +10,7 @@
         <h1 class="text-primary">{{#if category}} Update {{else}} Create {{/if}} Category</h1>
       </div>
     </div>
-    <form method="post" enctype="multipart/form-data" id="categoryForm">
+    <form method="post" enctype="multipart/form-data" id="category-frm">
       <div class="outlined-card m-2 border-black col-md">
         <div class="d-flex flex-wrap-reverse w-100">
           {{!-- Form --}}
@@ -48,7 +48,7 @@
                 <div class="fs-6 fw-bold text-primary">Add Image</div>
             {{/if}}
           </div>
-          <input type="file" name="image" id="image-input-re" accept="image/*" hidden>
+          <input type="file" data-existing-image="{{#if category.imagePath}}true{{else}}false{{/if}}" name="image" id="image-input-re" accept="image/*" hidden>
         </div>
       </div>
       <div id="popup-image">
@@ -56,7 +56,7 @@
           <div class="text-primary fs-2 fw-bold">Crop</div>
           <div class="d-flex pb-3" id="crop-image-gallery"></div>
           <div class="d-flex justify-content-end mt-2">
-            <button class="btn btn-primary" onclick="return false;" id="cCropDone">Done</button>
+            <button class="btn btn-primary" onclick="return false;" id="category-crop-done">Done</button>
           </div>
         </div>
       </div>
@@ -78,4 +78,3 @@
 
 <script src="/javascript/cropper/cropper.js"></script>
 <script src="/javascript/shared/image-upload.js"></script>
-<script src="/javascript/admin/category-form.js"></script>

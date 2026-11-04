@@ -6,14 +6,14 @@
   <div class="top-bar mt-3">
     <div class="d-flex justify-content-end">
       <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-        data-bs-target="#addMoneyModal">
+        data-bs-target="#add-money-modal">
         Add Money
       </button>
     </div>
   </div>
   <div class="text-primary fs-2 fw-bold text-center my-3">
     Balance:
-    ₹<span id="walletBalance">{{formatNumber wallet.balance}}</span>
+    ₹<span id="wallet-balance">{{formatNumber wallet.balance}}</span>
   </div>
   <div class="mt-4 w-100">
     <h3 class="text-primary">Transactions</h3>
@@ -34,7 +34,7 @@
                 <td>{{formatDate transactionDate 'MMMM D, YYYY'}}</td>
                 <td>{{description}}</td>
                 <td
-                  class="{{isEqualElse transactionType 'credit' 'text-success' 'text-danger'}} fw-bold">
+                  class="{{isEqualElse transaction-type 'credit' 'text-success' 'text-danger'}} fw-bold">
                   ₹{{formatNumber amount}}</td>
                 <td class="text-primary fw-bold">₹{{formatNumber balance}}</td>
               </tr>
@@ -51,29 +51,29 @@
 </div>
 
 <!-- Add money modal -->
-<div class="modal fade" id="addMoneyModal" tabindex="-1" aria-labelledby="addMoneyModalLabel"
+<div class="modal fade" id="add-money-modal" tabindex="-1" aria-labelledby="add-money-modal-label"
   aria-hidden="true">
   <div class="modal-dialog modal-fullscreen-sm-down">
     <div class="modal-content">
       <div class="modal-header">
-        <h1 class="modal-title fs-5" id="addMoneyModalLabel">Add Money</h1>
+        <h1 class="modal-title fs-5" id="add-money-modal-label">Add Money</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <p class="text-danger" id="err-message"></p>
-        <form method="post" id="addMoneyForm">
+        <form method="post" id="add-money-frm">
           <input type="number" name="amount" id="amount" placeholder="Enter Amount"
             class="outlined-card placeholder-primary rounded-3 outline-none w-100">
         </form>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" id="addMoneyBtn" class="btn btn-primary"
-          data-bs-dismiss="modal">Add</button>
+        <button type="button" id="add-money-btn" class="btn btn-primary">Add</button>
       </div>
     </div>
   </div>
 </div>
 
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script src="/javascript/purchase/payment.js"></script>
 <script src="/javascript/account/wallet.js"></script>

@@ -110,8 +110,8 @@
   background-color: #00000040;
 }
 
-#carouselExampleIndicators:hover .carousel-indicators,
-#carouselExampleIndicators:hover .carousel-control {
+#carousel-example-indicators:hover .carousel-indicators,
+#carousel-example-indicators:hover .carousel-control {
   visibility: visible;
   opacity: 1;
 }

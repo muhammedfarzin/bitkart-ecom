@@ -3,18 +3,18 @@
   </div>
   {{#with priceDetails}}
     <div class="p-2">
-      <div id="priceDatas">
+      <div id="price-datas">
         <div class="d-flex justify-content-between fs-6 py-2">
           <div>Total Prices</div>
-          <div id="totalPrice">₹{{formatNumber totalPrice}}</div>
+          <div id="total-price">₹{{formatNumber totalPrice}}</div>
         </div>
-        <div class="d-none justify-content-between fs-6 py-2" id="promocodeSummary">
+        <div class="d-none justify-content-between fs-6 py-2" id="promocode-summary">
           <div>Promocode</div>
-          <div class="text-primary" id="promocodeValue"></div>
+          <div class="text-primary" id="promocode-value"></div>
         </div>
         <div class="d-flex justify-content-between fs-6 py-2">
           <div>Delivery Charge</div>
-          <div {{#unless deliveryCharge}}class="text-primary" id="deliveryCharge"> Free
+          <div {{#unless deliveryCharge}}class="text-primary" id="delivery-charge"> Free
             {{else}}>
               ₹{{deliveryCharge}} {{/unless}}
           </div>
@@ -22,7 +22,7 @@
       </div>
       <div class="d-flex justify-content-between fs-5 fw-bold pt-3 pb-2">
         <div>Total Amount</div>
-        <div class="text-primary" id="totalAmount">₹{{formatNumber (sum totalPrice deliveryCharge)}}
+        <div class="text-primary" id="total-amount">₹{{formatNumber (sum totalPrice deliveryCharge)}}
         </div>
       </div>
     </div>

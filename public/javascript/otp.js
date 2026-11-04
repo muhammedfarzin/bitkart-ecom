@@ -1,89 +1,65 @@
-const otpPattern = /^\d{6}$/;
+document.addEventListener("DOMContentLoaded", () => {
+  const resendLink = $("#resend-otp");
+  const errorText = $("#err-message");
+  const resendDelay = 180;
+  let seconds = resendDelay;
+  let timerId;
 
-document.addEventListener("DOMContentLoaded", function () {
-  const resendOtpText = $("#resendOtp");
+  function renderTimer() {
+    const waiting = seconds > 0;
+    const minutes = Math.floor(seconds / 60);
+    const remainder = String(seconds % 60).padStart(2, "0");
+    resendLink.text(waiting ? `Resend OTP (${minutes}:${remainder})` : "Resend OTP");
+    resendLink.toggleClass("text-secondary", waiting).toggleClass("text-primary", !waiting);
+  }
 
-  // OTP timer
-  let duration = 180; // 3 minute
-  let seconds = duration;
+  function startTimer() {
+    clearInterval(timerId);
+    seconds = resendDelay;
+    renderTimer();
+    timerId = setInterval(() => {
+      seconds--;
+      renderTimer();
+      if (seconds <= 0) clearInterval(timerId);
+    }, 1000);
+  }
+
   startTimer();
-
-  resendOtpText.on("click", (e) => {
+  resendLink.on("click", () => {
     if (seconds > 0) return;
-    seconds = duration;
-    resendOtpText.addClass("text-secondary");
-    resendOtpText.removeClass("text-primary");
-    $.ajax({
+    seconds = resendDelay;
+    renderTimer();
+    App.request({
       url: "/resendOtp",
       type: "GET",
       dataType: "json",
-      success: function (data) {
+      success: data => {
         startTimer();
-        showAlertBox(
-          data.responseJSON?.message ?? "Resent OTP successfully",
-          true,
-        );
+        showAlertBox(data.message ?? "Resent OTP successfully", true);
       },
-      error: function (err) {
+      error: error => {
         seconds = 0;
-        resendOtpText.addClass("text-primary");
-        resendOtpText.removeClass("text-secondary");
-        showAlertBox(err.responseJSON?.errMessage ?? "Something went wrong");
+        renderTimer();
+        App.showRequestError(error);
       },
     });
   });
 
-  $("#otp-frm").submit((e) => {
-    e.preventDefault();
-    let otp = $("#otp");
-    let errMessageText = $("#err-message");
-
-    errMessageText.text("");
-    otp.removeClass("err");
-
-    if (!otp.val()) {
-      errMessageText.text("Please enter OTP");
-      otp.addClass("err");
-    } else if (!otpPattern.test(otp.val())) {
-      errMessageText.text("Plesae enter a valid OTP");
-    } else {
-      $.ajax({
-        url: "/verifyEmail",
-        type: "POST",
-        data: { otp: otp.val() },
-        dataType: "json",
-        success: function (data) {
-          location.href = data.path ?? "/done";
-        },
-        error: function (err) {
-          const errMessage =
-            err.responseJSON?.errMessage ?? "Something went wrong";
-          if (err.status == 440)
-            location.href = "/login?errMessage=" + errMessage;
-          else errMessageText.text(errMessage);
-        },
-      });
-    }
+  $("#otp-frm").submit(event => {
+    if (!App.validateSubmit(event)) return;
+    event.preventDefault();
+    errorText.text("");
+    App.request({
+      url: "/verifyEmail",
+      type: "POST",
+      data: App.formData(event.currentTarget),
+      dataType: "json",
+      success: data => { location.href = data.path ?? "/done"; },
+      error: error => {
+        const message = App.errorMessage(error);
+        if (error.status === 440) location.href = "/login?errMessage=" + encodeURIComponent(message);
+        else errorText.text(message);
+      },
+    });
   });
-
-  function startTimer() {
-    timerId = setInterval(() => {
-      let minutes = Math.floor(seconds / 60);
-      let remainingSeconds = seconds % 60;
-
-      if (seconds <= 0) {
-        clearInterval(timerId);
-        resendOtpText.text("Resend OTP");
-        resendOtpText.addClass("text-primary");
-        resendOtpText.removeClass("text-secondary");
-      } else {
-        let displaySeconds =
-          remainingSeconds < 10 ? "0" + remainingSeconds : remainingSeconds;
-        resendOtpText.text(`Resend OTP (${minutes}:${displaySeconds})`);
-        resendOtpText.addClass("text-secondary");
-        resendOtpText.removeClass("text-primary");
-        seconds--;
-      }
-    }, 1000);
-  }
 });

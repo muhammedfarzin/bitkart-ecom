@@ -1,5 +1,5 @@
-function razorpayPayment(order) {
-  let options = {
+function razorpayPayment(order, callback = verifyPayment) {
+  const options = {
     key: "rzp_test_yKUJBZ1MBQQioC",
     amount: order.amount,
     currency: "INR",
@@ -7,14 +7,14 @@ function razorpayPayment(order) {
     image: "/images/bitkart.svg",
     order_id: order.id,
     handler: function (response) {
-      verifyPayment(response, order);
+      callback(response, order);
     },
     theme: {
       color: "#6F43BF",
     },
   };
 
-  let razorpayObject = new Razorpay(options);
+  const razorpayObject = new Razorpay(options);
   razorpayObject.open();
   razorpayObject.on("payment.failed", function (response) {
     showAlertBox("This step of Payment Failed");
@@ -22,7 +22,7 @@ function razorpayPayment(order) {
 }
 
 function verifyPayment(payment, order) {
-  $.ajax({
+  App.request({
     url: "/orders/verifyPayment",
     type: "POST",
     data: {
@@ -36,9 +36,6 @@ function verifyPayment(payment, order) {
       } else {
         showAlertBox(data.message, true);
       }
-    },
-    error: function (err) {
-      showAlertBox(err.responseJSON?.errMessage ?? "Something went wrong");
     },
   });
 }

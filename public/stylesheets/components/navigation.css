@@ -63,7 +63,7 @@ form {
   width: -webkit-fill-available;
 }
 
-.searchbox #search {
+.searchbox input[type="search"] {
   width: -webkit-fill-available;
   border: none;
   outline: none;

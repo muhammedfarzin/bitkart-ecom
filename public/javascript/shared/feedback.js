@@ -1,5 +1,5 @@
-const toastAlertBox = document.getElementById("alertBox");
-const alertMessage = document.getElementById("alertMessage");
+const toastAlertBox = document.getElementById("alert-box");
+const alertMessage = document.getElementById("alert-message");
 
 function showAlertBox(message, isPrimary) {
   alertMessage.innerText = message;
@@ -12,10 +12,10 @@ function showAlertBox(message, isPrimary) {
 }
 
 function showConfirmBox(message, callback) {
-  document.getElementById("confirmModalLabel").innerText = message;
-  document.getElementById("confirmBtn").onclick = () => {
+  document.getElementById("confirm-modal-label").innerText = message;
+  document.getElementById("confirm-btn").onclick = () => {
     callback();
-    document.getElementById("closeModalBtn").click();
+    document.getElementById("close-modal-btn").click();
   };
-  document.getElementById("showConfirmModalBtn").click();
+  document.getElementById("show-confirm-modal-btn").click();
 }

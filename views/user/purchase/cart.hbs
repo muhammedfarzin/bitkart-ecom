@@ -1,10 +1,10 @@
 {{> navbar}}
 
 <div class="container-lg">
-  <div id="cartView" class=" p-0 d-flex flex-wrap-reverse {{#unless cart.length}}d-none{{/unless}}">
+  <div id="cart-view" class=" p-0 d-flex flex-wrap-reverse {{#unless cart.length}}d-none{{/unless}}">
     <div class="list col-12 col-sm-7 col-md-8 px-2">
       {{#each cart}}
-        <div class="list-item border border-primary position-relative" id="listItem{{productId}}">
+        <div class="list-item border border-primary position-relative" id="list-item-{{productId}}">
           <div class="content d-flex pb-1">
             <div class="leading">
               <a href="/view/{{this.productId}}">
@@ -39,7 +39,7 @@
                       stroke-linejoin="round" />
                   </svg>
                 </button>
-                <input class="outlined-primary-box" type="number" id="quantity{{this.productId}}"
+                <input class="outlined-primary-box" type="number" id="quantity-{{this.productId}}"
                   value="{{this.quantity}}" disabled>
                 <button class="btn icon-btn-primary-light mx-2"
                   onclick="addToCart('{{this.productId}}')">
@@ -63,7 +63,7 @@
     </div>
   </div>
 
-  <div id="emptyCart" class="my-4 col-12 {{#if cart.length}}d-none{{/if}}">
+  <div id="empty-cart" class="my-4 col-12 {{#if cart.length}}d-none{{/if}}">
     <div class="d-flex justify-content-around align-items-center m-auto flex-wrap col-12 col-md-9">
       <div class="text-center col-10 col-md-5 my-5">
         <h1 class="fs-2 text-primary">Your cart is Empty</h1>

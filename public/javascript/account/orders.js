@@ -1,43 +1,34 @@
 document.addEventListener("DOMContentLoaded", function () {
-  $("#cancelOrderBtn").on("click", (e) => {
+  $("#cancel-order-btn").on("click", (e) => {
     showConfirmBox("Do you really want to cancel the order?", () => {
-      $.ajax({
+      App.request({
         url: location.href,
         type: "DELETE",
         success: function (data) {
           showAlertBox(data.message ?? "Order cancelled", true);
           location.reload();
         },
-        error: function (err) {
-          showAlertBox(err.responseJSON?.errMessage ?? "Something went wrong");
-        },
       });
     });
   });
 
-  $("#completePendingPaymentBtn").on("click", (e) => {
+  $("#complete-pending-payment-btn").on("click", (e) => {
     const url = new URL(location.href);
     url.pathname += "/completePayment";
-    $.ajax({
+    App.request({
       url: url.toString(),
       type: "POST",
       success: function (data) {
         razorpayPayment(data);
       },
-      error: function (err) {
-        showAlertBox(err.responseJSON?.errMessage ?? "Something went wrong");
-      },
     });
   });
 
-  $("#returnOrderFrm").submit((e) => {
+  $("#return-order-frm").submit((e) => {
+    if (!App.validateSubmit(e)) return;
     e.preventDefault();
-    let formData = $("#returnOrderFrm").serializeArray();
-    let formObject = {};
-    $.each(formData, function () {
-      formObject[this.name] = this.value;
-    });
-    $.ajax({
+    const formObject = App.formData(e.currentTarget);
+    App.request({
       url: location.href + "/return",
       type: "PATCH",
       data: formObject,
@@ -45,47 +36,28 @@ document.addEventListener("DOMContentLoaded", function () {
       success: function (data) {
         location.reload();
       },
-      error: function (err) {
-        showAlertBox(err.responseJSON?.errMessage ?? "Something went wrong");
-      },
     });
   });
 
-  $("#reviewForm").submit((e) => {
+  $("#review-frm").submit((e) => {
+    if (!App.validateSubmit(e)) return;
     e.preventDefault();
-    let formData = $("#reviewForm").serializeArray();
-    let formObject = {};
-    $.each(formData, function () {
-      formObject[this.name] = this.value;
+    const formObject = App.formData(e.currentTarget);
+    App.request({
+      url: location.href + "/addReview",
+      type: "POST",
+      data: formObject,
+      dataType: "json",
+      success: data => showAlertBox(data.message || "Review submitted", true),
     });
-    if (formObject.starRating < 1 || formObject.starRating > 5) {
-      showAlertBox("Please select valid starRating");
-    } else {
-      $.ajax({
-        url: location.href + "/addReview",
-        type: "POST",
-        data: formObject,
-        dataType: "json",
-        success: function (data) {
-          showAlertBox(data.message || "Review submitted", true);
-        },
-        error: function (err) {
-          showAlertBox(err.responseJSON?.errMessage ?? "Something went wrong");
-        },
-      });
-    }
   });
 });
 
 function changeStarRating(value) {
-  const starRatingList = $(".starRating");
+  const starRatingList = $(".star-rating");
   starRatingList.each((index, element) => {
-    if (index < value) {
-      $(element).css("fill", "#6F43BF");
-    } else {
-      $(element).css("fill", "none");
-    }
+    $(element).css("fill", index < value ? "#6F43BF" : "none");
   });
-  $("#starRating").val(value);
-  $("#submitBtn").prop("disabled", false);
+  $("#star-rating").val(value);
+  $("#submit-btn").prop("disabled", false);
 }

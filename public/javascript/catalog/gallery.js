@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
-  const closePopupBtn = $("#closePopupBtn");
+  const closePopupBtn = $("#close-popup-btn");
   const popup = $("#popup-image");
   const imageView = $("#product-images");
   imageView.on("click", (e) => {
@@ -12,22 +12,20 @@ document.addEventListener("DOMContentLoaded", function () {
     popup.css("opacity", 0);
   });
 
-  var $image = $("#popup-image-view");
-  var $container = $("#popupCarousel");
+  const $image = $("#popup-image-view");
+  const $container = $("#popup-carousel");
 
   $container.on("mousemove", function (e) {
-    var containerWidth = $container.width();
-    var containerHeight = $container.height();
-    var imageWidth = $image.width();
-    var imageHeight = $image.height();
+    const containerWidth = $container.width();
+    const containerHeight = $container.height();
 
-    var x = e.pageX - $container.offset().left;
-    var y = e.pageY - $container.offset().top;
+    const x = e.pageX - $container.offset().left;
+    const y = e.pageY - $container.offset().top;
 
-    var xPercentage = (x / containerWidth) * 100;
-    var yPercentage = (y / containerHeight) * 100;
+    const xPercentage = (x / containerWidth) * 100;
+    const yPercentage = (y / containerHeight) * 100;
 
-    var scaleAmount = 2; // Adjust the zoom level as needed
+    const scaleAmount = 2; // Adjust the zoom level as needed
 
     $image.css({
       transformOrigin: xPercentage + "% " + yPercentage + "%",

@@ -1,8 +1,9 @@
 document.addEventListener("DOMContentLoaded", function () {
-  $("#filterForm").submit((e) => {
+  $("#filter-frm").submit((e) => {
+    if (!App.validateSubmit(e)) return;
     e.preventDefault();
     const url = new URL(location.href);
-    let formData = $("#filterForm").serializeArray();
+    let formData = $("#filter-frm").serializeArray();
     const categoryDatasArray = [];
     $.each(formData, function () {
       if (this.name == "categories") categoryDatasArray.push(this.value);
@@ -19,7 +20,7 @@ document.addEventListener("DOMContentLoaded", function () {
     location.replace(url);
   });
 });
-const selectSort = document.getElementById("selectSort");
+const selectSort = document.getElementById("select-sort");
 if (selectSort) {
   selectSort.onclick = () => {
     const value = selectSort.value;

@@ -1,11 +1,11 @@
 (() => {
-  const filter = document.getElementById("priceRangeFilter");
+  const filter = document.getElementById("price-range-filter");
   if (!filter) return;
 
-  const minimum = document.getElementById("minAmount");
-  const maximum = document.getElementById("maxAmount");
-  const lower = document.getElementById("minPriceRange");
-  const upper = document.getElementById("maxPriceRange");
+  const minimum = document.getElementById("min-amount");
+  const maximum = document.getElementById("max-amount");
+  const lower = document.getElementById("min-price-range");
+  const upper = document.getElementById("max-price-range");
   const limit = Number(filter.dataset.maximum);
   const minimumGap = 500;
   const amount = (input, fallback) =>

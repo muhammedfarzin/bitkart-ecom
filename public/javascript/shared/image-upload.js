@@ -9,6 +9,27 @@ document.addEventListener("DOMContentLoaded", function () {
   const cropImageGallery = document.getElementById("crop-image-gallery");
   let imageCropperList = [];
 
+  function setPopupVisible(visible) {
+    popupWindow.style.visibility = visible ? "visible" : "hidden";
+    popupWindow.style.opacity = visible ? 1 : 0;
+  }
+
+  function createCropper(file, aspectRatio) {
+    const container = document.createElement("div");
+    container.className = "outlined-card m-2 center-box-v-24 object-fit-contain bg-light rounded-0 p-0";
+    const image = document.createElement("img");
+    const url = URL.createObjectURL(file);
+    image.src = url;
+    container.append(image);
+    cropImageGallery.append(container);
+    return new Cropper(image, {
+      aspectRatio,
+      viewMode: 1,
+      ready: () => URL.revokeObjectURL(url),
+    });
+  }
+
+
   if (imagesInput) {
     imagesInput.addEventListener("change", handleImagesSelection);
     document
@@ -25,31 +46,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
     for (const image of selectedImages) {
       if (!isImage(image)) return showAlertBox("Please select an image");
-      const imageUrl = URL.createObjectURL(image);
-      let containerDiv = document.createElement("div");
-      containerDiv.classList.add(
-        "outlined-card",
-        "m-2",
-        "center-box-v-24",
-        "object-fit-contain",
-        "bg-light",
-        "rounded-0",
-        "p-0",
-      );
-      let newImage = document.createElement("img");
-      newImage.src = imageUrl;
-      containerDiv.append(newImage);
-      cropImageGallery.append(containerDiv);
-      const cropper = new Cropper(newImage, { aspectRatio: 1, viewMode: 1 });
+      const cropper = createCropper(image, 1);
       imageCropperList.push(cropper);
     }
-    popupWindow.style.visibility = "visible";
-    popupWindow.style.opacity = 1;
+    setPopupVisible(true);
   }
 
-  $("#cropDone").on("click", (e) => {
-    popupWindow.style.opacity = 0;
-    popupWindow.style.visibility = "hidden";
+  $("#crop-done").on("click", (e) => {
+    setPopupVisible(false);
     for (const cropper of imageCropperList) {
       const imageUrl = cropper.getCroppedCanvas().toDataURL("image/jpg");
       const croppedImage = document.createElement("img");
@@ -76,31 +80,13 @@ document.addEventListener("DOMContentLoaded", function () {
   function imageChanged(element) {
     const image = element?.target?.files[0];
     if (!isImage(image)) return showAlertBox("Please select an image");
-    const imageUrl = URL.createObjectURL(image);
-    let containerDiv = document.createElement("div");
-    containerDiv.classList.add(
-      "outlined-card",
-      "m-2",
-      "center-box-v-24",
-      "object-fit-contain",
-      "bg-light",
-      "rounded-0",
-      "p-0",
-    );
-    const newImage = document.createElement("img");
-    newImage.src = imageUrl;
-    containerDiv.append(newImage);
-    cropImageGallery.innerHTML = null;
-    cropImageGallery.append(containerDiv);
-    cropper = new Cropper(newImage, { aspectRatio: 1, viewMode: 1 });
-    popupWindow.style.visibility = "visible";
-    popupWindow.style.opacity = 1;
-    // newImage.classList.add('object-fit-contain', 'bg-light', 'w-100', 'h-100', 'rounded-4');
+    cropImageGallery.innerHTML = "";
+    cropper = createCropper(image, 1);
+    setPopupVisible(true);
   }
 
-  $("#cCropDone").on("click", (e) => {
-    popupWindow.style.opacity = 0;
-    popupWindow.style.visibility = "hidden";
+  $("#category-crop-done").on("click", (e) => {
+    setPopupVisible(false);
     const imageUrl = cropper.getCroppedCanvas().toDataURL("image/jpg");
     const croppedImage = document.createElement("img");
     croppedImage.src = imageUrl;
@@ -127,30 +113,13 @@ document.addEventListener("DOMContentLoaded", function () {
   function bannerImageChanged(element) {
     const image = element?.target?.files[0];
     if (!isImage(image)) return showAlertBox("Please select an image");
-    const imageUrl = URL.createObjectURL(image);
-    let containerDiv = document.createElement("div");
-    containerDiv.classList.add(
-      "outlined-card",
-      "m-2",
-      "center-box-v-24",
-      "object-fit-contain",
-      "bg-light",
-      "rounded-0",
-      "p-0",
-    );
-    const newImage = document.createElement("img");
-    newImage.src = imageUrl;
-    containerDiv.append(newImage);
-    cropImageGallery.innerHTML = null;
-    cropImageGallery.append(containerDiv);
-    bannerCropper = new Cropper(newImage, { aspectRatio: 21 / 6, viewMode: 1 });
-    popupWindow.style.visibility = "visible";
-    popupWindow.style.opacity = 1;
+    cropImageGallery.innerHTML = "";
+    bannerCropper = createCropper(image, 21 / 6);
+    setPopupVisible(true);
   }
 
-  $("#bannerCropDone").on("click", (e) => {
-    popupWindow.style.opacity = 0;
-    popupWindow.style.visibility = "hidden";
+  $("#banner-crop-done").on("click", (e) => {
+    setPopupVisible(false);
     const imageUrl = bannerCropper.getCroppedCanvas().toDataURL("image/jpg");
     bannerCropper.getCroppedCanvas().toBlob(function (blob) {
       const croppedFile = new File([blob], bannerImageInput.files[0].name, {
@@ -162,8 +131,8 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     bannerCropper = null;
-    $("#bannerImg").attr("src", imageUrl);
-    $("#bannerImg").removeClass("d-none");
-    $("#addImageUI").remove();
+    $("#banner-img").attr("src", imageUrl);
+    $("#banner-img").removeClass("d-none");
+    $("#add-image-ui").remove();
   });
 });

@@ -1,9 +1,9 @@
 {{> navbar}}
 
 <aside class="col-md-3 sm-d-none">
-  <div class="searchSection">
+  <div class="search-section">
     <h4 class="text-primary my-1">Sort</h4>
-    <select name="selectSort" id="selectSort"
+    <select name="selectSort" id="select-sort"
       class="outlined-card placeholder-primary outline-none w-100">
       <option value="newArrival" {{#if (eq sort 'newArrival' )}}selected{{/if}}>New Arrival</option>
       <option value="priceAtoZ" {{#if (eq sort 'priceAtoZ' )}}selected{{/if}}>Price: low to high
@@ -13,39 +13,39 @@
     </select>
   </div>
 
-  <form method="get" id="filterForm">
-    <div class="searchSection mt-2">
+  <form method="get" id="filter-frm">
+    <div class="search-section mt-2">
       <h4 class="text-primary my-1">Categories</h4>
       <div class="ms-1 my-2">
         {{#each categories}}
           <div class="d-flex">
-            <input type="checkbox" value="{{_id}}" name="categories" id="category{{_id}}"
+            <input type="checkbox" value="{{_id}}" name="categories" id="category-{{_id}}"
               class="form-check-input"
               {{#if (includes @root.selectedCategories (toStr _id))}}checked{{/if}}>
             <label class="ms-2 text-capitalize cursor-pointer"
-              for="category{{_id}}">{{title}}</label>
+              for="category-{{_id}}">{{title}}</label>
           </div>
         {{/each}}
       </div>
     </div>
-    <div class="searchSection">
+    <div class="search-section">
       <h4 class="text-primary my-1">Price</h4>
-      <div id="priceRangeFilter" data-maximum="50000">
+      <div id="price-range-filter" data-maximum="50000">
         <div class="price-range-slider form-control">
           <div class="price-range-track"></div>
-          <input type="range" id="minPriceRange" min="0" max="50000" step="500" value="0"
+          <input type="range" id="min-price-range" min="0" max="50000" step="500" value="0"
             aria-label="Minimum price in rupees" class="shadow-none">
-          <input type="range" id="maxPriceRange" min="0" max="50000" step="500" value="50000"
-            aria-label="Maximum price in rupees" aria-describedby="priceRangeHint"
+          <input type="range" id="max-price-range" min="0" max="50000" step="500" value="50000"
+            aria-label="Maximum price in rupees" aria-describedby="price-range-hint"
             class="shadow-none">
         </div>
       </div>
       <div class="d-flex flex-wrap align-items-center my-2">
-        <input type="number" name="minAmount" id="minAmount" placeholder="Min" value="{{minAmount}}"
+        <input type="number" name="minAmount" id="min-amount" placeholder="Min" value="{{minAmount}}"
           min="0" step="1" aria-label="Minimum price in rupees"
           class="outlined-card placeholder-primary outline-none text-center w-100 col-12 col-md">
         <div class="mx-3">to</div>
-        <input type="number" name="maxAmount" id="maxAmount" placeholder="50,000+"
+        <input type="number" name="maxAmount" id="max-amount" placeholder="50,000+"
           value="{{maxAmount}}" min="0" step="1" aria-label="Maximum price in rupees"
           class="outlined-card placeholder-primary outline-none text-center w-100 col-12 col-md">
       </div>
@@ -102,9 +102,9 @@
                   <span class="text-danger fs-6 fw-bold">This product is currently unvailable</span>
                 {{/if}}
               </div>
-              <div class="icon-btn position-absolute tr-1" id="wishlistBtn{{_id}}"
+              <div class="icon-btn position-absolute tr-1" id="wishlist-btn-{{_id}}"
                 onclick="{{#if (includes @root.userWishlist _id)}}removeFromWishlist{{else}}addToWishlist{{/if}}('{{_id}}'); return false">
-                <svg width="30" height="30" viewBox="0 0 30 30" id="wishlistIcon{{_id}}"
+                <svg width="30" height="30" viewBox="0 0 30 30" id="wishlist-icon-{{_id}}"
                   fill="{{#if (includes @root.userWishlist _id)}}#6F43BF{{else}}#ded6ed{{/if}}"
                   xmlns="http://www.w3.org/2000/svg">
                   <path stroke="#6F43BF" stroke-width="3" stroke-linecap="round"

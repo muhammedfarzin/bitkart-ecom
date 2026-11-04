@@ -1,10 +1,10 @@
 <div class="chart-container {{class}}" style="position: relative; width:80vw; max-width: 400px;">
-  <canvas id="myChart"></canvas>
+  <canvas id="my-chart"></canvas>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    var ctx = document.getElementById('myChart').getContext('2d');
+    var ctx = document.getElementById('my-chart').getContext('2d');
     var myChart = new Chart(ctx, {
         type: 'bar',
         data: {

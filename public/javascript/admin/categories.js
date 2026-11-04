@@ -1,5 +1,5 @@
 function deleteCategory(categoryId) {
-  $.ajax({
+  App.request({
     url: "/admin/categories/delete",
     type: "DELETE",
     data: { categoryId },
@@ -7,9 +7,6 @@ function deleteCategory(categoryId) {
     success: function (data) {
       showAlertBox("Category deleted successfully", true);
       location.reload();
-    },
-    error: function (err) {
-      alert(err.responseJSON?.errMessage ?? "Something went wrong");
     },
   });
 }

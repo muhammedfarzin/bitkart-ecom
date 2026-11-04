@@ -1,5 +1,5 @@
 function changeOrderStatus(status, elem) {
-  $.ajax({
+  App.request({
     url: location.href + "/updateStatus",
     type: "POST",
     data: { status },
@@ -7,9 +7,6 @@ function changeOrderStatus(status, elem) {
     success: function (data) {
       showAlertBox(data.message, true);
       location.reload();
-    },
-    error: function (err) {
-      showAlertBox(err.responseJSON?.errMessage ?? "Something went wrong");
     },
   });
 }

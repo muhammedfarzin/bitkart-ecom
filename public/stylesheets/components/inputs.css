@@ -63,6 +63,7 @@ textarea#description::-webkit-scrollbar {
 }
 
 input.err,
+select.err,
 textarea.err,
 div.err {
   border: 1px solid #dc3545;

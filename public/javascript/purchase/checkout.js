@@ -1,26 +1,22 @@
 document.addEventListener("DOMContentLoaded", function () {
   const errMessage = $("#err-message");
-  const placeOrderForm = $("#placeOrderFrm");
+  const placeOrderForm = $("#place-order-frm");
 
   const promocodeInput = $("#promocode");
-  const promocodeBtn = $("#promocodeBtn");
+  const promocodeBtn = $("#promocode-btn");
 
-  $("#placeOrderBtn").on("click", () => placeOrderForm.submit());
+  $("#place-order-btn").on("click", () => placeOrderForm.submit());
 
   placeOrderForm?.submit((e) => {
+    if (!App.validateSubmit(e)) return;
     e.preventDefault();
-    let formData = placeOrderForm.serializeArray();
-    let formObject = {};
-    $.each(formData, function () {
-      formObject[this.name] = this.value;
-    });
-    if (!formObject.addressId) return showAlertBox("Please select an address");
+    const formObject = App.formData(e.currentTarget);
 
     if (/^(cod|online|wallet)$/.test(formObject.paymentMethod)) {
       if (promocodeBtn.text() == "applied") {
         formObject.promocode = promocodeInput.val();
       }
-      $.ajax({
+      App.request({
         url: "/placeOrder",
         type: "POST",
         data: formObject,
@@ -32,9 +28,6 @@ document.addEventListener("DOMContentLoaded", function () {
             razorpayPayment(data);
           }
         },
-        error: function (err) {
-          showAlertBox(err.responseJSON?.errMessage ?? "Something went wrong");
-        },
       });
     } else {
       showAlertBox("Please select a valid payment method");
@@ -43,36 +36,33 @@ document.addEventListener("DOMContentLoaded", function () {
 
   promocodeInput.on("input", (e) => {
     const value = promocodeInput.val().replace(/\s/, "");
-    if (value) {
-      promocodeBtn.prop("disabled", false);
-      promocodeInput.val(value);
-    } else {
-      promocodeBtn.prop("disabled", true);
-      promocodeInput.val("");
-    }
+    promocodeBtn.prop("disabled", !value);
+    promocodeInput.val(value);
   });
 
-  $("#promocodeForm").submit((e) => {
+  $("#promocode-frm").submit((e) => {
+    if (!App.validateSubmit(e)) return;
     e.preventDefault();
     const promocode = promocodeInput.val().replace(/\s/, "");
     errMessage.text("");
     if (promocode) {
       promocodeBtn.prop("disabled", true);
-      $.ajax({
+      App.request({
         url: "/checkout/verifyPromocode",
         type: "POST",
         data: { promocode },
         dataType: "json",
         success: function (data) {
-          const totalAmountElem = $("#totalAmount");
+          const totalAmountElem = $("#total-amount");
           const totalAmount = parseFloat(
             totalAmountElem.text().replace("₹", "").replace(/,/g, ""),
           );
-          $("#promocodeSummary").removeClass("d-none").addClass("d-flex");
-          $("#promocodeValue").text("-₹" + data.promocodeDiscount);
+          $("#promocode-summary").removeClass("d-none").addClass("d-flex");
+          $("#promocode-value").text(
+            "-" + App.formatCurrency(data.promocodeDiscount),
+          );
           totalAmountElem.text(
-            "₹" +
-              (totalAmount - data.promocodeDiscount).toLocaleString("en-IN"),
+            App.formatCurrency(totalAmount - data.promocodeDiscount),
           );
 
           promocodeInput.prop("readonly", true);
@@ -80,8 +70,9 @@ document.addEventListener("DOMContentLoaded", function () {
           promocodeBtn.text("applied");
           promocodeBtn.removeClass("btn-primary").addClass("btn-success");
         },
-        error: function (err) {
-          showAlertBox(err.responseJSON?.errMessage ?? "Something went wrong");
+        error: (error) => {
+          promocodeBtn.prop("disabled", false);
+          App.showRequestError(error);
         },
       });
     }

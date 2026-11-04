@@ -1,13 +1,10 @@
 function onSignIn(response) {
-  $.ajax({
+  App.request({
     url: "/login/google",
     type: "POST",
     data: response,
     success: function (data) {
       location.replace(data.redirectUrl || "/");
-    },
-    error: function (err) {
-      showAlertBox(err.responseJSON?.errMessage ?? "Something went wrong");
     },
   });
 }

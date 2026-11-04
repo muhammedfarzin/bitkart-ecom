@@ -28,14 +28,14 @@
   max-width: 100%;
 }
 
-#popupCarousel:hover .carousel-control-prev,
-#popupCarousel:hover .carousel-control-next,
-#popupCarousel:hover .carousel-indicators {
+#popup-carousel:hover .carousel-control-prev,
+#popup-carousel:hover .carousel-control-next,
+#popup-carousel:hover .carousel-indicators {
   visibility: visible;
   opacity: 1;
 }
 
-#popupCarousel {
+#popup-carousel {
   border-radius: 1rem;
   overflow: hidden;
   position: relative;
@@ -48,7 +48,7 @@
   transition: transform 0.3s ease;
 }
 
-#popupCarousel::before {
+#popup-carousel::before {
   content: "";
   position: absolute;
   top: 0;
@@ -60,7 +60,7 @@
   pointer-events: none;
 }
 
-#closePopupBtn {
+#close-popup-btn {
   position: fixed;
   top: 10px;
   right: 10px;
@@ -72,7 +72,7 @@
   cursor: pointer;
 }
 
-#closePopupBtn:hover {
+#close-popup-btn:hover {
   background: #fff;
   fill: #000;
 }
