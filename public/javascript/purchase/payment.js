@@ -23,7 +23,7 @@ function razorpayPayment(order, callback = verifyPayment) {
 
 function verifyPayment(payment, order) {
   App.request({
-    url: "/orders/verifyPayment",
+    url: "/order-payment-verifications",
     type: "POST",
     data: {
       payment,

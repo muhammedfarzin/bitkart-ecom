@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", function () {
         formObject.promocode = promocodeInput.val();
       }
       App.request({
-        url: "/placeOrder",
+        url: "/orders",
         type: "POST",
         data: formObject,
         dataType: "json",
@@ -48,7 +48,7 @@ document.addEventListener("DOMContentLoaded", function () {
     if (promocode) {
       promocodeBtn.prop("disabled", true);
       App.request({
-        url: "/checkout/verifyPromocode",
+        url: "/checkout/promocode-validations",
         type: "POST",
         data: { promocode },
         dataType: "json",

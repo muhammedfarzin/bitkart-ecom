@@ -10,7 +10,7 @@
         <h1 class="text-primary">{{#if category}} Update {{else}} Create {{/if}} Category</h1>
       </div>
     </div>
-    <form method="post" enctype="multipart/form-data" id="category-frm">
+    <form method="post" data-rest-form data-method="{{#if category}}PATCH{{else}}POST{{/if}}" action="/admin/categories{{#if category}}/{{category._id}}{{/if}}" enctype="multipart/form-data" id="category-frm">
       <div class="outlined-card m-2 border-black col-md">
         <div class="d-flex flex-wrap-reverse w-100">
           {{!-- Form --}}

@@ -51,3 +51,37 @@ window.App = (() => {
     formatCurrency,
   };
 })();
+
+// Native forms only support GET/POST; submit resource mutations with their real method.
+document.addEventListener("submit", async (event) => {
+  const form = event.target;
+  if (!form?.matches("[data-rest-form]") || event.defaultPrevented) return;
+  event.preventDefault();
+  if (!FormValidation.validate(form)) return;
+  const url = new URL(form?.action, location.href);
+  const redirect = new URL(location.href).searchParams.get("redirect");
+  if (redirect) url.searchParams.set("redirect", redirect);
+  const data = new FormData(form);
+  try {
+    const response = await fetch(url, {
+      method: form?.dataset.method,
+      body:
+        form?.enctype === "multipart/form-data"
+          ? data
+          : new URLSearchParams(data),
+    });
+    if (response.redirected) {
+      location.assign(response.url);
+      return;
+    }
+    if (response.headers.get("content-type")?.includes("text/html")) {
+      const html = await response.text();
+      const page = new DOMParser().parseFromString(html, "text/html");
+      document.documentElement.replaceWith(page.documentElement);
+    } else if (!response.ok) {
+      App.showRequestError({ responseJSON: await response.json() });
+    }
+  } catch {
+    showAlertBox("Unable to submit the form. Please try again.");
+  }
+});

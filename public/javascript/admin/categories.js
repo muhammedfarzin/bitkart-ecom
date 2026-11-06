@@ -1,6 +1,6 @@
 function deleteCategory(categoryId) {
   App.request({
-    url: "/admin/categories/delete",
+    url: "/admin/categories/" + encodeURIComponent(categoryId),
     type: "DELETE",
     data: { categoryId },
     dataType: "json",

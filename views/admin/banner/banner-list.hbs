@@ -10,7 +10,7 @@
         <h1 class="text-primary">Banner</h1>
       </div>
     </div>
-    <form method="post" action="banner/{{#if banners}}update{{else}}create{{/if}}"
+    <form method="post" action="/admin/banner" data-rest-form data-method="{{#if banners}}PATCH{{else}}POST{{/if}}"
       enctype="multipart/form-data" id="banner-frm">
       <div class="outlined-card m-2 border-black col">
         <div class="text-danger f-uppercase ms-2" id="err-message">{{errMessage}}</div>

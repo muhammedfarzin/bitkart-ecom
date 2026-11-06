@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
     event.preventDefault();
     $("#err-message").text("");
     App.request({
-      url: "/account/wallet/addMoney",
+      url: "/account/wallet/payments",
       type: "POST",
       data: App.formData(event.currentTarget),
       dataType: "json",
@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 function verifyWalletPayment(payment, order) {
   App.request({
-    url: "/account/wallet/verifyPayment",
+    url: "/account/wallet/payment-verifications",
     type: "POST",
     data: {
       payment,

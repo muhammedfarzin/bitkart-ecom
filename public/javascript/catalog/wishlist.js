@@ -5,9 +5,8 @@ function updateWishlist(productId, adding) {
   const button = $("#wishlist-btn-" + productId);
   icon.css("fill", primaryColor + "80");
   App.request({
-    url: adding ? "/wishlist/add" : "/wishlist/remove",
-    type: adding ? "POST" : "DELETE",
-    data: { productId },
+    url: "/wishlist/items/" + encodeURIComponent(productId),
+    type: adding ? "PUT" : "DELETE",
     followRedirects: adding,
     dataType: "json",
     success: () => {
@@ -15,7 +14,7 @@ function updateWishlist(productId, adding) {
       const nextAction = adding ? "removeFromWishlist" : "addToWishlist";
       button.attr("onclick", `${nextAction}('${productId}'); return false`);
     },
-    error: error => {
+    error: (error) => {
       icon.css("fill", adding ? "none" : primaryColor);
       App.showRequestError(error);
     },

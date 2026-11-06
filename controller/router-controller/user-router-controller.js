@@ -22,10 +22,10 @@ const userRouterController = {
       .then((userData) => {
         req.session.user = userData;
         req.session.save();
-        res.redirect("/");
+        res.redirect(303, "/");
       })
       .catch((err) => {
-        res.redirect("/login?errMessage=" + err.message);
+        res.redirect(303, "/login?errMessage=" + err.message);
       });
   },
   signInUsingGoogle: async (req, res) => {
@@ -65,14 +65,14 @@ const userRouterController = {
       req.session.tempUserData = { name, mobile, email, password };
       req.session.cookie.maxAge = 5 * 60000;
       req.session.save();
-      res.redirect("/verifyEmail");
+      res.redirect(303, "/verifyEmail");
     } catch (err) {
-      res.redirect("/signup?errMessage=" + err.message);
+      res.redirect(303, "/signup?errMessage=" + err.message);
     }
   },
   showVerifyEmailPage: (req, res) => {
     if (!req.session.tempUserData)
-      return res.redirect("/login?errMessage=Time is over, please try again");
+      return res.redirect(303, "/login?errMessage=Time is over, please try again");
     res.render("user/verify-email", { errMessage: req.query.errMessage });
   },
   verfifyEmail: async (req, res) => {
@@ -107,7 +107,7 @@ const userRouterController = {
   resendOtp: async (req, res) => {
     try {
       if (!req.session.tempUserData)
-        return res.redirect("/login?errMessage=Time is over, please try again");
+        return res.redirect(303, "/login?errMessage=Time is over, please try again");
       req.session.cookie.maxAge = 5 * 60000;
       await otpController.sendOTP(req.session.tempUserData.email);
       res.json({ message: "Resent OTP successfully. Kindly check your email" });
@@ -132,31 +132,31 @@ const userRouterController = {
       };
       req.session.cookie.maxAge = 5 * 60000;
 
-      res.redirect("/verifyEmail");
+      res.redirect(303, "/verifyEmail");
     } catch (err) {
-      res.redirect("/login/forgotPassword?errMessage=" + err.message);
+      res.redirect(303, "/login/forgotPassword?errMessage=" + err.message);
     }
   },
   setNewPassword: async (req, res) => {
     try {
-      if (!req.session.tempUserData) return res.redirect("/");
+      if (!req.session.tempUserData) return res.redirect(303, "/");
       if (!req.session.tempUserData?.isOTPVerified)
         return res
           .status(400)
-          .redirect("/login?errMessage=Email address is not verified");
+          .redirect(303, "/login?errMessage=Email address is not verified");
 
       const { userId } = req.session.tempUserData;
       await userController.updatePassword(userId, req.body.password);
       req.session.user = { userId };
       delete req.session.tempUserData;
-      res.redirect("/");
+      res.redirect(303, "/");
     } catch (err) {
-      res.redirect("/login/setNewPassword?errMessage=" + err.message);
+      res.redirect(303, "/login/setNewPassword?errMessage=" + err.message);
     }
   },
   logout: (req, res) => {
     req.session.destroy();
-    res.redirect("/login");
+    res.redirect(303, "/login");
   },
 
   // Products
@@ -236,13 +236,14 @@ const userRouterController = {
         req.body
       );
       req.session.user = { ...req.session.user, ...newData };
-      res.redirect("/account");
+      res.redirect(303, "/account");
     } catch (err) {
-      res.redirect("/account?errMessage=" + err.message);
+      res.redirect(303, "/account?errMessage=" + err.message);
     }
   },
   updateCart: async (req, res) => {
-    const { productId, quantity } = req.body;
+    const { productId } = req.params;
+    const { quantity } = req.body;
     try {
       const datas = await orderController.updateCart(
         req.session.user.userId,
@@ -299,7 +300,7 @@ const userRouterController = {
     res.render("user/products/wishlist", { products });
   },
   addToWishlist: (req, res) => {
-    const { productId } = req.body;
+    const { productId } = req.params;
     const { userId } = req.session.user;
     userController
       .addToWishlist(userId, productId)
@@ -307,7 +308,7 @@ const userRouterController = {
       .catch((err) => res.status(400).json({ errMessage: err.message }));
   },
   removeFromWishlist: (req, res) => {
-    const { productId } = req.body;
+    const { productId } = req.params;
     const { userId } = req.session.user;
     userController
       .removeFromWishlist(userId, productId)
@@ -324,14 +325,15 @@ const userRouterController = {
   addAddress: async (req, res) => {
     try {
       await userController.addNewAddress(req);
-      res.redirect(req.query.redirect ?? "/account/address");
+      res.redirect(303, req.query.redirect ?? "/account/address");
     } catch (err) {
       const url = new URL(
         req.originalUrl,
         req.protocol + "://" + req.get("host")
       );
+      url.pathname = "/account/address/add";
       url.searchParams.set("errMessage", err.message);
-      res.status(400).redirect(url);
+      res.status(400).redirect(303, url);
     }
   },
   editAddressForm: async (req, res) => {
@@ -348,7 +350,7 @@ const userRouterController = {
     } catch (err) {
       res
         .status(400)
-        .redirect(
+        .redirect(303,
           `/account/address/add?errMessage=${err.message}&redirect=${req.query.redirect}`
         );
     }
@@ -356,9 +358,9 @@ const userRouterController = {
   editAddress: async (req, res) => {
     try {
       await userController.updateAddress(req);
-      res.redirect(req.query.redirect ?? "/account");
+      res.redirect(303, req.query.redirect ?? "/account");
     } catch (err) {
-      res.status(400).redirect(`${req.url}?&errMessage=${err.message}`);
+      res.status(400).redirect(303, `/account/address/edit/${req.params.id}?${new URLSearchParams({ ...req.query, errMessage: err.message })}`);
     }
   },
   deleteAddress: async (req, res) => {
@@ -390,7 +392,7 @@ const userRouterController = {
     const userId = req.session.user.userId;
     const addresses = await userController.getAddresses(userId);
     const priceDetails = await orderController.getPriceSummary(userId);
-    if (!priceDetails.totalPrice) return res.redirect("/");
+    if (!priceDetails.totalPrice) return res.redirect(303, "/");
 
     const context = {
       priceDetails,
@@ -506,7 +508,7 @@ const userRouterController = {
       delete req.session.orderDone;
       res.render("user/purchase/order-success");
     } else {
-      res.redirect("/");
+      res.redirect(303, "/");
     }
   },
   getOrderInvoicePDF: (req, res) => {

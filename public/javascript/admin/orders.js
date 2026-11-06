@@ -1,7 +1,7 @@
 function changeOrderStatus(status, elem) {
   App.request({
-    url: location.href + "/updateStatus",
-    type: "POST",
+    url: location.pathname,
+    type: "PATCH",
     data: { status },
     dataType: "json",
     success: function (data) {

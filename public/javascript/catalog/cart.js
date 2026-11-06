@@ -15,11 +15,11 @@ const debouncedUpdateCart = debounce(function (
   redirect,
 ) {
   let quantity = quantityElem.val();
-  const targetPath = "/cart/update";
+  const targetPath = "/cart/items/" + encodeURIComponent(productId);
   App.request({
     url: targetPath,
-    type: "POST",
-    data: { productId, quantity },
+    type: "PUT",
+    data: { quantity },
     dataType: "json",
     success: function (data) {
       if (redirect) return (location.href = redirect);

@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   $("#complete-pending-payment-btn").on("click", (e) => {
     const url = new URL(location.href);
-    url.pathname += "/completePayment";
+    url.pathname += "/payments";
     App.request({
       url: url.toString(),
       type: "POST",
@@ -29,8 +29,8 @@ document.addEventListener("DOMContentLoaded", function () {
     e.preventDefault();
     const formObject = App.formData(e.currentTarget);
     App.request({
-      url: location.href + "/return",
-      type: "PATCH",
+      url: location.pathname + "/returns",
+      type: "POST",
       data: formObject,
       dataType: "json",
       success: function (data) {
@@ -44,7 +44,7 @@ document.addEventListener("DOMContentLoaded", function () {
     e.preventDefault();
     const formObject = App.formData(e.currentTarget);
     App.request({
-      url: location.href + "/addReview",
+      url: location.pathname + "/reviews",
       type: "POST",
       data: formObject,
       dataType: "json",

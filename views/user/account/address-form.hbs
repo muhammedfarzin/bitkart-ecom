@@ -4,7 +4,7 @@
   <div class="col-md-9 my-3">
     <h3 class="text-primary">Enter your Address</h3>
     <p class="text-danger" id="err-message">{{errMessage}}</p>
-    <form method="post" class="my-3" id="address-frm">
+    <form method="post" data-rest-form data-method="{{#if address}}PATCH{{else}}POST{{/if}}" action="/account/address{{#if address}}/{{address._id}}{{/if}}" class="my-3" id="address-frm">
       <div class="d-flex flex-wrap">
         <div class="col-12 col-md my-2 px-2">
           <input type="text" name="name" id="name" value="{{address.name}}"

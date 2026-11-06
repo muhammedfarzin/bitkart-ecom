@@ -1,138 +1,145 @@
 import { Router } from "express";
-import session from "express-session";
-import MongoDBStore from "connect-mongodb-session";
+import { createSession, withMiddleware, renderForm } from "./helpers.js";
 import userRouterController from "../controller/router-controller/user-router-controller.js";
-import { checkUserLoginStatus, checkForUserLogin } from "../middleware/auth-middleware.js";
+import {
+  checkUserLoginStatus,
+  checkForUserLogin,
+} from "../middleware/auth-middleware.js";
 
 const router = Router();
-const MongoStore = MongoDBStore(session);
+const authenticatedRoute = withMiddleware(router, checkUserLoginStatus);
+const guestRoute = withMiddleware(router, checkForUserLogin);
 
-const sessionStore = new MongoStore({
-    uri: process.env.MONGO_URI,
-    collection: 'sessions',
-});
-
-sessionStore.on('error', (error) => {
-    console.error('Session store error:', error);
-});
-
-router.use(session({
-    key: 'USER_SESSION',
-    secret: 'user_secret',
-    saveUninitialized: false,
-    resave: false,
-    store: sessionStore,
-    cookie: {
-        maxAge: 3600000 * 24 * 30  // 30 days
-    }
-}));
+router.use(
+  createSession({
+    key: "USER_SESSION",
+    secret: "user_secret",
+    maxAge: 3600000 * 24 * 30,
+  }),
+);
 
 router.use((req, res, next) => {
   res.locals.isLoggedIn = !!req.session.user;
   next();
 });
 
-
 // Routes
 
-router.get('/login', checkForUserLogin, (req, res) => {
-    res.render('user/login', { errMessage: req.query.errMessage });
-});
+guestRoute("/login")
+  .get(renderForm("user/login"))
+  .post(userRouterController.login);
 
-router.post('/login', checkForUserLogin, userRouterController.login);
+guestRoute("/signup")
+  .get(renderForm("user/signup"))
+  .post(userRouterController.signup);
 
-router.get('/signup', checkForUserLogin, (req, res) => {
-    res.render('user/signup', { errMessage: req.query.errMessage });
-});
-
-router.post('/signup', checkForUserLogin, userRouterController.signup);
-
-router.post('/login/google', checkForUserLogin, userRouterController.signInUsingGoogle)
+guestRoute("/login/google").post(userRouterController.signInUsingGoogle);
 
 // OTP Validation
-router.get('/verifyEmail', userRouterController.showVerifyEmailPage);
+router
+  .route("/verifyEmail")
+  .get(userRouterController.showVerifyEmailPage)
+  .post(userRouterController.verfifyEmail);
 
-router.post('/verifyEmail', userRouterController.verfifyEmail);
+router.get("/resendOtp", userRouterController.resendOtp);
 
-router.get('/resendOtp', userRouterController.resendOtp);
+guestRoute("/login/forgotPassword")
+  .get(renderForm("user/forgot-password"))
+  .post(userRouterController.forgotPassword);
 
-router.get('/login/forgotPassword', checkForUserLogin, (req, res) => res.render('user/forgot-password', { errMessage: req.query.errMessage }));
+guestRoute("/login/setNewPassword")
+  .get(renderForm("user/auth/new-password-frm"))
+  .post(userRouterController.setNewPassword);
 
-router.post('/login/forgotPassword', checkForUserLogin, userRouterController.forgotPassword);
-
-router.get('/login/setNewPassword', checkForUserLogin, (req, res) => res.render('user/auth/new-password-frm', { errMessage: req.query.errMessage }));
-
-router.post('/login/setNewPassword', checkForUserLogin, userRouterController.setNewPassword);
-
-router.get('/', userRouterController.showHome);
+router.get("/", userRouterController.showHome);
 
 // Product overview
-router.get('/view/:id', userRouterController.productOverview);
+router.get("/view/:id", userRouterController.productOverview);
 
-router.get('/logout', userRouterController.logout);
+router.get("/logout", userRouterController.logout);
 
 // Search
-router.get('/search', userRouterController.searchProducts);
+router.get("/search", userRouterController.searchProducts);
 
 // Account
-router.get('/account', checkUserLoginStatus, userRouterController.showPersonalDetailsForm);
+authenticatedRoute("/account")
+  .get(userRouterController.showPersonalDetailsForm)
+  .patch(userRouterController.updateUser);
 
-router.get('/account/address', checkUserLoginStatus, userRouterController.showAddressList);
+authenticatedRoute("/account/address")
+  .get(userRouterController.showAddressList)
+  .post(userRouterController.addAddress);
 
-router.get('/account/orders', checkUserLoginStatus, userRouterController.showOrdersList);
+authenticatedRoute("/account/orders").get(userRouterController.showOrdersList);
 
-router.post('/updateUser', checkUserLoginStatus, userRouterController.updateUser);
+authenticatedRoute("/account/wallet").get(userRouterController.showWalletDatas);
 
-router.get('/account/wallet', checkUserLoginStatus, userRouterController.showWalletDatas);
+authenticatedRoute("/account/wallet/payments").post(
+  userRouterController.addMoneyToWallet,
+);
 
-router.post('/account/wallet/addMoney', checkUserLoginStatus, userRouterController.addMoneyToWallet);
+authenticatedRoute("/account/wallet/payment-verifications").post(
+  userRouterController.verifyWalletPayment,
+);
 
-router.post('/account/wallet/verifyPayment', checkUserLoginStatus, userRouterController.verifyWalletPayment)
+// Manage Address
+authenticatedRoute("/account/address/add").get(
+  userRouterController.showAddAddressForm,
+);
 
-// Mange Address
-router.get('/account/address/add', checkUserLoginStatus, userRouterController.showAddAddressForm);
+authenticatedRoute("/account/address/edit/:id").get(
+  userRouterController.editAddressForm,
+);
 
-router.post('/account/address/add', checkUserLoginStatus, userRouterController.addAddress);
-
-router.get('/account/address/edit/:id', checkUserLoginStatus, userRouterController.editAddressForm);
-
-router.post('/account/address/edit/:id', checkUserLoginStatus, userRouterController.editAddress);
-
-router.delete('/account/address/remove/:id', checkUserLoginStatus, userRouterController.deleteAddress);
+authenticatedRoute("/account/address/:id")
+  .patch(userRouterController.editAddress)
+  .delete(userRouterController.deleteAddress);
 
 // Wishlist
-router.get('/wishlist', checkUserLoginStatus, userRouterController.showWishlist);
-router.post('/wishlist/add', checkUserLoginStatus, userRouterController.addToWishlist);
-router.delete('/wishlist/remove', checkUserLoginStatus, userRouterController.removeFromWishlist);
+authenticatedRoute("/wishlist").get(userRouterController.showWishlist);
+authenticatedRoute("/wishlist/items/:productId")
+  .put(userRouterController.addToWishlist)
+  .delete(userRouterController.removeFromWishlist);
 
 // Cart
-router.get('/cart', checkUserLoginStatus, userRouterController.showCart);
+authenticatedRoute("/cart").get(userRouterController.showCart);
 
-router.post('/cart/update', checkUserLoginStatus, userRouterController.updateCart);
+authenticatedRoute("/cart/items/:productId").put(
+  userRouterController.updateCart,
+);
 
-router.get('/checkout', checkUserLoginStatus, userRouterController.showCheckout);
+authenticatedRoute("/checkout").get(userRouterController.showCheckout);
 
-router.post('/checkout/verifyPromocode', checkUserLoginStatus, userRouterController.verifyPromocode);
+authenticatedRoute("/checkout/promocode-validations").post(
+  userRouterController.verifyPromocode,
+);
 
 // Orders
-router.post('/placeOrder', checkUserLoginStatus, userRouterController.placeOrder);
+authenticatedRoute("/orders").post(userRouterController.placeOrder);
 
-router.get('/orders/:id', checkUserLoginStatus, userRouterController.showOrderDetails);
+authenticatedRoute("/orders/:id")
+  .get(userRouterController.showOrderDetails)
+  .delete(userRouterController.cancelOrder);
 
-router.delete('/orders/:id', checkUserLoginStatus, userRouterController.cancelOrder);
+authenticatedRoute("/orders/:id/returns").post(
+  userRouterController.returnOrder,
+);
 
-router.patch('/orders/:id/return', checkUserLoginStatus, userRouterController.returnOrder);
+authenticatedRoute("/order-payment-verifications").post(
+  userRouterController.verifyOrderPayment,
+);
 
-router.post('/orders/verifyPayment', checkUserLoginStatus, userRouterController.verifyOrderPayment);
+authenticatedRoute("/orders/:id/payments").post(
+  userRouterController.completePendingPayment,
+);
 
-router.post('/orders/:id/completePayment', checkUserLoginStatus, userRouterController.completePendingPayment);
-
-router.get('/orders/:id/downloadInvoice', checkUserLoginStatus, userRouterController.getOrderInvoicePDF);
+authenticatedRoute("/orders/:id/invoice").get(
+  userRouterController.getOrderInvoicePDF,
+);
 
 // Reviews
-router.post('/orders/:id/addReview', checkUserLoginStatus, userRouterController.addReview);
+authenticatedRoute("/orders/:id/reviews").post(userRouterController.addReview);
 
-router.get('/orderSuccess', checkUserLoginStatus, userRouterController.orderSuccess);
-
+authenticatedRoute("/orderSuccess").get(userRouterController.orderSuccess);
 
 export default router;

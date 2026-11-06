@@ -23,27 +23,27 @@ const adminRouterController = {
     // Authentications
     showLoginForm: (req, res) => {
         if (checkLogin(req.session)) {
-            res.redirect(dashboardRoute);
+            res.redirect(303, dashboardRoute);
         } else {
             res.render('admin/login', { title: "Admin Login" });
         }
     },
     login: (req, res) => {
         if (checkLogin(req.session)) {
-            return res.redirect(dashboardRoute);
+            return res.redirect(303, dashboardRoute);
         }
         const { email, password } = req.body;
         if (email == process.env.ADMIN_EMAIL && password == process.env.ADMIN_PASSWORD) {
             req.session.admin = email
             req.session.save();
-            res.redirect(dashboardRoute);
+            res.redirect(303, dashboardRoute);
         } else {
             res.status(401).render('admin/login', { errMessage: 'Invalid username or password' });
         }
     },
     logout: (req, res) => {
         req.session.destroy();
-        res.redirect(loginRoute);
+        res.redirect(303, loginRoute);
     },
 
     // Dashboard
@@ -53,7 +53,7 @@ const adminRouterController = {
             const topProducts = await orderController.getTopSellingProducts(3, req.query);
             const sideMenus = getSideMenus(sideMenuPath.dashboard);
             let downloadUrl = new URL(req.originalUrl, req.protocol + '://' + req.get('host'));
-            downloadUrl.pathname = '/admin/downloadSalesReport';
+            downloadUrl.pathname = '/admin/sales-report';
             res.render('admin/index', { salesReport, topProducts, sideMenus, downloadUrl, duration: req.query.duration });
         } catch (err) {
             res.status(400).render('admin/error', { errMessage: err.message });
@@ -87,7 +87,7 @@ const adminRouterController = {
     },
     toggleUserStatus: async (req, res) => {
         try {
-            const response = await userController.toggleUserStatus(req.body.userId);
+            const response = await userController.toggleUserStatus(req.params.id);
             res.json(response);
         } catch (err) {
             res.status(400).json({ errMessage: err.message });
@@ -138,9 +138,9 @@ const adminRouterController = {
     addNewProduct: async (req, res) => {
         try {
             await productController.addProduct(req);
-            res.redirect(dashboardRoute + sideMenuPath.products);
+            res.redirect(303, dashboardRoute + sideMenuPath.products);
         } catch (err) {
-            res.redirect(`${dashboardRoute}${req.path}?errMessage=${err.message}`);
+            res.redirect(303, `/admin/products/add?errMessage=${encodeURIComponent(err.message)}`);
         }
     },
     showEditProductForm: async (req, res) => {
@@ -156,9 +156,9 @@ const adminRouterController = {
     editProduct: async (req, res) => {
         try {
             await productController.updateProduct(req.params.id, req);
-            res.redirect(dashboardRoute + sideMenuPath.products);
+            res.redirect(303, dashboardRoute + sideMenuPath.products);
         } catch (err) {
-            res.redirect(`${dashboardRoute + req.path}?errMessage=${err.message}`);
+            res.redirect(303, `/admin/products/edit/${req.params.id}?errMessage=${encodeURIComponent(err.message)}`);
         }
     },
 
@@ -183,7 +183,7 @@ const adminRouterController = {
                 throw new Error('Please upload category image');
             }
             await categoryController.createCategory(req);
-            res.redirect(dashboardRoute + sideMenuPath.categories);
+            res.redirect(303, dashboardRoute + sideMenuPath.categories);
         } catch (err) {
             const sideMenus = getSideMenus();
             return res.render('admin/categories/category-form', ({ sideMenus, errMessage: err.message }));
@@ -202,14 +202,14 @@ const adminRouterController = {
     editCategory: async (req, res) => {
         try {
             await categoryController.updateCategory(req.params.id, req);
-            res.redirect(dashboardRoute + sideMenuPath.categories);
+            res.redirect(303, dashboardRoute + sideMenuPath.categories);
         } catch (err) {
-            res.redirect(`${dashboardRoute}${req.path}?errMessage=${err.message}`);
+            res.redirect(303, `/admin/categories/edit/${req.params.id}?errMessage=${encodeURIComponent(err.message)}`);
         }
     },
     deleteCategory: async (req, res) => {
         try {
-            const response = await categoryController.deleteCategory(req.body.categoryId);
+            const response = await categoryController.deleteCategory(req.params.id);
             res.json(response);
         } catch (err) {
             res.status(400).json({ errMessage: 'Invalid category' });
@@ -230,11 +230,12 @@ const adminRouterController = {
     createCoupon: async (req, res) => {
         try {
             await couponController.createCoupon(req.body);
-            res.redirect(`/admin${sideMenuPath.coupons}`);
+            res.redirect(303, `/admin${sideMenuPath.coupons}`);
         } catch (err) {
             const url = new URL(req.originalUrl, req.protocol + '://' + req.get('host'));
+            url.pathname = req.params.id ? `/admin/coupons/edit/${req.params.id}` : '/admin/coupons/create';
             url.searchParams.set('errMessage', err.message);
-            res.redirect(url);
+            res.redirect(303, url);
         }
     },
     showEditCouponForm: async (req, res) => {
@@ -246,11 +247,12 @@ const adminRouterController = {
     editCoupon: async (req, res) => {
         try {
             await couponController.editCoupon(req.params.id, req.body);
-            res.redirect(`/admin${sideMenuPath.coupons}`);
+            res.redirect(303, `/admin${sideMenuPath.coupons}`);
         } catch (err) {
             const url = new URL(req.originalUrl, req.protocol + '://' + req.get('host'));
+            url.pathname = req.params.id ? `/admin/coupons/edit/${req.params.id}` : '/admin/coupons/create';
             url.searchParams.set('errMessage', err.message);
-            res.redirect(url);
+            res.redirect(303, url);
         }
     },
     deleteCoupon: async (req, res) => {
@@ -270,11 +272,11 @@ const adminRouterController = {
     },
     createBanner: async (req, res) => {
         await bannerController.createBanner(req);
-        res.redirect(dashboardRoute + sideMenuPath.banner);
+        res.redirect(303, dashboardRoute + sideMenuPath.banner);
     },
     updateBanner: async (req, res) => {
         await bannerController.updateBanner(req);
-        res.redirect(dashboardRoute + sideMenuPath.banner);
+        res.redirect(303, dashboardRoute + sideMenuPath.banner);
 
     },
 

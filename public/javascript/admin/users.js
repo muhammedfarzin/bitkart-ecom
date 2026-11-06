@@ -1,8 +1,7 @@
 function toggleUserStatus(userId) {
   App.request({
-    url: "/admin/users/toggleStatus/",
+    url: "/admin/users/" + encodeURIComponent(userId) + "/status",
     type: "PATCH",
-    data: { userId },
     dataType: "json",
     success: function (data) {
       document.getElementById("status-" + userId).innerText = data.newStatus;

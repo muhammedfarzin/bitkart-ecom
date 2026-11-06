@@ -9,7 +9,7 @@
         <h1 class="text-primary">{{#if coupon}} Update {{else}} Create {{/if}} Coupon</h1>
       </div>
     </div>
-    <form method="post" id="coupon-frm">
+    <form method="post" data-rest-form data-method="{{#if coupon}}PATCH{{else}}POST{{/if}}" action="/admin/coupons{{#if coupon}}/{{coupon._id}}{{/if}}" id="coupon-frm">
       <div class="outlined-card m-2 border-black col-md">
         <div class="d-flex flex-wrap-reverse w-100">
           {{!-- Form --}}

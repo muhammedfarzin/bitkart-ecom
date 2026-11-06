@@ -10,7 +10,7 @@
         <h1 class="text-primary">{{#if product}} Edit {{else}} Add {{/if}} Products</h1>
       </div>
     </div>
-    <form method="post" enctype="multipart/form-data" id="product-frm">
+    <form method="post" data-rest-form data-method="{{#if product}}PATCH{{else}}POST{{/if}}" action="/admin/products{{#if product}}/{{product._id}}{{/if}}" enctype="multipart/form-data" id="product-frm">
       <div class="outlined-card m-2 border-black col">
         <div class="text-danger f-uppercase" id="err-message">{{errMessage}}</div>
         {{!-- Images --}}
