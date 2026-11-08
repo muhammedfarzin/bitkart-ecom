@@ -54,15 +54,12 @@ document.addEventListener("DOMContentLoaded", function () {
         dataType: "json",
         success: function (data) {
           const totalAmountElem = $("#total-amount");
-          const totalAmount = parseFloat(
-            totalAmountElem.text().replace("₹", "").replace(/,/g, ""),
-          );
           $("#promocode-summary").removeClass("d-none").addClass("d-flex");
           $("#promocode-value").text(
             "-" + App.formatCurrency(data.promocodeDiscount),
           );
           totalAmountElem.text(
-            App.formatCurrency(totalAmount - data.promocodeDiscount),
+            App.formatCurrency(data.totalPrice + data.deliveryCharge - data.promocodeDiscount),
           );
 
           promocodeInput.prop("readonly", true);

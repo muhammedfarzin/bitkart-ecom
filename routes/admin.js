@@ -96,6 +96,10 @@ authenticatedRoute(`${sideMenuPath.coupons}/edit/:id`).get(
   adminRouterController.showEditCouponForm,
 );
 
+authenticatedRoute(`${sideMenuPath.coupons}/:id/status`).patch(
+  adminRouterController.updateCouponStatus,
+);
+
 authenticatedRoute(`${sideMenuPath.coupons}/:id`)
   .patch(adminRouterController.editCoupon)
   .delete(adminRouterController.deleteCoupon);

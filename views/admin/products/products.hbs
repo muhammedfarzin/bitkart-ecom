@@ -12,12 +12,7 @@
         {{> searchbox method='get' for='products' class='col-12 col-md-6'}}
 
         <div class=" sm-reset-pl sm-mt-1 col">
-          <select class="btn btn-outline-primary w-100" name="status" id="status">
-            <option value="all">All</option>
-            <option value="confirmed">Active</option>
-            <option value="shipped">Inactive</option>
-            <option value="delivered">Sold out</option>
-          </select>
+          {{> status-filter options=statusOptions}}
         </div>
 
         <div class="sm-mt-1 col">

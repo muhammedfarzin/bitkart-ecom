@@ -202,7 +202,7 @@ window.FormValidation = (() => {
     const now = new Date();
     const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
     for (const name of ["validUpto", "validity"])
-      if (value(name) && value(name) < today)
+      if (value(name) && value(name) < today && value(name) !== field(name)?.dataset.originalValue)
         fail(name, "Choose today or a future date.");
     for (const name of ["dateFrom", "dateTo"])
       if (value(name) > today)

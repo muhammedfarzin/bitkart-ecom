@@ -81,9 +81,9 @@ const userController = {
             }
         })
     },
-    getUsersBasicData: async () => {
+    getUsersBasicData: async (filter = {}) => {
         try {
-            const users = await UserModel.find()
+            const users = await UserModel.find(filter)
                 .select('name email mobile status')
                 .limit(20);
             return users.map(user => user.toObject());
@@ -109,16 +109,20 @@ const userController = {
             throw err;
         }
     },
-    findUsersByQuery: async (searchQuery) => {
+    findUsersByQuery: async (searchQuery, filter = {}) => {
         try {
             let users = await UserModel.find({
+                ...filter,
                 $or: [
                     { name: { $regex: searchQuery, $options: 'i' } },
                     { email: { $regex: searchQuery, $options: 'i' } },
                     { mobile: { $regex: searchQuery, $options: 'i' } },
                 ]
             });
-            if (!users.length) users = [await UserModel.findById(searchQuery)];
+            if (!users.length && Types.ObjectId.isValid(searchQuery)) {
+                const user = await UserModel.findOne({ _id: searchQuery, ...filter });
+                if (user) users = [user];
+            }
             return users.map(user => user.toObject());
         } catch (err) {
             return [];

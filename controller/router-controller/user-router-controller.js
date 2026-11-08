@@ -406,11 +406,10 @@ const userRouterController = {
     try {
       const userId = req.session.user.userId;
       const promocode = req.body.promocode;
-      const couponResponse = await couponController.verifyCoupon(
-        userId,
-        promocode
-      );
-      res.json(couponResponse);
+      const cart = await orderController.getCartProducts(userId);
+      const couponDiscount = await couponController.verifyCoupon(promocode, cart);
+      const priceSummary = await orderController.getPriceSummary(userId, cart);
+      res.json({ ...priceSummary, promocodeDiscount: couponDiscount.totalDiscount });
     } catch (err) {
       res.status(400).json({ errMessage: err.message });
     }

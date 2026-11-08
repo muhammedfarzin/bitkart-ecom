@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 const selectSort = document.getElementById("select-sort");
 if (selectSort) {
-  selectSort.onclick = () => {
+  selectSort.onchange = () => {
     const value = selectSort.value;
     const url = new URL(location.href);
     url.searchParams.set("sort", value);

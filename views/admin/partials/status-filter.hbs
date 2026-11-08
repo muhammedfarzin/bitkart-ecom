@@ -1,0 +1,11 @@
+<form method="get" class="col" data-status-filter>
+  {{#if searchQuery}}<input type="hidden" name="search" value="{{searchQuery}}">{{/if}}
+  <select class="btn btn-outline-primary w-100" name="status" aria-label="Filter by status">
+    <option value="all" {{#if (eq selectedStatus 'all')}}selected{{/if}}>All</option>
+    {{#each options}}
+      <option value="{{value}}" {{#if (eq @root.selectedStatus value)}}selected{{/if}}>{{label}}</option>
+    {{/each}}
+  </select>
+  <noscript><button class="btn btn-primary" type="submit">Apply</button></noscript>
+</form>
+<script src="/javascript/admin/filters.js" defer></script>

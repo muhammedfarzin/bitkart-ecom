@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 const selectDuration = document.getElementById("select-duration");
-selectDuration.onclick = () => {
+selectDuration.onchange = () => {
   const value = selectDuration.value;
   if (value == "custom") {
     document.getElementById("show-custom-date-modal-btn").click();

@@ -3,34 +3,61 @@
 <div class="fluid-container d-flex">
   {{> sidebar}}
 
-  <div class="container">
+  <div class="container coupon-page">
     <div class="top-bar d-flex justify-content-between align-items-center flex-wrap">
       <div class="title col-3">
         <h1 class="text-primary">Coupons</h1>
       </div>
       <div class="actions d-flex flex-wrap justify-content-end align-items-center col-12 col-md-9">
-        {{> searchbox method='get' for='Coupons' class='col-8 col-md-9'}}
+        {{> searchbox method='get' for='Coupons' class='col-12 col-md-6'}}
 
+        {{> status-filter options=statusOptions}}
         <div class="col col-md-3">
           <a href="coupons/create" class="btn btn-primary w-100">New Coupon</a>
         </div>
       </div>
     </div>
-    <div class="list">
+    <div class="coupon-grid">
       {{#each coupons}}
-        <a class="text-reset" id="coupon-{{_id}}" href="/admin/coupons/edit/{{_id}}">
-          <div class="list-item d-flex justify-content-between align-items-start">
-            <div class="content d-flex pb-1">
-              <div class="datas">
-                <h4 class="title text-capitalize max-line-1 mb-1">{{title}}</h4>
-                <div class="subtitle">Code: {{code}}</div>
-                <div class="subtitle">Valid upto: {{formatDate validUpto 'MMMM D, YYYY'}}</div>
+        <article class="coupon-ticket" id="coupon-{{_id}}" aria-labelledby="coupon-title-{{_id}}">
+          <div class="coupon-ticket-offer">
+            <span class="coupon-ticket-brand">BITKART</span>
+            <div class="coupon-ticket-value">
+              {{#if (eq discountType 'percentage')}}{{formatNumber discountValue}}<span>%</span>{{else}}<span>&#8377;</span>{{formatNumber discountValue}}{{/if}}
+            </div>
+            <span class="coupon-ticket-off">OFF</span>
+            <span class="coupon-ticket-scope">{{#if categoryId}}Selected category{{else}}Across all categories{{/if}}</span>
+          </div>
+          <div class="coupon-ticket-body">
+            <div class="coupon-ticket-heading">
+              <span class="coupon-ticket-eyebrow">DISCOUNT COUPON</span>
+              <h2 id="coupon-title-{{_id}}"><a href="/admin/coupons/edit/{{_id}}">{{title}}</a></h2>
+            </div>
+            <div class="coupon-ticket-code" aria-label="Coupon code">{{code}}</div>
+            <dl class="coupon-ticket-details">
+              <div><dt>Minimum order</dt><dd>&#8377;{{formatNumber minPurchaseAmount}}</dd></div>
+              <div><dt>Maximum savings</dt><dd>&#8377;{{formatNumber maxDiscountAmount}}</dd></div>
+            </dl>
+            <p class="coupon-ticket-expiry">Valid until <time datetime="{{formatDate validUpto 'YYYY-MM-DD'}}">{{formatDate validUpto 'MMM D, YYYY'}}</time></p>
+            <div class="coupon-ticket-footer">
+              <div class="coupon-ticket-actions">
+                <a href="/admin/coupons/edit/{{_id}}" aria-label="Edit coupon {{code}}">Edit</a>
+                <button type="button" class="coupon-activation" data-coupon-id="{{_id}}" data-coupon-code="{{code}}" data-status="{{#if status}}{{status}}{{else}}active{{/if}}" data-expires-at="{{formatDate validUpto 'x'}}" hidden></button>
+                <button type="button" onclick="deleteCoupon('{{_id}}')" aria-label="Remove coupon {{code}}">Remove</button>
+              </div>
+              <div class="p-1 bg-light rounded-4">
+                <div class="{{isEqual displayStatus 'Active' 'status-view-success'}} {{isEqual displayStatus 'Deactivated' 'status-view-primary'}} {{isEqual displayStatus 'Expired' 'status-view-danger'}} coupon-ticket-status">{{displayStatus}}</div>
               </div>
             </div>
-            <button onclick="deleteCoupon('{{_id}}'); return false;"
-              class="btn btn-danger">Remove</button>
           </div>
-        </a>
+        </article>
+      {{else}}
+        <div class="coupon-empty">
+          <span class="coupon-empty-icon" aria-hidden="true">%</span>
+          <h2>No coupons found</h2>
+          <p>Try another search or status filter, or create a new coupon.</p>
+          <a href="/admin/coupons/create" class="btn btn-primary">New Coupon</a>
+        </div>
       {{/each}}
     </div>
   </div>

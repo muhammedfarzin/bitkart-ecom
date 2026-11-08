@@ -2,6 +2,7 @@
   <img src="/images/icons/search.svg" alt="" srcset="">
   <form method="{{#if method}}{{method}}{{else}}post{{/if}}" action="{{action}}"
     class="product-search-frm">
+    {{#if selectedStatus}}<input type="hidden" name="status" value="{{selectedStatus}}">{{/if}}
     <input class="w-100" type="search" name="search" aria-label="Search" maxlength="200" value="{{searchQuery}}"
       placeholder="Search {{for}}">
   </form>

@@ -88,15 +88,19 @@ const productController = {
         ]);
         return products;
     },
-    searchProducts: async (searchQuery) => {
+    searchProducts: async (searchQuery, filter = {}) => {
         try {
             let products = await ProductModel.find({
+                ...filter,
                 $or: [
                     { title: { $regex: searchQuery, $options: 'i' } },
                     { description: { $regex: searchQuery, $options: 'i' } },
                 ]
             });
-            if (!products.length) products = [await ProductModel.findById(searchQuery)];
+            if (!products.length && Types.ObjectId.isValid(searchQuery)) {
+                const product = await ProductModel.findOne({ _id: searchQuery, ...filter });
+                if (product) products = [product];
+            }
             return products.map(user => user.toObject());
         } catch (err) {
             return [];

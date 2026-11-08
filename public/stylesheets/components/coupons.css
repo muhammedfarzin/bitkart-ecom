@@ -1,0 +1,297 @@
+.coupon-page {
+  min-width: 0;
+}
+.coupon-page .top-bar {
+  gap: 1rem 0;
+  margin: 1.25rem 0 1.75rem;
+}
+.coupon-page-intro {
+  color: #756982;
+  font-size: 0.875rem;
+  margin: 0.5rem 0 0;
+}
+.coupon-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1.5rem;
+  padding-bottom: 2rem;
+}
+.coupon-ticket {
+  display: grid;
+  grid-template-columns: 180px minmax(0, 1fr);
+  border: 1px solid #e1d5f1;
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 5px 20px #45207809;
+}
+.coupon-ticket-offer {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1.75rem 0.75rem;
+  color: #fff;
+  background: linear-gradient(145deg, #8052cc, #59319f);
+  border-radius: 17px 0 0 17px;
+  border-right: 2px dashed #d8c5f1;
+  text-align: center;
+}
+.coupon-ticket-offer::before,
+.coupon-ticket-offer::after {
+  content: "";
+  position: absolute;
+  right: -11px;
+  width: 20px;
+  height: 20px;
+  border: 1px solid #e1d5f1;
+  border-radius: 50%;
+  background: white;
+  z-index: 1;
+}
+.coupon-ticket-offer::before {
+  top: -11px;
+  border-top-color: transparent;
+  border-left-color: transparent;
+  transform: rotate(45deg);
+}
+.coupon-ticket-offer::after {
+  bottom: -11px;
+  border-bottom-color: transparent;
+  border-right-color: transparent;
+  transform: rotate(45deg);
+}
+.coupon-ticket-brand {
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  font-weight: 700;
+  opacity: 0.8;
+}
+.coupon-ticket-value {
+  font-size: clamp(1.5rem, 2.7vw, 2.6rem);
+  font-weight: 800;
+  line-height: 1.2;
+  margin-top: 1.5rem;
+  overflow-wrap: anywhere;
+  max-width: 100%;
+}
+.coupon-ticket-value span {
+  font-size: 0.65em;
+}
+.coupon-ticket-off {
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.25em;
+  margin-top: 0.25rem;
+}
+.coupon-ticket-scope {
+  border-top: 1px solid #ffffff40;
+  margin-top: 1.5rem;
+  padding-top: 0.9rem;
+  font-size: 0.7rem;
+  color: #eee4ff;
+}
+.coupon-ticket-body {
+  padding: 1.4rem;
+  min-width: 0;
+}
+.coupon-ticket-eyebrow {
+  color: #8b7b9c;
+  font-weight: 700;
+  font-size: 0.6rem;
+  letter-spacing: 0.14em;
+}
+.coupon-ticket-heading h2 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  line-height: 1.4;
+  margin: 0.35rem 0 1rem;
+  overflow-wrap: anywhere;
+}
+.coupon-ticket-heading a {
+  color: #352345;
+  text-decoration: none;
+}
+.coupon-ticket-heading a:hover {
+  color: #6f43bf;
+  text-decoration: underline;
+}
+.coupon-ticket-code {
+  display: inline-block;
+  max-width: 100%;
+  padding: 0.5rem 0.85rem;
+  background: #f6f1fc;
+  border: 1px dashed #b59ad9;
+  border-radius: 6px;
+  color: #6f43bf;
+  font:
+    700 0.95rem ui-monospace,
+    monospace;
+  letter-spacing: 0.1em;
+  overflow-wrap: anywhere;
+  user-select: all;
+}
+.coupon-ticket-details {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.5rem;
+  margin: 1.1rem 0 0.8rem;
+}
+.coupon-ticket-details dt {
+  font-size: 0.65rem;
+  font-weight: 400;
+  color: #756982;
+  margin-bottom: 0.25rem;
+}
+.coupon-ticket-details dd {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #352345;
+  margin: 0;
+}
+.coupon-ticket-expiry {
+  font-size: 0.75rem;
+  color: #756982;
+  margin-bottom: 1rem;
+}
+.coupon-ticket-expiry time {
+  color: #51415e;
+  font-weight: 500;
+}
+.coupon-ticket-footer {
+  border-top: 1px solid #eee7f5;
+  padding-top: 0.85rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+.coupon-ticket-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.coupon-ticket-actions a,
+.coupon-ticket-actions button {
+  font: inherit;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+.coupon-ticket-actions a {
+  color: #6f43bf;
+}
+.coupon-ticket-actions button {
+  color: #b23c50;
+  border: 0;
+  padding: 0.25rem 0;
+  background: transparent;
+}
+.coupon-ticket-actions a:hover,
+.coupon-ticket-actions button:hover {
+  text-decoration: underline;
+}
+.coupon-ticket a:focus-visible,
+.coupon-ticket button:focus-visible {
+  outline: 2px solid #6f43bf;
+  outline-offset: 4px;
+  border-radius: 3px;
+}
+.coupon-ticket .coupon-ticket-status {
+  width: auto;
+  min-width: 5rem;
+  font-size: 0.7rem;
+  padding: 0.25rem 0.65rem;
+}
+.coupon-empty {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 4rem 1.5rem;
+  border: 1px dashed #cdb9e8;
+  border-radius: 18px;
+  background: #faf7fe;
+}
+.coupon-empty-icon {
+  display: inline-block;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #6f43bf;
+  margin-bottom: 1rem;
+}
+.coupon-empty h2 {
+  font-size: 1.25rem;
+  color: #352345;
+}
+.coupon-empty p {
+  color: #756982;
+}
+@media (min-width: 768px) {
+  .coupon-ticket-body {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: center;
+    gap: 0.75rem 2rem;
+    padding: 1.25rem 1.75rem;
+  }
+  .coupon-ticket-heading h2 {
+    margin-bottom: 0;
+  }
+  .coupon-ticket-code {
+    justify-self: end;
+  }
+  .coupon-ticket-details {
+    margin: 0;
+  }
+  .coupon-ticket-expiry {
+    margin: 0;
+    text-align: right;
+  }
+  .coupon-ticket-footer {
+    grid-column: 1 / -1;
+  }
+  .coupon-ticket-offer {
+    padding: 1.25rem 0.75rem;
+  }
+  .coupon-ticket-value {
+    margin-top: 0.75rem;
+  }
+  .coupon-ticket-scope {
+    margin-top: 0.75rem;
+    padding-top: 0.65rem;
+  }
+}
+@media (max-width: 767px) {
+  .coupon-page .top-bar > .title {
+    width: 100%;
+  }
+  .coupon-page .top-bar > .actions {
+    gap: 0.75rem;
+  }
+  .coupon-page .top-bar > .actions > * {
+    padding-left: 0;
+  }
+  .coupon-ticket {
+    grid-template-columns: 100px minmax(0, 1fr);
+  }
+  .coupon-ticket-body {
+    padding: 1rem;
+  }
+  .coupon-ticket-value {
+    font-size: 1.8rem;
+  }
+  .coupon-ticket-brand {
+    font-size: 0.55rem;
+  }
+}
+
+.coupon-ticket-actions {
+  flex-wrap: wrap;
+}
+.coupon-ticket-actions .coupon-activation {
+  color: #6f43bf;
+}
+.coupon-ticket-actions button:disabled {
+  opacity: 0.5;
+  cursor: wait;
+}

@@ -4,6 +4,11 @@ function toggleUserStatus(userId) {
     type: "PATCH",
     dataType: "json",
     success: function (data) {
+      const status = new URL(location.href).searchParams.get('status');
+      if (status && status !== 'all' && status !== data.newStatus) {
+        location.reload();
+        return;
+      }
       document.getElementById("status-" + userId).innerText = data.newStatus;
       const blockBtn = document.getElementById("block-" + userId);
       if (data.newStatus == "active") {

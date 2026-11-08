@@ -12,13 +12,7 @@
         {{> searchbox for='orders' class='col-8 col-md-9'}}
 
         <div class="col col-md-3">
-          <select class="btn btn-outline-primary w-100" name="status" id="status">
-            <option value="all">All</option>
-            <option value="confirmed">Confirmed</option>
-            <option value="shipped">Shipped</option>
-            <option value="delivered">Delivered</option>
-            <option value="cancelled">Cancelled</option>
-          </select>
+          {{> status-filter options=statusOptions}}
         </div>
       </div>
     </div>
