@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { createSession, withMiddleware, renderForm } from "./helpers.js";
-import userRouterController from "../controller/router-controller/user-router-controller.js";
+import * as userController from "../controller/user-controller.js";
 import {
   checkUserLoginStatus,
   checkForUserLogin,
@@ -27,119 +27,119 @@ router.use((req, res, next) => {
 
 guestRoute("/login")
   .get(renderForm("user/login"))
-  .post(userRouterController.login);
+  .post(userController.login);
 
 guestRoute("/signup")
   .get(renderForm("user/signup"))
-  .post(userRouterController.signup);
+  .post(userController.signup);
 
-guestRoute("/login/google").post(userRouterController.signInUsingGoogle);
+guestRoute("/login/google").post(userController.signInUsingGoogle);
 
 // OTP Validation
 router
   .route("/verifyEmail")
-  .get(userRouterController.showVerifyEmailPage)
-  .post(userRouterController.verfifyEmail);
+  .get(userController.showVerifyEmailPage)
+  .post(userController.verfifyEmail);
 
-router.get("/resendOtp", userRouterController.resendOtp);
+router.get("/resendOtp", userController.resendOtp);
 
 guestRoute("/login/forgotPassword")
   .get(renderForm("user/forgot-password"))
-  .post(userRouterController.forgotPassword);
+  .post(userController.forgotPassword);
 
 guestRoute("/login/setNewPassword")
   .get(renderForm("user/auth/new-password-frm"))
-  .post(userRouterController.setNewPassword);
+  .post(userController.setNewPassword);
 
-router.get("/", userRouterController.showHome);
+router.get("/", userController.showHome);
 
 // Product overview
-router.get("/view/:id", userRouterController.productOverview);
+router.get("/view/:id", userController.productOverview);
 
-router.get("/logout", userRouterController.logout);
+router.get("/logout", userController.logout);
 
 // Search
-router.get("/search", userRouterController.searchProducts);
+router.get("/search", userController.searchProducts);
 
 // Account
 authenticatedRoute("/account")
-  .get(userRouterController.showPersonalDetailsForm)
-  .patch(userRouterController.updateUser);
+  .get(userController.showPersonalDetailsForm)
+  .patch(userController.updateUser);
 
 authenticatedRoute("/account/address")
-  .get(userRouterController.showAddressList)
-  .post(userRouterController.addAddress);
+  .get(userController.showAddressList)
+  .post(userController.addAddress);
 
-authenticatedRoute("/account/orders").get(userRouterController.showOrdersList);
+authenticatedRoute("/account/orders").get(userController.showOrdersList);
 
-authenticatedRoute("/account/wallet").get(userRouterController.showWalletDatas);
+authenticatedRoute("/account/wallet").get(userController.showWalletDatas);
 
 authenticatedRoute("/account/wallet/payments").post(
-  userRouterController.addMoneyToWallet,
+  userController.addMoneyToWallet,
 );
 
 authenticatedRoute("/account/wallet/payment-verifications").post(
-  userRouterController.verifyWalletPayment,
+  userController.verifyWalletPayment,
 );
 
 // Manage Address
 authenticatedRoute("/account/address/add").get(
-  userRouterController.showAddAddressForm,
+  userController.showAddAddressForm,
 );
 
 authenticatedRoute("/account/address/edit/:id").get(
-  userRouterController.editAddressForm,
+  userController.editAddressForm,
 );
 
 authenticatedRoute("/account/address/:id")
-  .patch(userRouterController.editAddress)
-  .delete(userRouterController.deleteAddress);
+  .patch(userController.editAddress)
+  .delete(userController.deleteAddress);
 
 // Wishlist
-authenticatedRoute("/wishlist").get(userRouterController.showWishlist);
+authenticatedRoute("/wishlist").get(userController.showWishlist);
 authenticatedRoute("/wishlist/items/:productId")
-  .put(userRouterController.addToWishlist)
-  .delete(userRouterController.removeFromWishlist);
+  .put(userController.addToWishlist)
+  .delete(userController.removeFromWishlist);
 
 // Cart
-authenticatedRoute("/cart").get(userRouterController.showCart);
+authenticatedRoute("/cart").get(userController.showCart);
 
 authenticatedRoute("/cart/items/:productId").put(
-  userRouterController.updateCart,
+  userController.updateCart,
 );
 
-authenticatedRoute("/checkout").get(userRouterController.showCheckout);
+authenticatedRoute("/checkout").get(userController.showCheckout);
 
 authenticatedRoute("/checkout/promocode-validations").post(
-  userRouterController.verifyPromocode,
+  userController.verifyPromocode,
 );
 
 // Orders
-authenticatedRoute("/orders").post(userRouterController.placeOrder);
+authenticatedRoute("/orders").post(userController.placeOrder);
 
 authenticatedRoute("/orders/:id")
-  .get(userRouterController.showOrderDetails)
-  .delete(userRouterController.cancelOrder);
+  .get(userController.showOrderDetails)
+  .delete(userController.cancelOrder);
 
 authenticatedRoute("/orders/:id/returns").post(
-  userRouterController.returnOrder,
+  userController.returnOrder,
 );
 
 authenticatedRoute("/order-payment-verifications").post(
-  userRouterController.verifyOrderPayment,
+  userController.verifyOrderPayment,
 );
 
 authenticatedRoute("/orders/:id/payments").post(
-  userRouterController.completePendingPayment,
+  userController.completePendingPayment,
 );
 
 authenticatedRoute("/orders/:id/invoice").get(
-  userRouterController.getOrderInvoicePDF,
+  userController.getOrderInvoicePDF,
 );
 
 // Reviews
-authenticatedRoute("/orders/:id/reviews").post(userRouterController.addReview);
+authenticatedRoute("/orders/:id/reviews").post(userController.addReview);
 
-authenticatedRoute("/orderSuccess").get(userRouterController.orderSuccess);
+authenticatedRoute("/orderSuccess").get(userController.orderSuccess);
 
 export default router;

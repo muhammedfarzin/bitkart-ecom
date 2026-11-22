@@ -1,4 +1,4 @@
-import userController from "../controller/user-controller.js"
+import * as userService from "../services/user-service.js"
 
 export function checkLogin(session) {
     if (session.admin && session.admin == process.env.ADMIN_EMAIL) {
@@ -10,7 +10,7 @@ export function checkLogin(session) {
 
 export async function checkUserLoginStatus(req, res, next) {
     try {
-        const response = await userController.checkUserStatus(req.session.user);
+        const response = await userService.checkUserStatus(req.session.user);
         if (response) {
             req.session.user = response;
             req.session.save();
