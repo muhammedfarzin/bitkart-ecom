@@ -1,5 +1,10 @@
 import { Router } from "express";
-import { createSession, withMiddleware, renderForm } from "../helpers/route-helpers.js";
+import { setUserLocals } from "../middleware/user-locals-middleware.js";
+import {
+  createSession,
+  withMiddleware,
+  renderForm,
+} from "../helpers/route-helpers.js";
 import * as authController from "../controller/user/auth-controller.js";
 import * as catalogController from "../controller/user/catalog-controller.js";
 import * as accountController from "../controller/user/account-controller.js";
@@ -26,16 +31,11 @@ router.use(
   }),
 );
 
-router.use((req, res, next) => {
-  res.locals.isLoggedIn = !!req.session.user;
-  next();
-});
+router.use(setUserLocals);
 
 // Routes
 
-guestRoute("/login")
-  .get(renderForm("user/login"))
-  .post(authController.login);
+guestRoute("/login").get(renderForm("user/login")).post(authController.login);
 
 guestRoute("/signup")
   .get(renderForm("user/signup"))
@@ -112,9 +112,7 @@ authenticatedRoute("/wishlist/items/:productId")
 // Cart
 authenticatedRoute("/cart").get(cartController.showCart);
 
-authenticatedRoute("/cart/items/:productId").put(
-  cartController.updateCart,
-);
+authenticatedRoute("/cart/items/:productId").put(cartController.updateCart);
 
 authenticatedRoute("/checkout").get(checkoutController.showCheckout);
 
@@ -129,9 +127,7 @@ authenticatedRoute("/orders/:id")
   .get(orderController.showOrderDetails)
   .delete(orderController.cancelOrder);
 
-authenticatedRoute("/orders/:id/returns").post(
-  orderController.returnOrder,
-);
+authenticatedRoute("/orders/:id/returns").post(orderController.returnOrder);
 
 authenticatedRoute("/order-payment-verifications").post(
   orderController.verifyOrderPayment,

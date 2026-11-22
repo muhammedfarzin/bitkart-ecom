@@ -9,7 +9,8 @@ function updateWishlist(productId, adding) {
     type: adding ? "PUT" : "DELETE",
     followRedirects: adding,
     dataType: "json",
-    success: () => {
+    success: (data) => {
+      App.updateNavigationCount("wishlist", data.wishlistCount);
       icon.css("fill", adding ? primaryColor : "none");
       const nextAction = adding ? "removeFromWishlist" : "addToWishlist";
       button.attr("onclick", `${nextAction}('${productId}'); return false`);

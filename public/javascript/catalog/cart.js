@@ -22,6 +22,7 @@ const debouncedUpdateCart = debounce(function (
     data: { quantity },
     dataType: "json",
     success: function (data) {
+      App.updateNavigationCount("cart", data.cartCount);
       if (redirect) return (location.href = redirect);
       if (data.cartCount <= 0) {
         $("#cart-view").addClass("d-none");

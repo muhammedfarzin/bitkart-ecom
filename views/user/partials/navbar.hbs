@@ -8,9 +8,15 @@
     {{> searchbox for='for products' method='get' action='/search' class='sm-d-none col-4 col-lg-6'}}
 
     <div class="actions sm-d-none col-4 col-lg-3">
-      <a href="/cart" class="icon-btn"><img src="/images/icons/shopping-cart.svg" alt="cart"></a>
+      <a href="/cart" class="icon-btn navigation-count-link" aria-label="Cart: {{cartCount}} items" title="Cart: {{cartCount}} items">
+        <img src="/images/icons/shopping-cart.svg" alt="cart">
+        <span class="navigation-count" data-navigation-count="cart" aria-hidden="true" {{#unless cartCount}}hidden{{/unless}}>{{cartCount}}</span>
+      </a>
       <a href="/account" class="icon-btn"><img src="/images/icons/user.svg" alt="account"></a>
-      <a href="/wishlist" class="icon-btn"><img src="/images/icons/heart.svg" alt="wishlist"></a>
+      <a href="/wishlist" class="icon-btn navigation-count-link" aria-label="Wishlist: {{wishlistCount}} items" title="Wishlist: {{wishlistCount}} items">
+        <img src="/images/icons/heart.svg" alt="wishlist">
+        <span class="navigation-count" data-navigation-count="wishlist" aria-hidden="true" {{#unless wishlistCount}}hidden{{/unless}}>{{wishlistCount}}</span>
+      </a>
       {{#if isLoggedIn}}
         <a href="/logout" class="btn btn-outline-danger">
           Logout
@@ -38,20 +44,22 @@
           </div>
           {{> searchbox for='for products' method='get' action='/search' class='m-2'}}
 
-          <a href="/cart" class="btn btn-outline-primary">
+          <a href="/cart" class="btn btn-outline-primary" aria-label="Cart: {{cartCount}} items" title="Cart: {{cartCount}} items">
             <div class="d-inline-flex align-items-center"><img class="mx-2"
                 src="/images/icons/shopping-cart.svg" alt="cart"> <span
                 class="w-30px text-start">Cart</span></div>
+            <span class="navigation-count navigation-count-inline" data-navigation-count="cart" aria-hidden="true" {{#unless cartCount}}hidden{{/unless}}>{{cartCount}}</span>
           </a>
           <a href="/account" class="btn btn-outline-primary">
             <div class="d-inline-flex align-items-center"><img class="mx-2"
                 src="/images/icons/user.svg" alt="account"> <span
                 class="w-30px text-start">Account</span></div>
           </a>
-          <a href="/wishlist" class="btn btn-outline-primary">
+          <a href="/wishlist" class="btn btn-outline-primary" aria-label="Wishlist: {{wishlistCount}} items" title="Wishlist: {{wishlistCount}} items">
             <div class="d-inline-flex align-items-center"><img class="mx-2"
                 src="/images/icons/heart.svg" alt="wishlist"><span
                 class="w-30px text-start">Wishlist</span></div>
+            <span class="navigation-count navigation-count-inline" data-navigation-count="wishlist" aria-hidden="true" {{#unless wishlistCount}}hidden{{/unless}}>{{wishlistCount}}</span>
           </a>
           {{#if isLoggedIn}}
             <a href="/logout" class="btn btn-outline-danger">

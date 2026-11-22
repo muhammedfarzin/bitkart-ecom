@@ -4,6 +4,18 @@ window.App = (() => {
     error.responseJSON?.errMessage ?? "Something went wrong";
   const showRequestError = (error) => showAlertBox(errorMessage(error));
 
+  function updateNavigationCount(kind, count) {
+    if (!Number.isInteger(count) || count < 0) return;
+    document.querySelectorAll(`[data-navigation-count="${kind}"]`).forEach((badge) => {
+      badge.textContent = count;
+      badge.hidden = count === 0;
+      const label = `${kind === "cart" ? "Cart" : "Wishlist"}: ${count} ${count === 1 ? "item" : "items"}`;
+      const link = badge.closest("a");
+      link.setAttribute("aria-label", label);
+      link.setAttribute("title", label);
+    });
+  }
+
   function createRedirectXhr(url) {
     const xhr = new XMLHttpRequest();
     xhr.addEventListener("load", () => {
@@ -49,6 +61,7 @@ window.App = (() => {
     formData,
     validateSubmit,
     formatCurrency,
+    updateNavigationCount,
   };
 })();
 
