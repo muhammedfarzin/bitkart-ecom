@@ -1,6 +1,14 @@
 import { Router } from "express";
-import { createSession, withMiddleware, renderForm } from "./helpers.js";
-import * as userController from "../controller/user-controller.js";
+import { createSession, withMiddleware, renderForm } from "../helpers/route-helpers.js";
+import * as authController from "../controller/user/auth-controller.js";
+import * as catalogController from "../controller/user/catalog-controller.js";
+import * as accountController from "../controller/user/account-controller.js";
+import * as addressController from "../controller/user/address-controller.js";
+import * as walletController from "../controller/user/wallet-controller.js";
+import * as wishlistController from "../controller/user/wishlist-controller.js";
+import * as cartController from "../controller/user/cart-controller.js";
+import * as checkoutController from "../controller/user/checkout-controller.js";
+import * as orderController from "../controller/user/order-controller.js";
 import {
   checkUserLoginStatus,
   checkForUserLogin,
@@ -27,119 +35,119 @@ router.use((req, res, next) => {
 
 guestRoute("/login")
   .get(renderForm("user/login"))
-  .post(userController.login);
+  .post(authController.login);
 
 guestRoute("/signup")
   .get(renderForm("user/signup"))
-  .post(userController.signup);
+  .post(authController.signup);
 
-guestRoute("/login/google").post(userController.signInUsingGoogle);
+guestRoute("/login/google").post(authController.signInUsingGoogle);
 
 // OTP Validation
 router
   .route("/verifyEmail")
-  .get(userController.showVerifyEmailPage)
-  .post(userController.verfifyEmail);
+  .get(authController.showVerifyEmailPage)
+  .post(authController.verfifyEmail);
 
-router.get("/resendOtp", userController.resendOtp);
+router.get("/resendOtp", authController.resendOtp);
 
 guestRoute("/login/forgotPassword")
   .get(renderForm("user/forgot-password"))
-  .post(userController.forgotPassword);
+  .post(authController.forgotPassword);
 
 guestRoute("/login/setNewPassword")
   .get(renderForm("user/auth/new-password-frm"))
-  .post(userController.setNewPassword);
+  .post(authController.setNewPassword);
 
-router.get("/", userController.showHome);
+router.get("/", catalogController.showHome);
 
 // Product overview
-router.get("/view/:id", userController.productOverview);
+router.get("/view/:id", catalogController.productOverview);
 
-router.get("/logout", userController.logout);
+router.get("/logout", authController.logout);
 
 // Search
-router.get("/search", userController.searchProducts);
+router.get("/search", catalogController.searchProducts);
 
 // Account
 authenticatedRoute("/account")
-  .get(userController.showPersonalDetailsForm)
-  .patch(userController.updateUser);
+  .get(accountController.showPersonalDetailsForm)
+  .patch(accountController.updateUser);
 
 authenticatedRoute("/account/address")
-  .get(userController.showAddressList)
-  .post(userController.addAddress);
+  .get(addressController.showAddressList)
+  .post(addressController.addAddress);
 
-authenticatedRoute("/account/orders").get(userController.showOrdersList);
+authenticatedRoute("/account/orders").get(orderController.showOrdersList);
 
-authenticatedRoute("/account/wallet").get(userController.showWalletDatas);
+authenticatedRoute("/account/wallet").get(walletController.showWalletDatas);
 
 authenticatedRoute("/account/wallet/payments").post(
-  userController.addMoneyToWallet,
+  walletController.addMoneyToWallet,
 );
 
 authenticatedRoute("/account/wallet/payment-verifications").post(
-  userController.verifyWalletPayment,
+  walletController.verifyWalletPayment,
 );
 
 // Manage Address
 authenticatedRoute("/account/address/add").get(
-  userController.showAddAddressForm,
+  addressController.showAddAddressForm,
 );
 
 authenticatedRoute("/account/address/edit/:id").get(
-  userController.editAddressForm,
+  addressController.editAddressForm,
 );
 
 authenticatedRoute("/account/address/:id")
-  .patch(userController.editAddress)
-  .delete(userController.deleteAddress);
+  .patch(addressController.editAddress)
+  .delete(addressController.deleteAddress);
 
 // Wishlist
-authenticatedRoute("/wishlist").get(userController.showWishlist);
+authenticatedRoute("/wishlist").get(wishlistController.showWishlist);
 authenticatedRoute("/wishlist/items/:productId")
-  .put(userController.addToWishlist)
-  .delete(userController.removeFromWishlist);
+  .put(wishlistController.addToWishlist)
+  .delete(wishlistController.removeFromWishlist);
 
 // Cart
-authenticatedRoute("/cart").get(userController.showCart);
+authenticatedRoute("/cart").get(cartController.showCart);
 
 authenticatedRoute("/cart/items/:productId").put(
-  userController.updateCart,
+  cartController.updateCart,
 );
 
-authenticatedRoute("/checkout").get(userController.showCheckout);
+authenticatedRoute("/checkout").get(checkoutController.showCheckout);
 
 authenticatedRoute("/checkout/promocode-validations").post(
-  userController.verifyPromocode,
+  checkoutController.verifyPromocode,
 );
 
 // Orders
-authenticatedRoute("/orders").post(userController.placeOrder);
+authenticatedRoute("/orders").post(checkoutController.placeOrder);
 
 authenticatedRoute("/orders/:id")
-  .get(userController.showOrderDetails)
-  .delete(userController.cancelOrder);
+  .get(orderController.showOrderDetails)
+  .delete(orderController.cancelOrder);
 
 authenticatedRoute("/orders/:id/returns").post(
-  userController.returnOrder,
+  orderController.returnOrder,
 );
 
 authenticatedRoute("/order-payment-verifications").post(
-  userController.verifyOrderPayment,
+  orderController.verifyOrderPayment,
 );
 
 authenticatedRoute("/orders/:id/payments").post(
-  userController.completePendingPayment,
+  orderController.completePendingPayment,
 );
 
 authenticatedRoute("/orders/:id/invoice").get(
-  userController.getOrderInvoicePDF,
+  orderController.getOrderInvoicePDF,
 );
 
 // Reviews
-authenticatedRoute("/orders/:id/reviews").post(userController.addReview);
+authenticatedRoute("/orders/:id/reviews").post(orderController.addReview);
 
-authenticatedRoute("/orderSuccess").get(userController.orderSuccess);
+authenticatedRoute("/orderSuccess").get(checkoutController.orderSuccess);
 
 export default router;

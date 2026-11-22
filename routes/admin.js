@@ -1,7 +1,14 @@
 import { Router } from "express";
-import { createSession, withMiddleware } from "./helpers.js";
-import * as adminController from "../controller/admin-controller.js";
-import { sideMenuPath } from "../controller/admin-controller.js";
+import { createSession, withMiddleware } from "../helpers/route-helpers.js";
+import * as authController from "../controller/admin/auth-controller.js";
+import * as dashboardController from "../controller/admin/dashboard-controller.js";
+import * as userController from "../controller/admin/user-controller.js";
+import * as orderController from "../controller/admin/order-controller.js";
+import * as productController from "../controller/admin/product-controller.js";
+import * as categoryController from "../controller/admin/category-controller.js";
+import * as couponController from "../controller/admin/coupon-controller.js";
+import * as bannerController from "../controller/admin/banner-controller.js";
+import { sideMenuPath } from "../helpers/admin-helpers.js";
 import { checkAdminLoginStatus } from "../middleware/auth-middleware.js";
 import { uploadImage } from "../middleware/file-upload-middleware.js";
 
@@ -19,99 +26,97 @@ router.use(
 // Routes
 router
   .route("/login")
-  .get(adminController.showLoginForm)
-  .post(adminController.login);
+  .get(authController.showLoginForm)
+  .post(authController.login);
 
 // Authenticated routes
 
 authenticatedRoute(sideMenuPath.dashboard).get(
-  adminController.showDashboard,
+  dashboardController.showDashboard,
 );
 
 authenticatedRoute("/sales-report").get(
-  adminController.downloadSalesReport,
+  dashboardController.downloadSalesReport,
 );
 
-authenticatedRoute(sideMenuPath.users).get(adminController.showUsersList);
+authenticatedRoute(sideMenuPath.users).get(userController.showUsersList);
 
 authenticatedRoute(`${sideMenuPath.users}/:id/status`).patch(
-  adminController.toggleUserStatus,
+  userController.toggleUserStatus,
 );
 
 // Orders routes
 authenticatedRoute(sideMenuPath.orders).get(
-  adminController.showOrdersList,
+  orderController.showOrdersList,
 );
 
 authenticatedRoute(`${sideMenuPath.orders}/:id`)
-  .get(adminController.showOrderDetails)
-  .patch(adminController.updateOrderStatus);
+  .get(orderController.showOrderDetails)
+  .patch(orderController.updateOrderStatus);
 
 // Products routes
 authenticatedRoute(sideMenuPath.products)
-  .get(adminController.showProductsList)
-  .post(uploadImage.array("images", 5), adminController.addNewProduct);
+  .get(productController.showProductsList)
+  .post(uploadImage.array("images", 5), productController.addNewProduct);
 
 authenticatedRoute(`${sideMenuPath.products}/add`).get(
-  adminController.showAddProductForm,
+  productController.showAddProductForm,
 );
 
 authenticatedRoute(`${sideMenuPath.products}/edit/:id`).get(
-  adminController.showEditProductForm,
+  productController.showEditProductForm,
 );
 
 authenticatedRoute(`${sideMenuPath.products}/:id`).patch(
   uploadImage.array("images", 5),
-  adminController.editProduct,
+  productController.editProduct,
 );
 
 // Category routes
 authenticatedRoute(sideMenuPath.categories)
-  .get(adminController.showCategoryList)
-  .post(uploadImage.single("image"), adminController.createCategory);
+  .get(categoryController.showCategoryList)
+  .post(uploadImage.single("image"), categoryController.createCategory);
 
 authenticatedRoute(`${sideMenuPath.categories}/create`).get(
-  adminController.showNewCategoryForm,
+  categoryController.showNewCategoryForm,
 );
 
 authenticatedRoute(`${sideMenuPath.categories}/edit/:id`).get(
-  adminController.showEditCategoryForm,
+  categoryController.showEditCategoryForm,
 );
 
 authenticatedRoute(`${sideMenuPath.categories}/:id`)
-  .patch(uploadImage.single("image"), adminController.editCategory)
-  .delete(adminController.deleteCategory);
+  .patch(uploadImage.single("image"), categoryController.editCategory)
+  .delete(categoryController.deleteCategory);
 
 // Coupons
 authenticatedRoute(sideMenuPath.coupons)
-  .get(adminController.showCouponsList)
-  .post(adminController.createCoupon);
+  .get(couponController.showCouponsList)
+  .post(couponController.createCoupon);
 
 authenticatedRoute(`${sideMenuPath.coupons}/create`).get(
-  adminController.showCreateCouponForm,
+  couponController.showCreateCouponForm,
 );
 
 authenticatedRoute(`${sideMenuPath.coupons}/edit/:id`).get(
-  adminController.showEditCouponForm,
+  couponController.showEditCouponForm,
 );
 
 authenticatedRoute(`${sideMenuPath.coupons}/:id/status`).patch(
-  adminController.updateCouponStatus,
+  couponController.updateCouponStatus,
 );
 
 authenticatedRoute(`${sideMenuPath.coupons}/:id`)
-  .patch(adminController.editCoupon)
-  .delete(adminController.deleteCoupon);
+  .patch(couponController.editCoupon)
+  .delete(couponController.deleteCoupon);
 
 // Banner
 authenticatedRoute(sideMenuPath.banner)
-  .get(adminController.showBannerList)
-  .post(uploadImage.single("bannerImage"), adminController.createBanner)
-  .patch(uploadImage.single("bannerImage"), adminController.updateBanner);
+  .get(bannerController.showBannerList)
+  .post(uploadImage.single("bannerImage"), bannerController.createBanner)
+  .patch(uploadImage.single("bannerImage"), bannerController.updateBanner);
 
 // Logout
-router.get("/logout", adminController.logout);
-
-router.all("*", adminController.pageNotFound);
+router.get("/logout", authController.logout);
 
 export default router;
