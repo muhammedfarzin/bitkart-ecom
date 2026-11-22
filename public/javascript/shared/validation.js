@@ -14,7 +14,7 @@ window.FormValidation = (() => {
     "category-frm": "title description",
     "banner-frm": "title validity status",
     "coupon-frm":
-      "title code description validUpto discountValue discountType minPurchaseAmount maxDiscountAmount",
+      "title code description validUpto discountValue discountType minPurchaseAmount",
     "custom-date-frm": "dateFrom dateTo",
     "promocode-frm": "promocode",
     "review-frm": "starRating",
@@ -129,7 +129,11 @@ window.FormValidation = (() => {
       }
     }
     const patterns = [
-      ["mobile", mobilePattern, "Enter a valid 10-digit mobile number starting with 6-9."],
+      [
+        "mobile",
+        mobilePattern,
+        "Enter a valid 10-digit mobile number starting with 6-9.",
+      ],
       ["pincode", /^[1-9]\d{5}$/, "Enter a valid 6-digit PIN code."],
       ["otp", /^\d{6}$/, "Enter the 6-digit OTP."],
     ];
@@ -182,6 +186,12 @@ window.FormValidation = (() => {
     );
     number("minPurchaseAmount", 10);
     number("maxDiscountAmount", 1);
+    if (
+      form.id === "coupon-frm" &&
+      value("discountType") === "percentage" &&
+      !value("maxDiscountAmount")
+    )
+      fail("maxDiscountAmount", "Enter a maximum discount amount.");
     number("starRating", 1, 5, true);
     number("returnQuantity", 1, Number.MAX_SAFE_INTEGER, true);
     number("minAmount", 0, Number.MAX_SAFE_INTEGER, true);
@@ -199,10 +209,13 @@ window.FormValidation = (() => {
         "maxAmount",
         "Maximum price must be at least Rs 500 above minimum price.",
       );
-    const now = new Date();
-    const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
+    const today = AppDate.day();
     for (const name of ["validUpto", "validity"])
-      if (value(name) && value(name) < today && value(name) !== field(name)?.dataset.originalValue)
+      if (
+        value(name) &&
+        value(name) < today &&
+        value(name) !== field(name)?.dataset.originalValue
+      )
         fail(name, "Choose today or a future date.");
     for (const name of ["dateFrom", "dateTo"])
       if (value(name) > today)
@@ -223,11 +236,60 @@ window.FormValidation = (() => {
       )
         fail(el, "Select a valid option.");
     }
+
+    if (form.id === "coupon-frm") {
+      if (field("schedule")?.checked && !value("validFrom"))
+        fail("validFrom", "Choose a start date.");
+      if (
+        !/^[A-Z0-9_-]{1,32}$/.test(
+          value("code").replace(/\s/g, "").toUpperCase(),
+        )
+      )
+        fail("code", "Use 1-32 letters, numbers, hyphens or underscores.");
+      if (value("validFrom") > value("validUpto"))
+        fail("validUpto", "Expiry must be on or after the start date.");
+      if (
+        value("validFrom") &&
+        value("validFrom") < today &&
+        value("validFrom") !== field("validFrom")?.dataset.originalValue
+      )
+        fail("validFrom", "Choose today or a future start date.");
+    }
+
     renderErrors(form, errors);
     return errors.length === 0;
   }
 
   function renderErrors(form, errors) {
+    if (form.id === "coupon-frm") {
+      form.querySelectorAll(".coupon-field-error").forEach((el) => el.remove());
+
+      [...form.elements].forEach((el) => {
+        el.classList.remove("err");
+        el.removeAttribute("aria-invalid");
+        const ids = (el.getAttribute("aria-describedby") || "")
+          .split(" ")
+          .filter((id) => !id.endsWith("-error"))
+          .join(" ");
+
+        if (ids) el.setAttribute("aria-describedby", ids);
+        else el.removeAttribute("aria-describedby");
+      });
+
+      errors.forEach(({ el, message }) => {
+        if (!el || document.getElementById(`${el.id}-error`)) return;
+        const error = document.createElement("span");
+        error.id = `${el.id}-error`;
+        error.className = "coupon-field-error";
+        error.textContent = message;
+        el.insertAdjacentElement("afterend", error);
+        el.setAttribute(
+          "aria-describedby",
+          `${el.getAttribute("aria-describedby") || ""} ${error.id}`.trim(),
+        );
+      });
+    }
+
     let summary = form.querySelector(".validation-errors");
     if (!summary) {
       summary = document.createElement("div");
@@ -269,5 +331,5 @@ window.FormValidation = (() => {
       true,
     );
   });
-  return { validate };
+  return { validate, renderErrors };
 })();

@@ -1,9 +1,11 @@
+import { endOfLocalDay } from "../helpers/date-time.js";
 import BannerModel from "../models/banner-model.js";
 import fs from "fs";
 
 const bannerController = {
     createBanner: async (data) => {
-        const { title, validity, status } = data.body;
+        const { title, status } = data.body;
+        const validity = endOfLocalDay(data.body.validity);
         let imagePath = data.file.path.replace('public', '');
 
         const banner = new BannerModel({ title, validity, status, imagePath });
@@ -13,7 +15,8 @@ const bannerController = {
     updateBanner: (data) => {
         return new Promise(async (resolve, reject) => {
             try {
-                const { title, validity, status } = data.body;
+                const { title, status } = data.body;
+                const validity = endOfLocalDay(data.body.validity);
                 let imagePath = data.file?.path?.replace('public', '');
                 const banner = await BannerModel.findOne();
 

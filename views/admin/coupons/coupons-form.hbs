@@ -1,106 +1,47 @@
 {{> admin-navbar}}
-
 <div class="fluid-container d-flex">
   {{> sidebar}}
-
-  <div class="container">
-    <div class="top-bar d-flex justify-content-between align-items-center flex-wrap">
-      <div class="title col">
-        <h1 class="text-primary">{{#if coupon}} Update {{else}} Create {{/if}} Coupon</h1>
+  <main class="container coupon-form-page">
+    <div class="top-bar"><h1 class="text-primary">{{#if coupon}}Update{{else}}Create{{/if}} coupon</h1></div>
+    <form method="post" data-rest-form data-method="{{#if coupon}}PATCH{{else}}POST{{/if}}" action="/admin/coupons{{#if coupon}}/{{coupon._id}}{{/if}}" id="coupon-frm" data-status="{{values.status}}">
+      <section class="coupon-form-section" aria-labelledby="coupon-details-heading">
+        <div class="coupon-section-heading"><span class="coupon-section-number" aria-hidden="true">01</span><h2 id="coupon-details-heading">Coupon details</h2></div>
+      <div class="coupon-form-grid">
+        <div class="coupon-field"><label for="title">Title</label><input id="title" name="title" type="text" value="{{values.title}}" required maxlength="100" placeholder="Summer savings"></div>
+        <div class="coupon-field"><label for="code">Coupon code</label><input id="code" name="code" type="text" value="{{values.code}}" required maxlength="64" aria-describedby="code-help" placeholder="SUMMER10"></div>
+        <p id="code-help" class="coupon-full">Codes use up to 32 letters, numbers, hyphens or underscores. Spaces are removed and letters capitalized.</p>
+        <div class="coupon-field coupon-full"><label for="description">Description</label><textarea id="description" name="description" maxlength="300" rows="3" required>{{values.description}}</textarea></div>
       </div>
-    </div>
-    <form method="post" data-rest-form data-method="{{#if coupon}}PATCH{{else}}POST{{/if}}" action="/admin/coupons{{#if coupon}}/{{coupon._id}}{{/if}}" id="coupon-frm">
-      <div class="outlined-card m-2 border-black col-md">
-        <div class="d-flex flex-wrap-reverse w-100">
-          {{!-- Form --}}
-          <div class="d-flex flex-column justify-content-between px-3 col-12">
-            <div>
-              <div class="text-danger f-uppercase" id="err-message">{{errMessage}}</div>
-              <div>
-                <div class="fs-6 fw-bold text-primary my-2">Title</div>
-                <input type="text" name="title" id="title"
-                  class="outlined-card placeholder-primary outline-none w-100"
-                  value="{{coupon.title}}" placeholder="Enter title">
-              </div>
-              <div>
-                <div class="fs-6 fw-bold text-primary my-2">Coupon Code</div>
-                <input type="text" name="code" id="code"
-                  class="outlined-card placeholder-primary text-uppercase outline-none w-100"
-                  value="{{coupon.code}}" placeholder="Enter coupon code">
-              </div>
-              <div>
-                <div class="fs-6 fw-bold text-primary my-2">Description</div>
-                <textarea maxlength="300" rows="3" type="text" name="description" id="description"
-                  class="outlined-card placeholder-primary outline-none w-100"
-                  placeholder="Enter description">{{coupon.description}}</textarea>
-              </div>
-              <div class="col-12 col-md-6">
-                <div class="d-flex">
-                  <div class="col pe-1">
-                    <div class="fs-6 fw-bold text-primary my-2">Category</div>
-                    <select name="category" id="category"
-                      class="outlined-card text-capitalize placeholder-primary outline-none w-100">
-                      <option value="">All</option>
-                      {{#each categories}}
-                        <option value="{{_id}}"
-                          {{#if @root.coupon.categoryId}}{{#if (eq (toStr _id)
-                                                (toStr @root.coupon.categoryId))}}selected{{/if}}{{/if}}>
-                          {{title}}
-                        </option>
-                      {{/each}}
-                    </select>
-                  </div>
-                  <div class="col ps-1">
-                    <div class="fs-6 fw-bold text-primary my-2">Valid Upto</div>
-                    <input type="date" name="validUpto" id="valid-upto"
-                      data-original-value="{{#if coupon}}{{formatDate coupon.validUpto 'YYYY-MM-DD'}}{{/if}}"
-                      class="outlined-card placeholder-primary outline-none w-100"
-                      value="{{formatDate coupon.validUpto 'YYYY-MM-DD'}}"
-                      placeholder="Enter valid upto date">
-                  </div>
-                </div>
-                <div class="d-flex">
-                  <div class="col pe-1">
-                    <div class="fs-6 fw-bold text-primary my-2">Discount</div>
-                    <input type="number" name="discountValue" id="discount-value"
-                      class="outlined-card placeholder-primary outline-none w-100"
-                      value="{{coupon.discountValue}}" placeholder="Enter discount value">
-                  </div>
-                  <div class="col ps-1">
-                    <div class="fs-6 fw-bold text-primary my-2">Discount Type</div>
-                    <select type="text" name="discountType" id="discount-type"
-                      class="outlined-card placeholder-primary outline-none w-100">
-                      <option value="flat">Flat</option>
-                      <option value="percentage" {{#if (eq coupon.discountType 'percentage')}}selected{{/if}}>Pecentage</option>
-                    </select>
-                  </div>
-                </div>
-                <div class="d-flex">
-                  <div class="col pe-1">
-                    <div class="fs-6 fw-bold text-primary my-2">Min Purchase Amount</div>
-                    <input type="number" name="minPurchaseAmount" id="min-purchase-amount"
-                      class="outlined-card placeholder-primary outline-none w-100"
-                      value="{{coupon.minPurchaseAmount}}" placeholder="Enter min purchase amount">
-                  </div>
-                  <div class="col ps-1">
-                    <div class="fs-6 fw-bold text-primary my-2">Max Discount Amount</div>
-                    <input type="number" name="maxDiscountAmount" id="max-discount-amount"
-                      class="outlined-card placeholder-primary outline-none w-100"
-                      value="{{coupon.maxDiscountAmount}}" placeholder="Enter max discount amount">
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="d-flex justify-content-end my-3">
-              <button class="btn btn-primary px-4 rounded-4" type="submit">
-                {{#if coupon}} Update {{else}} Create {{/if}}
-              </button>
-            </div>
-          </div>
+      </section>
+      <section class="coupon-form-section" aria-labelledby="coupon-offer-heading">
+        <div class="coupon-section-heading"><span class="coupon-section-number" aria-hidden="true">02</span><h2 id="coupon-offer-heading">Discount &amp; eligibility</h2></div>
+      <div class="coupon-form-grid">
+        <div class="coupon-field"><label for="category">Eligible category</label><select id="category" name="category"><option value="">All categories</option>{{#each categories}}<option value="{{_id}}" {{#if (eq (toStr _id) @root.values.category)}}selected{{/if}}>{{title}}</option>{{/each}}</select></div>
+        <div class="coupon-field"><label for="discountType">Discount type</label><select id="discountType" name="discountType"><option value="flat">Flat (&#8377;)</option><option value="percentage" {{#if (eq values.discountType 'percentage')}}selected{{/if}}>Percentage (%)</option></select></div>
+        <div class="coupon-field"><label for="discountValue">Discount (&#8377;)</label><input id="discountValue" name="discountValue" type="number" value="{{values.discountValue}}" required min="1" max="1000000000" step="0.01"></div>
+        <div class="coupon-field"><label for="minPurchaseAmount">Minimum eligible spend (&#8377;)</label><input id="minPurchaseAmount" name="minPurchaseAmount" type="number" value="{{values.minPurchaseAmount}}" required min="10" max="1000000000" step="0.01"></div>
+        <div class="coupon-field" id="maximum-discount-field" {{#unless (eq values.discountType 'percentage')}}hidden{{/unless}}><label for="maxDiscountAmount">Maximum discount (&#8377;)</label><input id="maxDiscountAmount" name="maxDiscountAmount" {{#unless (eq values.discountType 'percentage')}}disabled{{/unless}} type="number" value="{{values.maxDiscountAmount}}" required min="1" max="1000000000" step="0.01"></div>
+      </div>
+      </section>
+      <section class="coupon-form-section" aria-labelledby="coupon-dates-heading">
+        <div class="coupon-section-heading"><span class="coupon-section-number" aria-hidden="true">03</span><h2 id="coupon-dates-heading">Dates &amp; scheduling</h2><span class="coupon-timezone">{{deviceTimeZone}}</span></div>
+      <div class="coupon-form-grid">
+        <label class="coupon-schedule-control coupon-full" for="schedule">
+          <span class="coupon-schedule-copy"><span class="coupon-schedule-title">Schedule coupon</span><span id="schedule-help">Choose when this offer becomes available.</span></span>
+          <input class="coupon-schedule-toggle" type="checkbox" role="switch" id="schedule" name="schedule" value="true" aria-controls="coupon-schedule-fields" aria-describedby="schedule-help" {{#if values.schedule}}checked{{/if}}>
+        </label>
+        <div id="coupon-schedule-fields" class="coupon-full coupon-form-grid" {{#unless values.schedule}}hidden{{/unless}}>
+        <div class="coupon-field"><label for="startOption">Valid from</label><select id="startOption" name="startOption" {{#unless values.schedule}}disabled{{/unless}}><option value="today" {{#if (eq values.startOption 'today')}}selected{{/if}}>Today</option><option value="tomorrow">Tomorrow</option><option value="pick" {{#if (eq values.startOption 'pick')}}selected{{/if}}>Pick a date</option></select></div>
+        <div class="coupon-field"><label for="validFrom">Start date</label><input id="validFrom" name="validFrom" {{#unless values.schedule}}disabled{{/unless}} type="date" value="{{values.validFrom}}" required data-original-value="{{values.validFrom}}"></div>
+        <div class="coupon-field"><label for="startTime">Start time (optional)</label><input id="startTime" name="startTime" {{#unless values.schedule}}disabled{{/unless}} type="time" value="{{values.startTime}}"></div>
         </div>
+        <div class="coupon-field"><label for="validUpto">Valid through</label><input id="validUpto" name="validUpto" type="date" value="{{values.validUpto}}" required data-original-value="{{#if coupon}}{{values.validUpto}}{{/if}}"></div>
       </div>
+      </section>
+      <aside class="coupon-preview" aria-label="Coupon preview"><strong>Offer preview</strong><p id="coupon-preview-text" aria-live="polite"></p></aside>
+      <div class="coupon-form-actions"><a class="btn btn-outline-primary" href="/admin/coupons">Cancel</a><button class="btn btn-primary" type="submit">{{#if coupon}}Save changes{{else}}Create coupon{{/if}}</button></div>
     </form>
-  </div>
+  </main>
 </div>
 
 <script src="/javascript/admin/coupons.js"></script>

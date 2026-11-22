@@ -10,7 +10,7 @@ import ProductModel from "../models/product-model.js";
 import PDFDocument from "pdfkit-table";
 import xlsx from "xlsx";
 import couponController from "./coupon-controller.js";
-import moment from "moment";
+import { formatDate, startOfLocalDay, endOfLocalDay } from "../helpers/date-time.js";
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -576,8 +576,8 @@ const orderController = {
       if (!dateFrom || !dateTo)
         throw new Error("Please enter a valid date range");
       dateRange = {
-        $lte: new Date(dateTo),
-        $gte: new Date(dateFrom),
+        $lte: endOfLocalDay(dateTo),
+        $gte: startOfLocalDay(dateFrom),
       };
     } else {
       dateRange = {
@@ -630,8 +630,8 @@ const orderController = {
           if (!dateFrom || !dateTo)
             throw new Error("Please enter a valid date range");
           dateRange = {
-            $lte: new Date(dateTo),
-            $gte: new Date(dateFrom),
+            $lte: endOfLocalDay(dateTo),
+            $gte: startOfLocalDay(dateFrom),
           };
         } else {
           dateRange = {
@@ -790,7 +790,7 @@ const orderController = {
           order.paymentMethod,
           `${order.price.totalPrice.toFixed(2)}`,
           order.status,
-          order.orderedAt.toLocaleString(),
+          formatDate(order.orderedAt, "MMM D, YYYY HH:mm Z"),
         ]),
       };
 
@@ -853,7 +853,7 @@ const orderController = {
       ]);
       const orderDetailsWorksheet = xlsx.utils.json_to_sheet(
         report.map((row) => {
-          row.orderedAt = row.orderedAt.toString();
+          row.orderedAt = formatDate(row.orderedAt, "YYYY-MM-DD HH:mm Z");
           return row;
         }),
       );
@@ -911,7 +911,7 @@ const orderController = {
       .font("Helvetica", 10)
       .text(`Order ID: ${orderDetails.orderId}`)
       .text(
-        `Ordered at: ${moment(orderDetails.orderedAt).format("MMMM D, YYYY")}`,
+        `Ordered at: ${formatDate(orderDetails.orderedAt, "MMMM D, YYYY")}`,
       )
       .moveDown();
 

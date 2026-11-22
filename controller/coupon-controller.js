@@ -1,3 +1,9 @@
+import {
+  validateCouponFields,
+  normalizeCouponCode,
+  CouponValidationError,
+  couponStatus,
+} from "../helpers/coupon-validation.js";
 import { allocateCouponDiscount } from "../helpers/coupon-discount.js";
 import { Types } from "mongoose";
 import CategoryModel from "../models/category-model.js";
@@ -7,34 +13,16 @@ const couponController = {
   createCoupon: async (data) => {
     try {
       data = await validateCouponData(data);
-      const {
-        code,
-        title,
-        description,
-        validUpto,
-        categoryId,
-        discountValue,
-        discountType,
-        minPurchaseAmount,
-        maxDiscountAmount,
-      } = data;
-
-      const coupon = new CouponModel({
-        code: code.replace(/\s/, "").toUpperCase(),
-        title,
-        description,
-        categoryId,
-        validUpto,
-        discountValue,
-        discountType,
-        minPurchaseAmount,
-        maxDiscountAmount,
-      });
+      const coupon = new CouponModel(data);
       await coupon.save();
 
       const response = { message: "Coupon created successfully" };
       return response;
     } catch (err) {
+      if (err.code === 11000)
+        throw new CouponValidationError({
+          code: "This coupon code already exists.",
+        });
       if (err.name === "BSONError") {
         throw new Error("Selected category not found");
       } else {
@@ -46,9 +34,14 @@ const couponController = {
     const now = new Date();
     const filter = {};
     if (status === "deactivated") filter.status = "deactivated";
-    else if (status === "active" || status === "expired") {
+    else if (["active", "expired", "scheduled"].includes(status)) {
       filter.status = { $ne: "deactivated" };
-      filter.validUpto = status === "active" ? { $gt: now } : { $lte: now };
+      filter.validUpto = status === "expired" ? { $lte: now } : { $gt: now };
+      if (status === "scheduled") filter.validFrom = { $gt: now };
+      if (status === "active")
+        filter.$and = [
+          { $or: [{ validFrom: { $lte: now } }, { validFrom: null }] },
+        ];
     }
     if (search) {
       const escaped = search.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
@@ -61,18 +54,14 @@ const couponController = {
       .limit(limit);
     return coupons.map((coupon) => ({
       ...coupon.toObject(),
-      displayStatus:
-        coupon.status === "deactivated"
-          ? "Deactivated"
-          : coupon.validUpto <= now
-            ? "Expired"
-            : "Active",
+      displayStatus: couponStatus(coupon, now),
     }));
   },
   getCouponById: async (couponId) => {
     try {
       couponId = Types.ObjectId.createFromHexString(couponId);
       const coupon = await CouponModel.findById(couponId);
+      if (!coupon) throw new Error("Coupon not found");
       return coupon.toObject();
     } catch (err) {
       if (err.name === "BSONError") {
@@ -85,13 +74,15 @@ const couponController = {
   getCouponByPromocode: async (promocode) => {
     if (typeof promocode !== "string" || !promocode.trim())
       throw new Error("Invalid promocode");
-    promocode = promocode.replace(/\s/g, "").toUpperCase();
+    promocode = normalizeCouponCode(promocode);
     const coupon = await CouponModel.findOne({ code: promocode });
     if (!coupon) throw new Error("Invalid promocode");
     if (coupon.status === "deactivated")
       throw new Error("This promocode is currently unavailable.");
     if (coupon.validUpto <= new Date())
       throw new Error("This promocode has expired.");
+    if (coupon.validFrom > new Date())
+      throw new Error("This promocode is scheduled and is not available yet.");
     return coupon.toObject();
   },
   // Validate eligibility and calculate coupon discounts for the supplied cart.
@@ -129,34 +120,18 @@ const couponController = {
     try {
       couponId = Types.ObjectId.createFromHexString(couponId);
       const coupon = await CouponModel.findById(couponId);
-      data = await validateCouponData(data, coupon.code, coupon.validUpto);
-      let {
-        code,
-        title,
-        description,
-        validUpto,
-        categoryId,
-        discountValue,
-        discountType,
-        minPurchaseAmount,
-        maxDiscountAmount,
-      } = data;
-
-      await coupon.updateOne({
-        code,
-        title,
-        description,
-        categoryId,
-        validUpto,
-        discountValue,
-        discountType,
-        minPurchaseAmount,
-        maxDiscountAmount,
-      });
+      if (!coupon) throw new Error("Coupon not found");
+      data = await validateCouponData(data, coupon);
+      coupon.set(data);
+      await coupon.save();
 
       const response = { message: "Coupon succesfully updated" };
       return response;
     } catch (err) {
+      if (err.code === 11000)
+        throw new CouponValidationError({
+          code: "This coupon code already exists.",
+        });
       if (err.name === "BSONError") {
         throw new Error("Coupon not found");
       } else {
@@ -186,12 +161,13 @@ const couponController = {
   deleteCoupon: async (couponId) => {
     try {
       couponId = Types.ObjectId.createFromHexString(couponId);
-      await CouponModel.findByIdAndDelete(couponId);
+      if (!(await CouponModel.findByIdAndDelete(couponId)))
+        throw new Error("Coupon not found");
       const response = { message: "Coupon succesfully deleted" };
       return response;
     } catch (err) {
       if (err.name === "BSONError") {
-        throw new Error("Selected category not found");
+        throw new Error("Coupon not found");
       } else {
         throw err;
       }
@@ -199,73 +175,28 @@ const couponController = {
   },
 };
 
-async function validateCouponData(data, currentCouponCode, currentExpiry) {
-  let {
-    code,
-    title,
-    description,
-    validUpto,
-    category,
-    discountValue,
-    discountType,
-    minPurchaseAmount,
-    maxDiscountAmount,
-  } = data;
-  let categoryId;
-
+async function validateCouponData(data, current) {
+  const values = validateCouponFields(data, current);
+  values.categoryId = null;
+  if (data.category) {
+    if (
+      typeof data.category !== "string" ||
+      !Types.ObjectId.isValid(data.category) ||
+      !(await CategoryModel.findById(data.category))
+    )
+      throw new CouponValidationError({
+        category: "Selected category not found.",
+      });
+    values.categoryId = new Types.ObjectId(data.category);
+  }
   if (
-    (!code || !title || !description,
-    !validUpto,
-    !discountValue,
-    !discountType,
-    !minPurchaseAmount,
-    !maxDiscountAmount)
-  ) {
-    throw new Error("Please fill complete form");
-  }
-
-  if (category) {
-    categoryId = Types.ObjectId.createFromHexString(category);
-    const categoryData = await CategoryModel.findById(categoryId);
-    if (!categoryData) throw new Error("Selected category not found");
-  }
-
-  code = code.replace(/\s/, "").toUpperCase();
-  if (currentCouponCode != code) {
-    const existCoupon = await CouponModel.findOne({ code });
-    if (existCoupon) throw new Error("The coupon code is already exist");
-  }
-
-  validUpto = new Date(validUpto);
-  if (!Number.isFinite(validUpto.getTime()))
-    throw new Error("Invalid expiry date");
-  const unchangedExpiry =
-    currentExpiry &&
-    validUpto.toISOString().slice(0, 10) ===
-      new Date(currentExpiry).toISOString().slice(0, 10);
-  if (validUpto <= Date.now() && !unchangedExpiry)
-    throw new Error("Valid upto date cannot be past");
-  if (unchangedExpiry) validUpto = currentExpiry;
-
-  if (discountValue < 1)
-    throw new Error("Discount value cannot be less than 1");
-  else if (minPurchaseAmount < 1)
-    throw new Error("Minimum purchase amount cannot be less than 1");
-  else if (maxDiscountAmount < 1)
-    throw new Error("Maximum purchase amount cannot be less than 1");
-
-  const response = {
-    code,
-    title,
-    description,
-    validUpto,
-    categoryId,
-    discountValue,
-    discountType,
-    minPurchaseAmount,
-    maxDiscountAmount,
-  };
-  return response;
+    values.code !== current?.code &&
+    (await CouponModel.findOne({ code: values.code }))
+  )
+    throw new CouponValidationError({
+      code: "This coupon code already exists.",
+    });
+  return values;
 }
 
 export default couponController;

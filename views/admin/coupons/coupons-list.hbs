@@ -17,6 +17,8 @@
         </div>
       </div>
     </div>
+
+    {{#if successMessage}}<p role="status" class="alert alert-success">{{successMessage}}</p>{{/if}}
     <div class="coupon-grid">
       {{#each coupons}}
         <article class="coupon-ticket" id="coupon-{{_id}}" aria-labelledby="coupon-title-{{_id}}">
@@ -35,10 +37,10 @@
             </div>
             <div class="coupon-ticket-code" aria-label="Coupon code">{{code}}</div>
             <dl class="coupon-ticket-details">
-              <div><dt>Minimum order</dt><dd>&#8377;{{formatNumber minPurchaseAmount}}</dd></div>
+              <div><dt>Minimum eligible spend</dt><dd>&#8377;{{formatNumber minPurchaseAmount}}</dd></div>
               <div><dt>Maximum savings</dt><dd>&#8377;{{formatNumber maxDiscountAmount}}</dd></div>
             </dl>
-            <p class="coupon-ticket-expiry">Valid until <time datetime="{{formatDate validUpto 'YYYY-MM-DD'}}">{{formatDate validUpto 'MMM D, YYYY'}}</time></p>
+            <p class="coupon-ticket-expiry">{{#if validFrom}}Starts {{formatDate validFrom 'MMM D, YYYY, HH:mm Z'}}<br>{{/if}}Expires {{formatDate validUpto 'MMM D, YYYY, HH:mm Z'}}</p>
             <div class="coupon-ticket-footer">
               <div class="coupon-ticket-actions">
                 <a href="/admin/coupons/edit/{{_id}}" aria-label="Edit coupon {{code}}">Edit</a>
@@ -46,7 +48,7 @@
                 <button type="button" onclick="deleteCoupon('{{_id}}')" aria-label="Remove coupon {{code}}">Remove</button>
               </div>
               <div class="p-1 bg-light rounded-4">
-                <div class="{{isEqual displayStatus 'Active' 'status-view-success'}} {{isEqual displayStatus 'Deactivated' 'status-view-primary'}} {{isEqual displayStatus 'Expired' 'status-view-danger'}} coupon-ticket-status">{{displayStatus}}</div>
+                <div class="{{isEqual displayStatus 'Active' 'status-view-success'}} {{isEqual displayStatus 'Deactivated' 'status-view-primary'}} {{isEqual displayStatus 'Expired' 'status-view-danger'}} {{isEqual displayStatus 'Scheduled' 'coupon-scheduled'}} coupon-ticket-status">{{displayStatus}}</div>
               </div>
             </div>
           </div>

@@ -1,3 +1,4 @@
+import { couponDate, couponTime } from "../../helpers/coupon-validation.js";
 import userController from "../user-controller.js";
 import categoryController from "../category-controller.js";
 import productController from "../product-controller.js";
@@ -20,7 +21,7 @@ const statusOptions = {
   users: ["active", "blocked"],
   products: ["active", "sold out"],
   orders: ["confirmed", "shipped", "delivered", "cancelled", "return"],
-  coupons: ["active", "expired", "deactivated"],
+  coupons: ["active", "scheduled", "expired", "deactivated"],
 };
 const filterOptions = (type) =>
   statusOptions[type].map((value) => ({
@@ -339,7 +340,7 @@ const adminRouterController = {
 
   // Coupons
   showCouponsList: async (req, res) => {
-    const status = ["active", "expired", "deactivated"].includes(
+    const status = ["active", "scheduled", "expired", "deactivated"].includes(
       req.query.status,
     )
       ? req.query.status
@@ -356,60 +357,79 @@ const adminRouterController = {
       coupons,
       sideMenus,
       selectedStatus: status,
+      successMessage:
+        req.query.saved === "created"
+          ? "Coupon created successfully."
+          : req.query.saved === "updated"
+            ? "Coupon updated successfully."
+            : "",
       statusOptions: filterOptions("coupons"),
       searchQuery,
     });
   },
   showCreateCouponForm: async (req, res) => {
-    const categories = await categoryController.getAllCategoryTitles();
-    const sideMenus = getSideMenus();
     res.render("admin/coupons/coupons-form", {
-      categories,
-      sideMenus,
-      errMessage: req.query.errMessage,
+      categories: await categoryController.getAllCategoryTitles(),
+      sideMenus: getSideMenus(sideMenuPath.coupons),
+      values: {
+        startOption: "today",
+        validFrom: couponDate(),
+        validUpto: couponDate(),
+        discountType: "flat",
+        status: "active",
+      },
     });
   },
   createCoupon: async (req, res) => {
     try {
       await couponController.createCoupon(req.body);
-      res.redirect(303, `/admin${sideMenuPath.coupons}`);
+      res.redirect(303, "/admin/coupons?saved=created");
     } catch (err) {
-      const url = new URL(
-        req.originalUrl,
-        req.protocol + "://" + req.get("host"),
-      );
-      url.pathname = req.params.id
-        ? `/admin/coupons/edit/${req.params.id}`
-        : "/admin/coupons/create";
-      url.searchParams.set("errMessage", err.message);
-      res.redirect(303, url);
+      res
+        .status(422)
+        .json({
+          errMessage: err.errors
+            ? err.message
+            : "Unable to create coupon. Please try again.",
+          errors: err.errors || {},
+        });
     }
   },
   showEditCouponForm: async (req, res) => {
     const coupon = await couponController.getCouponById(req.params.id);
-    const categories = await categoryController.getAllCategoryTitles();
-    const sideMenus = getSideMenus();
     res.render("admin/coupons/coupons-form", {
       coupon,
-      categories,
-      sideMenus,
-      errMessage: req.query.errMessage,
+      values: {
+        ...coupon,
+        schedule: coupon.validFrom > new Date(),
+        category: coupon.categoryId?.toString() || "",
+        startOption: coupon.validFrom || coupon.createdAt ? "pick" : "today",
+        validFrom:
+          coupon.validFrom || coupon.createdAt
+            ? couponDate(coupon.validFrom || coupon.createdAt)
+            : couponDate(),
+        startTime:
+          coupon.validFrom > new Date() ? couponTime(coupon.validFrom) : "",
+        validUpto: couponDate(coupon.validUpto),
+        status: coupon.status || "active",
+      },
+      categories: await categoryController.getAllCategoryTitles(),
+      sideMenus: getSideMenus(sideMenuPath.coupons),
     });
   },
   editCoupon: async (req, res) => {
     try {
       await couponController.editCoupon(req.params.id, req.body);
-      res.redirect(303, `/admin${sideMenuPath.coupons}`);
+      res.redirect(303, "/admin/coupons?saved=updated");
     } catch (err) {
-      const url = new URL(
-        req.originalUrl,
-        req.protocol + "://" + req.get("host"),
-      );
-      url.pathname = req.params.id
-        ? `/admin/coupons/edit/${req.params.id}`
-        : "/admin/coupons/create";
-      url.searchParams.set("errMessage", err.message);
-      res.redirect(303, url);
+      res
+        .status(422)
+        .json({
+          errMessage: err.errors
+            ? err.message
+            : "Unable to update coupon. It may have been removed. Please try again.",
+          errors: err.errors || {},
+        });
     }
   },
   updateCouponStatus: async (req, res) => {

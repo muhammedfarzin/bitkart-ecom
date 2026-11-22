@@ -57,11 +57,18 @@ document.addEventListener("submit", async (event) => {
   const form = event.target;
   if (!form?.matches("[data-rest-form]") || event.defaultPrevented) return;
   event.preventDefault();
+  if (form.dataset.submitting === "true") return;
   if (!FormValidation.validate(form)) return;
   const url = new URL(form?.action, location.href);
   const redirect = new URL(location.href).searchParams.get("redirect");
   if (redirect) url.searchParams.set("redirect", redirect);
   const data = new FormData(form);
+  const buttons = [...form.querySelectorAll('[type="submit"]')];
+  form.dataset.submitting = "true";
+  form.setAttribute("aria-busy", "true");
+  buttons.forEach((button) => {
+    button.disabled = true;
+  });
   try {
     const response = await fetch(url, {
       method: form?.dataset.method,
@@ -79,9 +86,26 @@ document.addEventListener("submit", async (event) => {
       const page = new DOMParser().parseFromString(html, "text/html");
       document.documentElement.replaceWith(page.documentElement);
     } else if (!response.ok) {
-      App.showRequestError({ responseJSON: await response.json() });
+      const error = await response.json();
+      if (form.id === "coupon-frm") {
+        FormValidation.renderErrors(
+          form,
+          Object.keys(error.errors || {}).length
+            ? Object.entries(error.errors).map(([name, message]) => ({
+                el: form.elements.namedItem(name),
+                message,
+              }))
+            : [{ message: error.errMessage || "Unable to save coupon." }],
+        );
+      } else App.showRequestError({ responseJSON: error });
     }
   } catch {
     showAlertBox("Unable to submit the form. Please try again.");
+  } finally {
+    delete form.dataset.submitting;
+    form.removeAttribute("aria-busy");
+    buttons.forEach((button) => {
+      button.disabled = false;
+    });
   }
 });
